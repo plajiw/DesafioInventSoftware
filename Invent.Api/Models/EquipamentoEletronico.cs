@@ -5,7 +5,7 @@ namespace Invent.Api.Models
     public class EquipamentoEletronico
     {
         // Identificador global
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required(ErrorMessage = "O campo Nome é obrigatório")]
         public required string Nome { get; set; }

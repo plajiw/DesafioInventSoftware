@@ -8,7 +8,9 @@ Criar o processo de CRUD (Create, Read, Update, Delete) em uma API em C#. Sem co
 
 Inicializado com o template `dotnet new webapi`, que fornece a estrutura básica da aplicação. Depois, criamos a pasta **Models**, onde mora a principal classe de domínio, `EquipamentoEletronico` e definimos suas propriedades.
 
-### Models - EquipamentoEletronico
+Após, realizada a criada do diretório `Data` e arquivo de Interface `IEquipamentoRepository`, onde vamos definir os "contratos" que nosso repositório deve seguir através da criação de operações assíncronas de criação, leitura, atualização e remoção.
+
+### 1. Models - EquipamentoEletronico
 
 * **Id (Guid)**: ao instanciar um novo equipamento, o `Guid.NewGuid()` gera automaticamente um identificador global único.
 
@@ -20,3 +22,6 @@ Inicializado com o template `dotnet new webapi`, que fornece a estrutura básica
 
 * **TemEstoque (bool)**: uma propriedade de leitura que devolve `true` se `QuantidadeEmEstoque > 0`. Dessa forma, optamos por uma prática de encapsulamento e centralização da lógica.
 
+### 2. Data - IProductRepository
+
+* **a**

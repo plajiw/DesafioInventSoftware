@@ -38,83 +38,28 @@ A aplicação foi estruturada em camadas para garantir a separação de responsa
 
 - Responsabilidades: É responsável por gerar o Id e a DataDeInclusao no momento da criação de um novo registro, garantindo a consistência dos dados.
 
-## Processo
+### 3. Injeção de Dependência
 
-Inicializado com o template `dotnet new webapi`, que fornece a estrutura básica da aplicação. Depois, criamos a pasta **Models**, onde mora a principal classe de domínio, `EquipamentoEletronico` e definimos suas propriedades.
+A configuração da Injeção de Dependência foi realizada no Program.cs.
 
-Após, realizada a criada do diretório `Data` e arquivo de Interface `IEquipamentoRepository`, onde vamos definir os "contratos" que nosso repositório deve seguir através da criação de operações assíncronas de criação, leitura, atualização e remoção.
+- builder.Services.AddSingleton<IEquipamentoRepository, InMemoryEquipamentoRepository>();: O repositório foi registrado como um serviço Singleton. Isso garante que a mesma instância do InMemoryEquipamentoRepository (e, consequentemente, do dicionário de dados estático) seja utilizada em toda a aplicação, mantendo a consistência dos dados em memória entre as requisições.
 
-A partir disso, vamos implementar os "contratos" criados em `InMemoryEquipamentoRepository` a partir do processo de herança e garantir que essa classe se comprometa com os contratos estabelecidos.
+### 4. Camada de Controle (Controller)
 
-No `EquipamentosController` fazemos a herança ao `ControllerBase` e declaramos uma dependência da interface `IEquipamentoRepository`.
+- EquipamentosController.cs: Controller responsável por expor os endpoints da API.
 
+- Configuração: Utiliza os atributos [ApiController] para habilitar comportamentos específicos de API e [Route("api/[controller]")] para definir o padrão de roteamento.
 
-No program.cs usamos dotnet add package Swashbuckle.AspNetCore
-para uso do swagger e testar os endpoints
+- Injeção de Dependência: Recebe uma instância de IEquipamentoRepository via construtor, sem conhecer a implementação concreta, em conformidade com o Princípio da Inversão de Dependência.
 
----
+- Endpoints: Cada método público corresponde a uma operação CRUD e é mapeado a um verbo HTTP ([HttpGet], [HttpPost], [HttpPut], [HttpDelete]).
 
-### 1 Models - EquipamentoEletronico
-
-* **Id (Guid)**: ao instanciar um novo equipamento, o `Guid.NewGuid()` gera automaticamente um identificador global único.
-
-* **Nome e Tipo**: marcados com `[Required]`, esses campos definem que o equipamento é e para que serve.
-
-* **QuantidadeEmEstoque (int)**: usamos `[Range(0, int.MaxValue)]` para garantir que nunca armazenemos valores negativos.
-
-* **DataDeInclusao (DateTime)**: registramos o momento exato em UTC da criação do registro.
-
-* **TemEstoque (bool)**: uma propriedade de leitura que devolve `true` se `QuantidadeEmEstoque > 0`. Dessa forma, optamos por uma prática de encapsulamento e centralização da lógica.
+- Respostas HTTP: Utiliza IActionResult para retornar códigos de status HTTP apropriados e padronizados (200 OK, 201 Created, 204 No Content, 400 Bad Request, 404 Not Found), comunicando o resultado da operação.
 
 ---
 
-### 2.1 Data - IProductRepository
-
-* **CreateAsync**: Operação assíncrona que adiciona um novo `EquipamentoEletronico` ao repositório e devolve a instância criada.
-
-* **GetByIdAsync**: Busca um equipamento pelo seu Guid id. Retorna o objeto correspondente ou null se não existir
-
-* **GetAllAsync**: Retorna todos os equipamentos cadastrados num único lote. Se não houver nenhum, devolve uma coleção vazia.
-
-* **UpdateAsync**: Atualiza um equipamento existente com base no Id presente no objeto passado; devolve o objeto atualizado ou null se o Id não for encontrado.
-
-* **DeleteAsync**: Remove de forma assíncrona o equipamento identificado pelo Guid id. Retorna true se a remoção for concluída ou false caso não exista esse Id.
+*Desenvolvido por Pablo Ribeiro.*
 
 
-### 2.2 Data - InMemoryEquipamentoRepository
 
-Determinação do "banco de dados" memória. Usando um Dictionary "_equipamentos" com acesso privado, estático para ser manter único em toda aplicação e inicializado somente uma vez com o `readonly`. Assim temos segunraça e uma coleção de pares associados, chave é o Guid (o ID do equipamento) e o valor é o objeto EquipamentoEletronico
-`private static readonly Dictionary<Guid, EquipamentoEletronico> _equipamentos = new();`.
-
-Métodos para implementação do "contrato"
-E depois fazemos a injeção dessa dependência para os controllers
-
-
-### launchSettings
-
-{
-  "$schema": "https://json.schemastore.org/launchsettings.json",
-  "profiles": {
-    "httpss": {
-      "commandName": "Project",
-      "dotnetRunMessages": true,
-      "launchBrowser": true,
-      "applicationUrl": "https://localhost:7178;http://localhost:5124",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "launchUrl": "swagger"
-    }
-  },
-  "httpss": {
-    "commandName": "Project",
-    "dotnetRunMessages": true,
-    "launchBrowser": true,
-    "applicationUrl": "https://localhost:7178;http://localhost:5124",
-    "environmentVariables": {
-      "ASPNETCORE_ENVIRONMENT": "Development"
-    },
-    "launchUrl": "swagger"
-  }
-}
 

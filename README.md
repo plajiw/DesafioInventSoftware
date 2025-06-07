@@ -5,8 +5,8 @@ API RESTful desenvolvida em C# e .NET 8 para o processo seletivo da Invent Softw
 ## Tecnologias e Ferramentas
 - .NET 9
 - ASP.NET Core Web API
-- C# 12
 - Swagger (OpenAPI) para documentação e teste de endpoints.
+- HTML5, CSS, Javascript
 - Git para controle de versão.
 
 ## Estrutura e Implementação
@@ -56,10 +56,51 @@ A configuração da Injeção de Dependência foi realizada no Program.cs.
 
 - Respostas HTTP: Utiliza IActionResult para retornar códigos de status HTTP apropriados e padronizados (200 OK, 201 Created, 204 No Content, 400 Bad Request, 404 Not Found), comunicando o resultado da operação.
 
----
+## Como Executar e Testar a Aplicação
 
-*Desenvolvido por Pablo Ribeiro.*
+O projeto é dividido em duas partes: o **Backend (API)** e o **Frontend (Interface Web)**. Para testar a aplicação completa, é necessário executar ambos.
 
+### 1. Executando o Backend (API em C#)
+A API deve ser iniciada primeiro, pois ela fornece os dados para o frontend.
 
+### Passos:
+1. **Clone o repositório**:
+   ```bash
+   git clone https://github.com/plajiw/DesafioInventSoftware
+   ```
 
+2. **Navegue até a pasta da API** no terminal:
+   ```bash
+   cd DesafioInventSoftware/Invent.Api
+   ```
 
+3. **Execute a aplicação**:
+   ```bash
+   dotnet run
+   ```
+
+### 2. Executando o Frontend (Interface Web)
+Com a API rodando, inicie a interface web para interagir com ela.
+
+### Passos:
+1. **Configure a conexão**: Verifique se no arquivo `Invent.Frontend/script.js` a variável `apiUrl` está apontando para o endereço correto da API:
+   ```javascript
+   const apiUrl = 'http://localhost:5124/api/equipamentos';
+   ```
+
+2. **Abra o arquivo HTML**: Navegue até a pasta `Invent.Frontend` no explorador de arquivos e dê um duplo clique no arquivo `index.html`. Ele abrirá no navegador padrão.
+
+3. **Teste a aplicação**: A página carregará e buscará os equipamentos da API. Use o formulário para adicionar, editar e remover equipamentos, e a tabela será atualizada dinamicamente.
+
+### Endpoints da API
+Para referência técnica, os endpoints disponíveis na API são:
+
+| Verbo  | Rota                     | Descrição                                  |
+| ------ | ------------------------ | ------------------------------------------ |
+| GET    | `/api/equipamentos`      | Retorna a lista de todos os equipamentos.  |
+| GET    | `/api/equipamentos/{id}` | Retorna um equipamento específico pelo ID. |
+| POST   | `/api/equipamentos`      | Cria um novo equipamento.                  |
+| PUT    | `/api/equipamentos/{id}` | Atualiza um equipamento existente pelo ID. |
+| DELETE | `/api/equipamentos/{id}` | Deleta um equipamento pelo ID.             |
+
+*Desenvolvido por Pablo Ribeiro.*s

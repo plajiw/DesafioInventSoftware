@@ -1,6 +1,6 @@
 # Desafio Técnico Invent Software
 
-API RESTful desenvolvida em C# e .NET 8 para o processo seletivo da Invent Software. O projeto consiste na implementação de um CRUD (Create, Read, Update, Delete) para o gerenciamento de equipamentos eletrônicos, com persistência de dados em memória.
+API RESTful desenvolvida em C# e .NET 9 para o processo seletivo da Invent Software. O projeto consiste na implementação de um CRUD (Create, Read, Update, Delete) para o gerenciamento de equipamentos eletrônicos, com persistência de dados em memória.
 
 ## Tecnologias e Ferramentas
 - .NET 9

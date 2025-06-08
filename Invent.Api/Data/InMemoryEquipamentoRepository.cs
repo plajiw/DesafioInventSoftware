@@ -1,5 +1,4 @@
 ﻿using Invent.Api.Models;
-using System.Collections.Concurrent; // Pode remover este using agora
 
 namespace Invent.Api.Data
 {

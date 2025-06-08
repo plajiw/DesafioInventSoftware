@@ -13,13 +13,16 @@
 
 <body class="bg-light">
     <div class="container py-5">
+
         <header class="text-center mb-5">
             <h1 class="display-4 fw-bold text-dark">Gestão de Equipamentos</h1>
             <p class="text-muted fs-5">Interface para o Desafio Invent Software</p>
         </header>
 
-        <main>
-            <section>
+        <main class="card p-4 shadow-sm">
+
+            <!-- Formulário -->
+            <section class="mb-5">
                 <h2 id="form-title" class="h4 fw-semibold text-dark mb-4">Adicionar Novo Equipamento</h2>
                 <form id="equipamento-form" class="row g-3">
                     <input type="hidden" id="equipamento-id">
@@ -60,11 +63,42 @@
                         <button type="button" id="cancel-btn" class="btn btn-secondary d-none me-2">Cancelar</button>
                         <button type="submit" id="submit-btn" class="btn btn-primary">Salvar</button>
                     </div>
-                    
                 </form>
+            </section>
+
+            <!-- Tabela -->
+            <section>
+                <h2 class="h4 fw-semibold text-dark mb-4">Equipamentos Cadastrados</h2>
+                <div class="table-responsive">
+                    <table id="equipamentos-table" class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">Nome</th>
+                                <th scope="col">Tipo</th>
+                                <th scope="col">Quantidade</th>
+                                <th scope="col">Data de Cadastro</th>
+                                <th scope="col">Em Estoque</th>
+                                <th scope="col">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body"></tbody> <!-- Preenchido com o JS -->
+                    </table>
+                </div>
+                <p id="no-data-message" class="text-center text-muted py-4 d-none">Nenhum equipamento cadastrado.</p>
             </section>
         </main>
     </div>
+
+    <!-- Bootstrap JS e Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+        crossorigin="anonymous"></script>
+
+    <!-- JavaScript -->
+    <script src="script.js" defer></script>
 
 </body>
 

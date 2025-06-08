@@ -1,0 +1,108 @@
+body {
+    background-color: #FFFFFF;
+}
+
+.container {
+    padding: 1rem;
+}
+
+.header-title {
+    color: #000000;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.header-subtitle {
+    color: #6C757D;
+    font-size: 1rem;
+}
+
+.card {
+    border: 1px solid #DEE2E6;
+    padding: 1rem;
+}
+
+.form-title {
+    color: #000000;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.form-control {
+    border: 1px solid #CED4DA;
+    border-radius: 4px;
+}
+
+.form-text {
+    color: #6C757D;
+    font-size: 0.8rem;
+}
+
+.btn-primary {
+    background-color: #0D6EFD;
+    border-color: #0D6EFD;
+    padding: 0.5rem 1rem;
+}
+
+.btn-primary:hover {
+    background-color: #0B5ED7;
+    border-color: #0B5ED7;
+}
+
+.btn-secondary {
+    background-color: #6C757D;
+    border-color: #6C757D;
+    padding: 0.5rem 1rem;
+}
+
+.btn-secondary:hover {
+    background-color: #5C636A;
+    border-color: #5C636A;
+}
+
+.table {
+    margin-bottom: 0;
+}
+
+.table th {
+    color: #000000;
+    font-weight: 500;
+}
+
+.table td {
+    color: #212529;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #F8F9FA;
+}
+
+#no-data-message {
+    color: #6C757D;
+    font-size: 0.9rem;
+}
+
+/* Responsividade básica */
+@media (max-width: 576px) {
+    .header-title {
+        font-size: 1.5rem;
+    }
+
+    .form-title {
+        font-size: 1.25rem;
+    }
+
+    .form-control {
+        font-size: 0.9rem;
+    }
+
+    .btn {
+        font-size: 0.9rem;
+        padding: 0.4rem 0.8rem;
+    }
+
+    .table th,
+    .table td {
+        font-size: 0.85rem;
+    }
+}

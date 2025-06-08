@@ -1,0 +1,149 @@
+{
+	"info": {
+		"_postman_id": "0d7e6116-d0be-4d23-a7cf-b4667c8f6332",
+		"name": "InventSoftware",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38494725"
+	},
+	"item": [
+		{
+			"name": "Listar todos os equipamentos",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5124/api/Equipamentos",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5124",
+					"path": [
+						"api",
+						"Equipamentos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Listar por ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5124/api/Equipamentos/:ID",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5124",
+					"path": [
+						"api",
+						"Equipamentos",
+						":ID"
+					],
+					"variable": [
+						{
+							"key": "ID",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Criar um equipamento",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nome\": \"Nome\",\r\n  \"tipo\": \"Tipo\",\r\n  \"quantidadeEmEstoque\": 999\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5124/api/Equipamentos",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5124",
+					"path": [
+						"api",
+						"Equipamentos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Editar um equipamento pelo ID",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": \"983005f1-7d10-4e4c-8cc8-d66ead8640ab\",\r\n  \"nome\": \"string\",\r\n  \"tipo\": \"string\",\r\n  \"quantidadeEmEstoque\": 2147483647,\r\n  \"dataDeInclusao\": \"2025-06-08T18:15:18.227Z\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5124/api/Equipamentos/:ID",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5124",
+					"path": [
+						"api",
+						"Equipamentos",
+						":ID"
+					],
+					"variable": [
+						{
+							"key": "ID",
+							"value": "983005f1-7d10-4e4c-8cc8-d66ead8640ab"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Remover um equipamento pelo ID",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5124/api/Equipamentos/:ID",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5124",
+					"path": [
+						"api",
+						"Equipamentos",
+						":ID"
+					],
+					"variable": [
+						{
+							"key": "ID",
+							"value": "ea16c325-a382-4f61-8fbd-5cfea37830b0"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

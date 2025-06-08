@@ -90,7 +90,7 @@ Com a API rodando, inicie a interface web para interagir com ela.
 
 2. **Abra o arquivo HTML**: Navegue até a pasta `Invent.Frontend` no explorador de arquivos e dê um duplo clique no arquivo `index.html`. Ele abrirá no navegador padrão.
 
-3. **Teste a aplicação**: A página carregará e buscará os equipamentos da API. Use o formulário para adicionar, editar e remover equipamentos, e a tabela será atualizada dinamicamente.
+3. **Teste a aplicação**: A página carregará e buscará os equipamentos da API. Use o formulário para adicionar, editar e remover equipamentos, e a tabela será atualizada.
 
 ### Endpoints da API
 Para referência técnica, os endpoints disponíveis na API são:
@@ -102,5 +102,7 @@ Para referência técnica, os endpoints disponíveis na API são:
 | POST   | `/api/equipamentos`      | Cria um novo equipamento.                  |
 | PUT    | `/api/equipamentos/{id}` | Atualiza um equipamento existente pelo ID. |
 | DELETE | `/api/equipamentos/{id}` | Deleta um equipamento pelo ID.             |
+
+Além do Swagger, uma collection do Postman está disponível na pasta `/docs` para facilitar os testes dos endpoints.
 
 *Desenvolvido por Pablo Ribeiro.*s

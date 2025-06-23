@@ -27,9 +27,9 @@ builder.Services.AddSingleton<IDocumentStore>(provider =>
     var store = new DocumentStore
     {
         // Porta para o RavenDB
-        Urls = new[] { "http://127.0.0.1:8080" }, 
-        
-        Database = "InventSoftwareDB"             
+        Urls = new[] { "http://127.0.0.1:8080" },
+
+        Database = "InventSoftwareDB"
     };
 
     // Alterar o separador padrão do Raven

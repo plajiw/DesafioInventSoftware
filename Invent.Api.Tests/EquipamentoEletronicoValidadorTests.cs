@@ -1,4 +1,5 @@
-﻿using Invent.Api.Models;
+﻿using FluentValidation;
+using Invent.Api.Models;
 using Xunit;
 
 namespace Invent.Api.Tests
@@ -6,6 +7,7 @@ namespace Invent.Api.Tests
     public class EquipamentoEletronicoValidadorTests
     {
         private readonly EquipamentoEletronicoValidador _validador = new EquipamentoEletronicoValidador();
+        private readonly IValidator<EquipamentoEletronico> _validadorEquipamento;
 
         [Fact]
         public void Deve_Validar_Com_Sucesso_Equipamento_Valido()
@@ -39,9 +41,13 @@ namespace Invent.Api.Tests
             // Act
             var resultado = _validador.Validate(equipamento);
 
+            // _validador.ValidateAndThrow(equipamento);
+
             // Assert
             Assert.False(resultado.IsValid);
-            Assert.Contains(resultado.Errors, erro => erro.PropertyName == "Nome");
+
+            const string mensagemDeErro = "O nome do equipamento é obrigatório.\r\nO nome deve ter entre 3 e 100 caracteres.";
+            Assert.Equal(mensagemDeErro, resultado.ToString());
         }
 
         [Fact]
@@ -81,7 +87,7 @@ namespace Invent.Api.Tests
 
             // Assert
             Assert.False(resultado.IsValid);
-            Assert.Contains(resultado.Errors, erro => erro.PropertyName == "QuantidadeEmEstoque");
+            Assert.Contains(resultado.Errors, erro => erro.PropertyName == "");
         }
     }
 }

@@ -8,7 +8,7 @@ namespace Invent.Api.Models
         public Guid Id { get; set; }
 
         [Required(ErrorMessage = "O campo Nome é obrigatório")]
-        public required string Nome { get; set; }
+        public required string Name { get; set; }
 
         [Required(ErrorMessage = "Informe o tipo do equipamento")]
         public required string Tipo { get; set; }

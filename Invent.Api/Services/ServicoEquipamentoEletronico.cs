@@ -25,20 +25,13 @@ namespace Invent.Api.Services
         // Criar Equipamento
         public async Task<EquipamentoEletronico> Criar(EquipamentoEletronico equipamentoParaCriar)
         {
-            // Validação dos dados
             _validadorEquipamentoEletronico.ValidateAndThrow(equipamentoParaCriar);
             return await _repositorioEquipamento.CriarEquipamento(equipamentoParaCriar);
         }
 
         // Atualizar por Id
-        public async Task<EquipamentoEletronico?> Atualizar(string id, EquipamentoEletronico dadosParaAtualizar)
+        public async Task<EquipamentoEletronico> Atualizar(string id, EquipamentoEletronico dadosParaAtualizar)
         {
-            // Validar se o Id existe
-            if (id != dadosParaAtualizar.Id)
-            {
-                // Colocar no Controller
-                throw new ValidationException("O Id da rota não corresponde ao ID no corpo da requisição.");
-            }
 
             // Valida os dados do objeto
             _validadorEquipamentoEletronico.ValidateAndThrow(dadosParaAtualizar);
@@ -54,7 +47,7 @@ namespace Invent.Api.Services
         }
 
         // Obter equipamento por id
-        public async Task<EquipamentoEletronico?> ObterPorId(string idDoEquipamento)
+        public async Task<EquipamentoEletronico> ObterPorId(string idDoEquipamento)
         {
             return await _repositorioEquipamento.ObterPorId(idDoEquipamento);
         }

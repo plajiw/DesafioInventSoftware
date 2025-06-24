@@ -29,7 +29,7 @@ namespace Invent.Api.Data
         }
 
         // Atualização do equipamento
-        public async Task<EquipamentoEletronico?> Atualizar(string id, EquipamentoEletronico equipamento)
+        public async Task<EquipamentoEletronico> Atualizar(string id, EquipamentoEletronico equipamento)
         {
             using (IAsyncDocumentSession session = _store.OpenAsyncSession())
             {
@@ -60,11 +60,18 @@ namespace Invent.Api.Data
             }
         }
 
-        public async Task<EquipamentoEletronico?> ObterPorId(string id)
+        public async Task<EquipamentoEletronico> ObterPorId(string id)
         {
             using (IAsyncDocumentSession session = _store.OpenAsyncSession())
             {
-                return await session.LoadAsync<EquipamentoEletronico>(id);
+                var equipamento = await session.LoadAsync<EquipamentoEletronico>(id);
+
+                if (equipamento is null)
+                {
+                    throw new KeyNotFoundException($"Equipamento com o ID '{id}' não foi encontrado.");
+                }
+
+                return equipamento;
             }
         }
 
@@ -83,6 +90,9 @@ namespace Invent.Api.Data
 
                 // Se existe é removido
                 session.Delete(documentoParaRemover);
+
+                await session.SaveChangesAsync();
+
                 return true;
             }
         }

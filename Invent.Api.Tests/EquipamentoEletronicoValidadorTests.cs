@@ -50,12 +50,33 @@ namespace Invent.Api.Tests
         }
 
         [Fact]
-        public void Deve_Falhar_Quando_Nome_Estiver_Menor_Que_Tres_Caracteres()
+        public void Deve_Falhar_Quando_Nome_Conter_Menos_Que_Tres_Caracteres()
         {
             // Arrange
             var equipamento = new EquipamentoEletronico
             {
                 Nome = "Ab",
+                Tipo = "Teclado",
+                QuantidadeEmEstoque = 7
+            };
+
+            string erroTamanho = "O nome deve ter entre 3 e 100 caracteres.";
+
+            // Act
+            var excecao = Assert.Throws<ValidationException>(() => _validador.ValidateAndThrow(equipamento));
+
+            // Assert
+            Assert.Contains(erroTamanho, excecao.Message);
+        }
+
+        [Fact]
+        public void Deve_Falhar_Quando_Nome_Conter_Mais_Que_Cem_Caracteres()
+        {
+            // Arrange
+            var equipamento = new EquipamentoEletronico
+            {
+                // 101 caracteres
+                Nome = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
                 Tipo = "Teclado",
                 QuantidadeEmEstoque = 7
             };
@@ -90,8 +111,10 @@ namespace Invent.Api.Tests
         }
 
         [Theory]
+        [InlineData(-10001, "A quantidade precisa ser maior ou igual a zero.")]
         [InlineData(-1, "A quantidade precisa ser maior ou igual a zero.")]
         [InlineData(10001, "A quantidade em estoque não pode exceder 10.000 unidades.")]
+        [InlineData(100000, "A quantidade em estoque não pode exceder 10.000 unidades.")]
         public void Deve_Falhar_Quantidade_Em_Estoque_Invalida(int quantidadeInvalida, string mensagemDeErro)
         {
             // Arrange

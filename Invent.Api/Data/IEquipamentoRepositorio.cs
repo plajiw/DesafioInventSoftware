@@ -12,7 +12,7 @@ namespace Invent.Api.Data
         Task<EquipamentoEletronico> CriarEquipamento(EquipamentoEletronico equipamento);
 
         // Atualiza um equipamento existente na base de dados
-        Task<EquipamentoEletronico?> Atualizar(EquipamentoEletronico equipamento);
+        Task<EquipamentoEletronico?> Atualizar(string id, EquipamentoEletronico equipamento);
 
         // Retorna uma lista com todos os equipamentos cadastrados
         Task<IEnumerable<EquipamentoEletronico>> ObterTodos();

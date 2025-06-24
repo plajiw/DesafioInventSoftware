@@ -29,17 +29,17 @@ namespace Invent.Api.Data
         }
 
         // Atualização do equipamento
-        public async Task<EquipamentoEletronico?> Atualizar(EquipamentoEletronico equipamento)
+        public async Task<EquipamentoEletronico?> Atualizar(string id, EquipamentoEletronico equipamento)
         {
             using (IAsyncDocumentSession session = _store.OpenAsyncSession())
             {
-                // Carregamos o documento
-                var equipamentoDoBanco = await session.LoadAsync<EquipamentoEletronico>(equipamento.Id);
+                // Carregamos o documento usando o id do parâmetro
+                var equipamentoDoBanco = await session.LoadAsync<EquipamentoEletronico>(id);
 
                 // Se o documento for nulo, retorna null
                 if (equipamentoDoBanco is null)
                 {
-                    return null;
+                    throw new KeyNotFoundException($"Equipamento com o ID '{id}' não foi encontrado.");
                 }
 
                 // Dados alterados

@@ -39,11 +39,9 @@ namespace Invent.Api.Controllers
                 // Se encontrou, retornamos OK
                 return Ok(equipamentoEncontrado);
             }
-            else
-            {
-                // Se não encontrou, retornamos um erro 404
-                return NotFound();
-            }
+
+            return NotFound();
+
         }
 
         // Rota para criar um novo equipamento

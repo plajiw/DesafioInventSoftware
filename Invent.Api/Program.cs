@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using FluentValidation.AspNetCore;
+using Invent.Api;
 using Invent.Api.Data;
 using Invent.Api.Models;
 using Invent.Api.Services;
@@ -21,24 +22,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddSingleton<IDocumentStore>(provider =>
-{
-    var store = new DocumentStore
-    {
-        Urls = new[] { "http://127.0.0.1:8080" },
-        Database = "InventSoftwareDB"
-    };
-    store.Conventions.IdentityPartsSeparator = '-';
-    store.Initialize();
-    return store;
-});
-
-builder.Services.AddScoped<IEquipamentoRepositorio, RavenDbEquipamentoRepositorio>();
-
-builder.Services.AddScoped<ServicoEquipamentoEletronico>();
-
-builder.Services.AddFluentValidationAutoValidation();
-builder.Services.AddValidatorsFromAssemblyContaining<EquipamentoEletronicoValidador>();
+ModuloInjecaoAplicacao.BindServices(builder.Services);
 
 var app = builder.Build();
 

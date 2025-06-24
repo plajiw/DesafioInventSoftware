@@ -7,11 +7,10 @@ namespace Invent.Api.Models
 {
     public class EquipamentoEletronicoValidador : AbstractValidator<EquipamentoEletronico>
     {
+        // Essas validações se aplicam para a classe EquipamentoEletronico
+        // Esta classe inteira existe com o único propósito de validar objetos do tipo EquipamentoEletronico
         public EquipamentoEletronicoValidador()
         {
-            // RuleFor(e => e.Id)
-            //    .NotEmpty().WithMessage("O ID é obrigatório para operações de atualização.");
-
             RuleFor(e => e.Nome)
                 .NotEmpty().WithMessage("O nome do equipamento é obrigatório.")
                 .Length(3, 100).WithMessage("O nome deve ter entre 3 e 100 caracteres.");

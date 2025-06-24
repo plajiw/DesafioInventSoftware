@@ -6,8 +6,11 @@ namespace Invent.Api.Tests
 {
     public class EquipamentoEletronicoValidadorTests
     {
+        // Instanciamos a classe de validação do FluentValidation
         private readonly EquipamentoEletronicoValidador _validador = new EquipamentoEletronicoValidador();
-        private readonly IValidator<EquipamentoEletronico> _validadorEquipamento;
+        
+        
+        // Incluir no service private readonly IValidator<EquipamentoEletronico> _validadorEquipamento;
 
         [Fact]
         public void Deve_Validar_Com_Sucesso_Equipamento_Valido()
@@ -21,10 +24,11 @@ namespace Invent.Api.Tests
             };
 
             // Act (Agir)
-            var resultado = _validador.Validate(equipamento);
+            // Validar e lançar exceção, se houver
+            var excecao = Record.Exception(() => _validador.ValidateAndThrow(equipamento));
 
             // Assert (Afirmar)
-            Assert.True(resultado.IsValid);
+            Assert.Null(excecao);
         }
 
         [Fact]
@@ -38,16 +42,15 @@ namespace Invent.Api.Tests
                 QuantidadeEmEstoque = 7
             };
 
-            // Act
-            var resultado = _validador.Validate(equipamento);
+            string erroObrigatorio = "O nome do equipamento é obrigatório.";
+            string erroTamanho = "O nome deve ter entre 3 e 100 caracteres.";
 
-            // _validador.ValidateAndThrow(equipamento);
+            // Act e Assert
+            var excecao = Assert.Throws<ValidationException>(() => _validador.ValidateAndThrow(equipamento));
 
-            // Assert
-            Assert.False(resultado.IsValid);
+            Assert.Contains(erroObrigatorio, excecao.Message);
+            Assert.Contains(erroTamanho, excecao.Message);
 
-            const string mensagemDeErro = "O nome do equipamento é obrigatório.\r\nO nome deve ter entre 3 e 100 caracteres.";
-            Assert.Equal(mensagemDeErro, resultado.ToString());
         }
 
         [Fact]
@@ -61,18 +64,18 @@ namespace Invent.Api.Tests
                 QuantidadeEmEstoque = 13
             };
 
-            // Act
-            var resultado = _validador.Validate(equipamento);
+            string mensagemDeErro = "O tipo do equipamento é obrigatório.";
 
-            // Assert
-            Assert.False(resultado.IsValid);
-            Assert.Contains(resultado.Errors, erro => erro.PropertyName == "Tipo");
+            // Act e Assert
+            var excecao = Assert.Throws<ValidationException>(() => _validador.ValidateAndThrow(equipamento));
+
+            Assert.Contains(mensagemDeErro, excecao.Message);
         }
 
         [Theory]
-        [InlineData(-1)]
-        [InlineData(10001)]
-        public void Deve_Falhar_Quantidade_Em_Estoque_Invalida(int quantidadeInvalida)
+        [InlineData(-1, "A quantidade precisa ser maior ou igual a zero.")]
+        [InlineData(10001, "A quantidade em estoque não pode exceder 10.000 unidades.")]
+        public void Deve_Falhar_Quantidade_Em_Estoque_Invalida(int quantidadeInvalida, string mensagemDeErro)
         {
             // Arrange
             var equipamento = new EquipamentoEletronico
@@ -83,11 +86,10 @@ namespace Invent.Api.Tests
             };
 
             // Act
-            var resultado = _validador.Validate(equipamento);
+            var excecao = Assert.Throws<ValidationException>(() => _validador.ValidateAndThrow(equipamento));
 
             // Assert
-            Assert.False(resultado.IsValid);
-            Assert.Contains(resultado.Errors, erro => erro.PropertyName == "");
+            Assert.Contains(mensagemDeErro, excecao.Message);
         }
     }
 }

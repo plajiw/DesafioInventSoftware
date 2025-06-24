@@ -16,47 +16,47 @@ namespace Invent.Api.Data
             _store = store;
         }
 
-        // Criação de um equipamento
-        public async Task<EquipamentoEletronico> CreateAsync(EquipamentoEletronico equipamento)
+        // Criação de um equipamento
+        public async Task<EquipamentoEletronico> CriarEquipamento(EquipamentoEletronico equipamentoParaSalvar)
         {
             using (IAsyncDocumentSession session = _store.OpenAsyncSession())
             {
-                equipamento.Id = null; // O próprio Raven determina o Id
+                equipamentoParaSalvar.Id = null; // O próprio Raven determina o Id
 
-                equipamento.DataDeInclusao = DateTime.UtcNow;
+                equipamentoParaSalvar.DataDeInclusao = DateTime.UtcNow;
 
-                await session.StoreAsync(equipamento);
+                await session.StoreAsync(equipamentoParaSalvar);
 
                 await session.SaveChangesAsync();
 
-                return equipamento;
+                return equipamentoParaSalvar;
             }
         }
 
-        // Atualiação do equipamento
-        public async Task<EquipamentoEletronico?> UpdateAsync(EquipamentoEletronico equipamento)
+        // Atualiação do equipamento
+        public async Task<EquipamentoEletronico?> Atualizar(EquipamentoEletronico dadosDoEquipamento)
         {
             using (IAsyncDocumentSession session = _store.OpenAsyncSession())
             {
-                var doc = await session.LoadAsync<EquipamentoEletronico>(equipamento.Id);
+                var equipamentoDoBanco = await session.LoadAsync<EquipamentoEletronico>(dadosDoEquipamento.Id);
 
-                if (doc is null)
+                if (equipamentoDoBanco is null)
                 {
                     return null; // Se não encontrou, retorna nulo.
-                }
+                }
 
-                // Atualiza os dados do objeto que veio do banco.
-                doc.Nome = equipamento.Nome;
-                doc.Tipo = equipamento.Tipo;
-                doc.QuantidadeEmEstoque = equipamento.QuantidadeEmEstoque;
+                // Atualiza os dados do objeto que veio do banco.
+                equipamentoDoBanco.Nome = dadosDoEquipamento.Nome;
+                equipamentoDoBanco.Tipo = dadosDoEquipamento.Tipo;
+                equipamentoDoBanco.QuantidadeEmEstoque = dadosDoEquipamento.QuantidadeEmEstoque;
 
-                // Salva as alterações.
-                await session.SaveChangesAsync();
-                return doc;
+                // Salva as alterações.
+                await session.SaveChangesAsync();
+                return equipamentoDoBanco;
             }
         }
 
-        public async Task<IEnumerable<EquipamentoEletronico>> GetAllAsync()
+        public async Task<IEnumerable<EquipamentoEletronico>> ObterTodos()
         {
             using (IAsyncDocumentSession session = _store.OpenAsyncSession())
             {
@@ -64,25 +64,25 @@ namespace Invent.Api.Data
             }
         }
 
-        // Busca um único equipamento pelo seu ID.
-        public async Task<EquipamentoEletronico?> GetByIdAsync(string id)
+        // Busca um único equipamento pelo seu ID.
+        public async Task<EquipamentoEletronico?> ObterPorId(string idDoEquipamento)
         {
             using (IAsyncDocumentSession session = _store.OpenAsyncSession())
             {
-                // session.LoadAsync realiza a busca por ID
-                return await session.LoadAsync<EquipamentoEletronico>(id);
+                // session.LoadAsync realiza a busca por ID
+                return await session.LoadAsync<EquipamentoEletronico>(idDoEquipamento);
             }
         }
 
-        // Deleta um equipamento pelo ID
-        public async Task<bool> DeleteAsync(string id)
+        // Deleta um equipamento pelo ID
+        public async Task<bool> RemoverPorId(string idDoEquipamento)
         {
             using (IAsyncDocumentSession session = _store.OpenAsyncSession())
             {
-                session.Delete(id);
+                session.Delete(idDoEquipamento);
 
-                // Efetiva a remoção no banco.
-                await session.SaveChangesAsync();
+                // Efetiva a remoção no banco.
+                await session.SaveChangesAsync();
                 return true;
             }
         }

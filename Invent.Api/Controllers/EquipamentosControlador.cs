@@ -1,6 +1,9 @@
-﻿using Invent.Api.Data;
+﻿using FluentValidation;
 using Invent.Api.Models;
+using Invent.Api.Services;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Threading.Tasks;
 
 namespace Invent.Api.Controllers
 {
@@ -8,61 +11,100 @@ namespace Invent.Api.Controllers
     [Route("api/[controller]")]
     public class EquipamentosControlador : ControllerBase
     {
-        private readonly IEquipamentoRepositorio _repository;
+        // Instância de serviço
+        private readonly ServicoEquipamentoEletronico _servicoEquipamento;
 
-        public EquipamentosControlador(IEquipamentoRepositorio repository)
+        // Injeção do serviço
+        public EquipamentosControlador(ServicoEquipamentoEletronico servicoEquipamento)
         {
-            _repository = repository;
+            _servicoEquipamento = servicoEquipamento;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> ObterTodos()
         {
-            var equipamentos = await _repository.GetAllAsync();
-            return Ok(equipamentos);
+            var todosOsEquipamentos = await _servicoEquipamento.ObterTodos();
+            return Ok(todosOsEquipamentos);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(string id)
+        public async Task<IActionResult> ObterPorId(string id)
         {
-            var equipamento = await _repository.GetByIdAsync(id);
-            return equipamento is not null ? Ok(equipamento) : NotFound();
+            var equipamentoEncontrado = await _servicoEquipamento.ObterPorId(id);
+
+            if (equipamentoEncontrado != null)
+            {
+                return Ok(equipamentoEncontrado);
+            }
+
+            else
+            {
+                return NotFound();
+            }
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] EquipamentoEletronico equipamento)
+        public async Task<IActionResult> Criar([FromBody] EquipamentoEletronico dadosDoNovoEquipamento)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
+                var equipamentoCriado = await _servicoEquipamento.Criar(dadosDoNovoEquipamento);
+                return CreatedAtAction(nameof(ObterPorId), new { id = equipamentoCriado.Id }, equipamentoCriado);
+            }
+            catch (ValidationException ex)
+            {
+                return BadRequest(ex.Errors);
             }
 
-            var createdEquipamento = await _repository.CreateAsync(equipamento);
-            return CreatedAtAction(nameof(GetById), new { id = createdEquipamento.Id }, createdEquipamento);
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Um erro interno ocorreu: {ex.Message}");
+            }
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(string id, [FromBody] EquipamentoEletronico equipamento)
+        public async Task<IActionResult> Atualizar(string idDaUrl, [FromBody] EquipamentoEletronico equipamentoParaAtualizar)
         {
-            if (id != equipamento.Id)
+            try
             {
-                return BadRequest("O ID da rota não corresponde ao ID do corpo da requisição.");
+                var equipamentoAtualizado = await _servicoEquipamento.Atualizar(idDaUrl, equipamentoParaAtualizar);
+
+                if (equipamentoAtualizado != null)
+                {
+                    return Ok(equipamentoAtualizado);
+                }
+
+                else
+                {
+                    // Retorno se o Id não for encontrado
+                    return NotFound();
+                }
+            }
+            catch (ValidationException ex)
+            {
+                return BadRequest(ex.Errors);
             }
 
-            if (!ModelState.IsValid)
+            catch (Exception ex)
             {
-                return BadRequest(ModelState);
+                return StatusCode(500, $"Um erro interno ocorreu: {ex.Message}");
             }
-
-            var updatedEquipamento = await _repository.UpdateAsync(equipamento);
-            return updatedEquipamento is not null ? Ok(updatedEquipamento) : NotFound();
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Remover(string idParaRemover)
         {
-            var success = await _repository.DeleteAsync(id);
-            return success ? NoContent() : NotFound();
+            var removidoComSucesso = await _servicoEquipamento.RemoverPorId(idParaRemover);
+
+            if (removidoComSucesso)
+            {
+                return NoContent(); // Resposta 204
+            }
+
+            else
+            {
+                return NotFound(); // Resposta 404
+            }
         }
     }
 }

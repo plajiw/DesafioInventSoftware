@@ -8,18 +8,18 @@ namespace Invent.Api.Data
     public interface IEquipamentoRepositorio
     {
         // Adiciona um novo equipamento
-        Task<EquipamentoEletronico> CreateAsync(EquipamentoEletronico equipamento);
+        Task<EquipamentoEletronico> CriarEquipamento(EquipamentoEletronico equipamento);
 
         // Busca um equipamento pelo Id, retorna null se não existir
-        Task<EquipamentoEletronico?> GetByIdAsync(string id);
+        Task<EquipamentoEletronico?> ObterPorId(string id);
 
         // Retorna todos os equipamentos cadastrados
-        Task<IEnumerable<EquipamentoEletronico>> GetAllAsync();
+        Task<IEnumerable<EquipamentoEletronico>> ObterTodos();
 
         // Atualiza um equipamento existente, retorna null se não encontrar
-        Task<EquipamentoEletronico?> UpdateAsync(EquipamentoEletronico equipamento);
+        Task<EquipamentoEletronico?> Atualizar(EquipamentoEletronico equipamento);
 
         // Remove um equipamento pelo Id, devolve true se removeu com sucesso
-        Task<bool> DeleteAsync(string id);
+        Task<bool> RemoverPorId(string id);
     }
 }

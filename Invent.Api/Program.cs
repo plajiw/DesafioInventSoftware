@@ -28,17 +28,13 @@ builder.Services.AddSingleton<IDocumentStore>(provider =>
         Urls = new[] { "http://127.0.0.1:8080" },
         Database = "InventSoftwareDB"
     };
-
-    // Alterar o separador padrão do Raven
     store.Conventions.IdentityPartsSeparator = '-';
-
     store.Initialize();
-
     return store;
 });
 
-// Registro das classes que serão injetadas.
-builder.Services.AddScoped<RavenDbEquipamentoRepositorio>();
+builder.Services.AddScoped<IEquipamentoRepositorio, RavenDbEquipamentoRepositorio>();
+
 builder.Services.AddScoped<ServicoEquipamentoEletronico>();
 
 builder.Services.AddFluentValidationAutoValidation();
@@ -55,4 +51,5 @@ if (app.Environment.IsDevelopment())
 app.UseCors("AllowAll");
 app.UseAuthorization();
 app.MapControllers();
+
 app.Run();

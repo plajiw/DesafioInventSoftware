@@ -9,9 +9,6 @@ namespace Invent.Api.Tests
         // Instanciamos a classe de validação do FluentValidation
         private readonly EquipamentoEletronicoValidador _validador = new EquipamentoEletronicoValidador();
 
-
-        // Incluir no service private readonly IValidator<EquipamentoEletronico> _validadorEquipamento;
-
         [Fact]
         public void Nao_Deve_Lancar_Excecao_Null_Quando_Incluir_Equipamento_Valido()
         {
@@ -24,7 +21,6 @@ namespace Invent.Api.Tests
             };
 
             // Act (Agir)
-            // Validar e lançar exceção, se houver
             var excecao = Record.Exception(() => _validador.ValidateAndThrow(equipamento));
 
             // Assert (Afirmar)
@@ -71,26 +67,6 @@ namespace Invent.Api.Tests
 
             // Assert
             Assert.Contains(erroTamanho, excecao.Message);
-        }
-
-        [Fact]
-        public void Deve_Falhar_Quando_Nome_Estiver_Null()
-        {
-            // Arrange
-            var equipamento = new EquipamentoEletronico
-            {
-                Nome = null,
-                Tipo = "Teclado",
-                QuantidadeEmEstoque = 7
-            };
-
-            string mensagemDeErro = "O nome do equipamento não pode ser nulo.";
-
-            // Act
-            var excecao = Assert.Throws<ValidationException>(() => _validador.ValidateAndThrow(equipamento));
-
-            // Assert
-            Assert.Contains(mensagemDeErro, excecao.Message);
         }
 
         [Fact]

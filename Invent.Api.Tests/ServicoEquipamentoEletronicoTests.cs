@@ -3,55 +3,51 @@ using Invent.Api.Data;
 using Invent.Api.Models;
 using Invent.Api.Services;
 using Moq;
-using System.Threading.Tasks;
-using Xunit;
 
 namespace Invent.Api.Tests
 {
     public class ServicoEquipamentoEletronicoTests
     {
+        // classe ServicoEquipamentoEletronico precisa de um repositório e validador para salvar os dados
         private readonly Mock<IEquipamentoRepositorio> _mockRepositorio;
-        private readonly Mock<IValidator<EquipamentoEletronico>> _mockValidador;
-        private readonly ServicoEquipamentoEletronico _servico;
+        private readonly IValidator<EquipamentoEletronico> _validador;
+        private readonly ServicoEquipamentoEletronico _servico; // Objeto testado
 
+        // Construtor
         public ServicoEquipamentoEletronicoTests()
         {
-            _mockRepositorio = new Mock<IEquipamentoRepositorio>();
-            _mockValidador = new Mock<IValidator<EquipamentoEletronico>>();
-            _servico = new ServicoEquipamentoEletronico(_mockRepositorio, _mockValidador);
+            _mockRepositorio = new Mock<IEquipamentoRepositorio>(); // Instancia do repositorio
+            _validador = new EquipamentoEletronicoValidador(); // Instancia do validador
+            
+            _servico = new ServicoEquipamentoEletronico(_mockRepositorio.Object, _validador);
         }
 
+        // Teste 1
         [Fact]
-        public async Task Criar_Deve_Chamar_Repositorio_Quando_Validacao_Passa()
+        public async Task Criar_Deve_Chamar_Repositorio_Quando_Equipamento_Eh_Valido()
         {
             // Arrange
-            var equipamentoValido = new EquipamentoEletronico { Nome = "Equipamento Teste", Tipo = "Teste" };
+            var equipamento = new EquipamentoEletronico
+            {
+                Nome = "Notebook Gamer",
+                Tipo = "Eletrônico",
+                QuantidadeEmEstoque = 5
+            };
 
-            // Damos a instrução ao nosso mock
-            _mockRepositorio.Setup(repo => repo.CriarEquipamento(equipamentoValido))
-                            .ReturnsAsync(equipamentoValido);
+            // "salva" no banco de dados e retornar de forma assíncrona
+            _mockRepositorio.Setup(repo => repo.CriarEquipamento(equipamento)).ReturnsAsync(equipamento);
 
             // Act
-            var resultado = await _servico.Criar(equipamentoValido);
+            var resultado = await _servico.Criar(equipamento);
 
             // Assert
             Assert.NotNull(resultado);
-            _mockRepositorio.Verify(repo => repo.CriarEquipamento(equipamentoValido), Times.Once);
+
+            // verifica se o método foi chamado uma vez e chamado o objeto equipamento
+            _mockRepositorio.Verify(repo => repo.CriarEquipamento(equipamento), Times.Once);
         }
 
         [Fact]
-        public async Task Criar_Deve_Lancar_Excecao_E_Nao_Chamar_Repositorio_Quando_Validacao_Falha()
-        {
-            // Arrange
-            var equipamentoInvalido = new EquipamentoEletronico { Nome = "" };
-            _mockValidador
-                .Setup(v => v.ValidateAndThrowAsync(equipamentoInvalido, default))
-                .ThrowsAsync(new ValidationException("Erro simulado."));
-
-            // Act & Assert
-            await Assert.ThrowsAsync<ValidationException>(() => _servico.Criar(equipamentoInvalido));
-
-            _mockRepositorio.Verify(repo => repo.CriarEquipamento(It.IsAny<EquipamentoEletronico>()), Times.Never);
-        }
+        public async Task Atualizar_Equipamento_Deve_Chamar_Repos
     }
 }

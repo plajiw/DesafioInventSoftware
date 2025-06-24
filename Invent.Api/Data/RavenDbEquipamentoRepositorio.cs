@@ -4,7 +4,7 @@ using Raven.Client.Documents.Session;
 
 namespace Invent.Api.Data
 {
-    public class RavenDbEquipamentoRepositorio
+    public class RavenDbEquipamentoRepositorio : IEquipamentoRepositorio
     {
         private readonly IDocumentStore _store;
 

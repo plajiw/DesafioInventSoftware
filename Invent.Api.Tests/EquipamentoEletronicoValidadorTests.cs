@@ -3,6 +3,7 @@ using Invent.Api.Models;
 
 namespace Invent.Api.Tests
 {
+    // Os testes precisam cobrir a menor unidade do propriedade
     public class EquipamentoEletronicoValidadorTests
     {
         // Instanciamos a classe de validação do FluentValidation
@@ -12,7 +13,7 @@ namespace Invent.Api.Tests
         // Incluir no service private readonly IValidator<EquipamentoEletronico> _validadorEquipamento;
 
         [Fact]
-        public void Deve_Validar_Com_Sucesso_Equipamento_Valido()
+        public void Nao_Deve_Lancar_Excecao_Null_Quando_Incluir_Equipamento_Valido()
         {
             // Arrange (Organizar)
             var equipamento = new EquipamentoEletronico
@@ -50,7 +51,46 @@ namespace Invent.Api.Tests
             // Assert
             Assert.Contains(erroObrigatorio, excecao.Message);
             Assert.Contains(erroTamanho, excecao.Message);
+        }
 
+        [Fact]
+        public void Deve_Falhar_Quando_Nome_Estiver_Menor_Que_Tres_Caracteres()
+        {
+            // Arrange
+            var equipamento = new EquipamentoEletronico
+            {
+                Nome = "Ab",
+                Tipo = "Teclado",
+                QuantidadeEmEstoque = 7
+            };
+
+            string erroTamanho = "O nome deve ter entre 3 e 100 caracteres.";
+
+            // Act
+            var excecao = Assert.Throws<ValidationException>(() => _validador.ValidateAndThrow(equipamento));
+
+            // Assert
+            Assert.Contains(erroTamanho, excecao.Message);
+        }
+
+        [Fact]
+        public void Deve_Falhar_Quando_Nome_Estiver_Null()
+        {
+            // Arrange
+            var equipamento = new EquipamentoEletronico
+            {
+                Nome = null,
+                Tipo = "Teclado",
+                QuantidadeEmEstoque = 7
+            };
+
+            string mensagemDeErro = "O nome do equipamento não pode ser nulo.";
+
+            // Act
+            var excecao = Assert.Throws<ValidationException>(() => _validador.ValidateAndThrow(equipamento));
+
+            // Assert
+            Assert.Contains(mensagemDeErro, excecao.Message);
         }
 
         [Fact]

@@ -10,10 +10,13 @@ namespace Invent.Api.Models
         {
             RuleFor(e => e.Nome)
                 .NotEmpty().WithMessage("O nome do equipamento é obrigatório.")
-                .Length(3, 100).WithMessage("O nome deve ter entre 3 e 100 caracteres.");
+                .Length(3, 100).WithMessage("O nome deve ter entre 3 e 100 caracteres.")
+                .NotNull().WithMessage("O nome do equipamento não pode ser nulo.");
+            // Validar null e separar validações
 
             RuleFor(e => e.Tipo)
                 .NotEmpty().WithMessage("O tipo do equipamento é obrigatório.");
+            // Validar null
 
             RuleFor(e => e.QuantidadeEmEstoque)
                 .GreaterThanOrEqualTo(0).WithMessage("A quantidade precisa ser maior ou igual a zero.")

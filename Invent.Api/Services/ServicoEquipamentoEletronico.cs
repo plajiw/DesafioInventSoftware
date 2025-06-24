@@ -10,7 +10,7 @@ namespace Invent.Api.Services
         // Classe para o repositório
         private readonly RavenDbEquipamentoRepositorio _repositorio;
 
-        // Classe para fazer as validações das regras de negócios
+        // Classe para fazer as validações das regras de negócios sobre o EquipamentoEletronico 
         private readonly IValidator<EquipamentoEletronico> _validador;
 
         // Construtor

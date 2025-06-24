@@ -1,13 +1,10 @@
 ﻿using Invent.Api.Models;
 using Raven.Client.Documents;
 using Raven.Client.Documents.Session;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Invent.Api.Data
 {
-    public class RavenDbEquipamentoRepositorio : IEquipamentoRepositorio
+    public class RavenDbEquipamentoRepositorio
     {
         private readonly IDocumentStore _store;
 
@@ -17,41 +14,40 @@ namespace Invent.Api.Data
         }
 
         // Criação de um equipamento
-        public async Task<EquipamentoEletronico> CriarEquipamento(EquipamentoEletronico equipamentoParaSalvar)
+        public async Task<EquipamentoEletronico> CriarEquipamento(EquipamentoEletronico equipamento)
         {
             using (IAsyncDocumentSession session = _store.OpenAsyncSession())
             {
-                equipamentoParaSalvar.Id = null; // O próprio Raven determina o Id
+                equipamento.Id = null; // O próprio Raven determina o Id
 
-                equipamentoParaSalvar.DataDeInclusao = DateTime.UtcNow;
+                equipamento.DataDeInclusao = DateTime.UtcNow;
 
-                await session.StoreAsync(equipamentoParaSalvar);
-
+                await session.StoreAsync(equipamento);
                 await session.SaveChangesAsync();
-
-                return equipamentoParaSalvar;
+                return equipamento;
             }
         }
 
-        // Atualiação do equipamento
-        public async Task<EquipamentoEletronico?> Atualizar(EquipamentoEletronico dadosDoEquipamento)
+        // Atualização do equipamento
+        public async Task<EquipamentoEletronico?> Atualizar(EquipamentoEletronico equipamento)
         {
             using (IAsyncDocumentSession session = _store.OpenAsyncSession())
             {
-                var equipamentoDoBanco = await session.LoadAsync<EquipamentoEletronico>(dadosDoEquipamento.Id);
+                // Carregamos o documento
+                var equipamentoDoBanco = await session.LoadAsync<EquipamentoEletronico>(equipamento.Id);
 
+                // Se o documento for nulo, retorna null
                 if (equipamentoDoBanco is null)
                 {
-                    return null; // Se não encontrou, retorna nulo.
-                }
+                    return null;
+                }
 
-                // Atualiza os dados do objeto que veio do banco.
-                equipamentoDoBanco.Nome = dadosDoEquipamento.Nome;
-                equipamentoDoBanco.Tipo = dadosDoEquipamento.Tipo;
-                equipamentoDoBanco.QuantidadeEmEstoque = dadosDoEquipamento.QuantidadeEmEstoque;
+                // Dados alterados
+                equipamentoDoBanco.Nome = equipamento.Nome;
+                equipamentoDoBanco.Tipo = equipamento.Tipo;
+                equipamentoDoBanco.QuantidadeEmEstoque = equipamento.QuantidadeEmEstoque;
 
-                // Salva as alterações.
-                await session.SaveChangesAsync();
+                await session.SaveChangesAsync();
                 return equipamentoDoBanco;
             }
         }
@@ -64,25 +60,29 @@ namespace Invent.Api.Data
             }
         }
 
-        // Busca um único equipamento pelo seu ID.
-        public async Task<EquipamentoEletronico?> ObterPorId(string idDoEquipamento)
+        public async Task<EquipamentoEletronico?> ObterPorId(string id)
         {
             using (IAsyncDocumentSession session = _store.OpenAsyncSession())
             {
-                // session.LoadAsync realiza a busca por ID
-                return await session.LoadAsync<EquipamentoEletronico>(idDoEquipamento);
+                return await session.LoadAsync<EquipamentoEletronico>(id);
             }
         }
 
-        // Deleta um equipamento pelo ID
-        public async Task<bool> RemoverPorId(string idDoEquipamento)
+        public async Task<bool> RemoverPorId(string id)
         {
             using (IAsyncDocumentSession session = _store.OpenAsyncSession())
             {
-                session.Delete(idDoEquipamento);
+                // Carregamos o documento
+                var documentoParaRemover = await session.LoadAsync<EquipamentoEletronico>(id);
 
-                // Efetiva a remoção no banco.
-                await session.SaveChangesAsync();
+                // Se o documento for nulo, retorna false
+                if (documentoParaRemover is null)
+                {
+                    return false;
+                }
+
+                // Se existe é removido
+                session.Delete(documentoParaRemover);
                 return true;
             }
         }

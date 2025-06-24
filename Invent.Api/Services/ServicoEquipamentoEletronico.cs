@@ -1,46 +1,44 @@
 ﻿using FluentValidation;
 using Invent.Api.Data;
 using Invent.Api.Models;
-using System.ComponentModel.DataAnnotations;
 
 namespace Invent.Api.Services
 {
-    // Implementamos a lógica de negócio
+    // Implementamos a lógica e validação de negócio
     public class ServicoEquipamentoEletronico
     {
-        private readonly IEquipamentoRepositorio _repositorio;
+        // Classe para o repositório
+        private readonly RavenDbEquipamentoRepositorio _repositorio;
 
-        // Classe para fazer as validações das regras de negócios
-        private readonly IValidator<EquipamentoEletronico> _validador;
+        // Classe para fazer as validações das regras de negócios
+        private readonly IValidator<EquipamentoEletronico> _validador;
 
         // Construtor
-        public ServicoEquipamentoEletronico(IEquipamentoRepositorio repositorio, IValidator<EquipamentoEletronico> validador)
+        public ServicoEquipamentoEletronico(RavenDbEquipamentoRepositorio repositorio, IValidator<EquipamentoEletronico> validador)
         {
             _repositorio = repositorio;
             _validador = validador;
         }
-
 
         // Criar Equipamento
         public async Task<EquipamentoEletronico> Criar(EquipamentoEletronico equipamentoParaCriar)
         {
             // Validação dos dados
             _validador.ValidateAndThrow(equipamentoParaCriar);
-
             return await _repositorio.CriarEquipamento(equipamentoParaCriar);
         }
 
         // Atualizar por Id
-        public async Task<EquipamentoEletronico?> Atualizar(string idDoEquipamento, EquipamentoEletronico dadosParaAtualizar)
+        public async Task<EquipamentoEletronico?> Atualizar(string id, EquipamentoEletronico dadosParaAtualizar)
         {
             // Validar se o Id existe
-            if (idDoEquipamento != dadosParaAtualizar.Id)
+            if (id != dadosParaAtualizar.Id)
             {
-                throw new FluentValidation.ValidationException("O Id da rota não corresponde ao ID no corpo da requisição.");
+                throw new ValidationException("O Id da rota não corresponde ao ID no corpo da requisição.");
             }
 
-            // Valida os dados do objeto
-            _validador.ValidateAndThrow(dadosParaAtualizar);
+            // Valida os dados do objeto
+            _validador.ValidateAndThrow(dadosParaAtualizar);
 
             // Registra no repositório
             return await _repositorio.Atualizar(dadosParaAtualizar);
@@ -58,12 +56,10 @@ namespace Invent.Api.Services
             return await _repositorio.ObterPorId(idDoEquipamento);
         }
 
-        // Remover
-        public async Task<bool> RemoverPorId(string id)
+        // Remover
+        public async Task<bool> RemoverPorId(string id)
         {
             return await _repositorio.RemoverPorId(id);
         }
-
-
     }
 }

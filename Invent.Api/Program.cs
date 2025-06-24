@@ -2,18 +2,18 @@
 using FluentValidation.AspNetCore;
 using Invent.Api.Data;
 using Invent.Api.Models;
+using Invent.Api.Services;
 using Raven.Client.Documents;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", builder =>
     {
-        builder.AllowAnyOrigin()  // Permite requisições de qualquer origem
-               .AllowAnyMethod()  // Permite qualquer método HTTP (GET, POST, PUT, DELETE)
-               .AllowAnyHeader(); // Permite que a requisição tenha qualquer cabeçalho
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
     });
 });
 
@@ -21,14 +21,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
 builder.Services.AddSingleton<IDocumentStore>(provider =>
 {
     var store = new DocumentStore
     {
-        // Porta para o RavenDB
         Urls = new[] { "http://127.0.0.1:8080" },
-
         Database = "InventSoftwareDB"
     };
 
@@ -40,9 +37,10 @@ builder.Services.AddSingleton<IDocumentStore>(provider =>
     return store;
 });
 
-builder.Services.AddScoped<IEquipamentoRepositorio, RavenDbEquipamentoRepositorio>();
+// Registro das classes que serão injetadas.
+builder.Services.AddScoped<RavenDbEquipamentoRepositorio>();
+builder.Services.AddScoped<ServicoEquipamentoEletronico>();
 
-// Registro do FluentValidation
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<EquipamentoEletronicoValidador>();
 
@@ -54,12 +52,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// app.UseHttpsRedirection();
-
 app.UseCors("AllowAll");
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();

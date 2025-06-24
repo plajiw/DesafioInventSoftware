@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using Invent.Api.Models;
-using Xunit;
 
 namespace Invent.Api.Tests
 {
@@ -8,8 +7,8 @@ namespace Invent.Api.Tests
     {
         // Instanciamos a classe de validação do FluentValidation
         private readonly EquipamentoEletronicoValidador _validador = new EquipamentoEletronicoValidador();
-        
-        
+
+
         // Incluir no service private readonly IValidator<EquipamentoEletronico> _validadorEquipamento;
 
         [Fact]
@@ -45,9 +44,10 @@ namespace Invent.Api.Tests
             string erroObrigatorio = "O nome do equipamento é obrigatório.";
             string erroTamanho = "O nome deve ter entre 3 e 100 caracteres.";
 
-            // Act e Assert
+            // Act
             var excecao = Assert.Throws<ValidationException>(() => _validador.ValidateAndThrow(equipamento));
 
+            // Assert
             Assert.Contains(erroObrigatorio, excecao.Message);
             Assert.Contains(erroTamanho, excecao.Message);
 
@@ -66,9 +66,10 @@ namespace Invent.Api.Tests
 
             string mensagemDeErro = "O tipo do equipamento é obrigatório.";
 
-            // Act e Assert
+            // Act
             var excecao = Assert.Throws<ValidationException>(() => _validador.ValidateAndThrow(equipamento));
 
+            // Assert
             Assert.Contains(mensagemDeErro, excecao.Message);
         }
 

@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Invent.Api.Models
+﻿namespace Invent.Api.Models
 {
     public class EquipamentoEletronico
     {

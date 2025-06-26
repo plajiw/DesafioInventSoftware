@@ -2,15 +2,100 @@
   controllerName="ui5.walkthrough.controller.EquipamentoLista"
   xmlns="sap.m"
   xmlns:mvc="sap.ui.core.mvc"
-
-  <List
-    headerText="Equipamentos"
+  xmlns:core="sap.ui.core"
+>
+  <Table
+  width="100%"
+    id="tabelaEquipamentos"
+    inset="false"
+    growing="true"
+    growingThreshold="20"
+    headerToolbar="{
+      path: ''
+    }"
+    items="{equipamentos>/}"
     noDataText="Nenhum equipamento encontrado."
-    items="{equipamentos>/}">
+  >
+    <!-- Barra de busca -->
+    <headerToolbar>
+      <Toolbar>
+        <Title text="Equipamentos Cadastrados" />
+        <ToolbarSpacer />
+        <SearchField
+          placeholder="Buscar"
+          search=".onSearch"
+          width="250px"
+        />
+      </Toolbar>
+    </headerToolbar>
 
-    <StandardListItem
-			title="{equipamentos>id}"/>
+    <!-- Colunas -->
+    <columns>
+      <Column>
+        <header>
+          <Text text="Id" />
+        </header>
+      </Column>
 
-  </List>
+      <Column>
+        <header>
+          <Text text="Nome" />
+        </header>
+      </Column>
 
+      <Column>
+        <header>
+          <Text text="Tipo" />
+        </header>
+      </Column>
+
+      <Column>
+        <header>
+          <Text text="Quantidade" />
+        </header>
+      </Column>
+
+      <Column>
+        <header>
+          <Text text="Data de inclusão" />
+        </header>
+      </Column>
+
+      <Column>
+        <header>
+          <Text text="Disponibilidade" />
+        </header>
+      </Column>
+    </columns>
+
+    <!-- Linhas -->
+    <items>
+      <ColumnListItem>
+        <cells>
+          <!-- ID -->
+          <Text text="{equipamentos>id}" />
+
+          <!-- Nome -->
+          <Text text="{equipamentos>nome}" />
+
+          <!-- Tipo -->
+          <Text text="{equipamentos>tipo}" />
+
+          <!-- Quantidade -->
+          <ObjectNumber number="{equipamentos>quantidadeEmEstoque}" />
+
+          <!-- Data -->
+          <Text text="{equipamentos>dataDeInclusao}"/>
+
+          <!-- Disponibilidade -->
+
+          <Text text="{equipamentos>temEstoque}"/>
+          <!-- <ObjectStatus text="{= ${equipamentos>temEstoque} ? 'true' : 'false' }"/> -->
+
+          <!-- <Text text="{equipamentos>temEstoque}" /> -->
+
+        </cells>
+      </ColumnListItem>
+    </items>
+  </Table>
 </mvc:View>

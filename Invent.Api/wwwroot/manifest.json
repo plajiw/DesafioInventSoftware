@@ -1,0 +1,74 @@
+{
+	"_version": "1.58.0",
+	"sap.app": {
+		"id": "ui5.gestaoequipamento",
+		"type": "application",
+		"i18n": {
+            "bundleUrl": "i18n/i18n.properties",
+            "supportedLocales": [],
+            "fallbackLocale": ""
+        },
+		"title": "{{TituloAplicacao}}",
+		"description": "{{Descricao}}"
+	},
+	"sap.ui": {
+		"technology": "UI5",
+		"deviceTypes": {
+			"desktop": true,
+			"tablet": true,
+			"phone": true
+		}
+	},
+	"sap.ui5": {
+		"dependencies": {
+			"minUI5Version": "1.108.0",
+			"libs": {
+				"sap.m": {},
+				"sap.ui.core": {}
+			}
+		},
+		"contentDensities": {
+			"compact": true,
+			"cozy": true
+		},
+		"models": {
+			"i18n": {
+				"type": "sap.ui.model.resource.ResourceModel",
+				"settings": {
+					"bundleUrl": "i18n/i18n.properties",
+					"supportedLocales": ["en", "pt-BR"],
+					"fallbackLocale": ""
+				}
+			}
+		},
+		"rootView": {
+			"viewName": "ui5.gestaoequipamento.view.App",
+			"type": "XML",
+			"async": true,
+			"id": "app"
+		},
+		"routing": {
+			"config": {
+				"routerClass": "sap.m.routing.Router",
+				"viewType": "XML",
+				"viewPath": "ui5.gestaoequipamento.view",
+				"controlId": "app",
+				"controlAggregation": "pages",
+				"async": true
+			},
+			"routes": [
+				{
+					"pattern": "",
+					"name": "principal",
+					"target": "targetPaginaPrincipal"
+				}
+			],
+			"targets": {
+				"targetPaginaPrincipal": {
+					"viewName": "PaginaPrincipal",
+					"viewId": ""
+				}
+			}
+		}
+	}
+}

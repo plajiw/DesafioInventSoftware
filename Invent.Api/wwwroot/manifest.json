@@ -1,48 +1,30 @@
 {
 	"_version": "1.58.0",
 	"sap.app": {
-		"id": "ui5.gestaoequipamento",
+		"id": "ui5.walkthrough",
 		"type": "application",
-		"i18n": {
-            "bundleUrl": "i18n/i18n.properties",
-            "supportedLocales": [],
-            "fallbackLocale": ""
-        },
-		"title": "{{TituloAplicacao}}",
-		"description": "{{Descricao}}"
+		"i18n": "i18n/i18n.properties",
+		"title": "{{appTitle}}",
+		"description": "{{appDescription}}"
 	},
 	"sap.ui": {
 		"technology": "UI5",
-		"deviceTypes": {
-			"desktop": true,
-			"tablet": true,
-			"phone": true
-		}
+		"deviceTypes": { "desktop": true, "tablet": true, "phone": true }
 	},
 	"sap.ui5": {
 		"dependencies": {
 			"minUI5Version": "1.108.0",
-			"libs": {
-				"sap.m": {},
-				"sap.ui.core": {}
-			}
+			"libs": { "sap.m": {}, "sap.ui.core": {} }
 		},
-		"contentDensities": {
-			"compact": true,
-			"cozy": true
-		},
+		"contentDensities": { "compact": true, "cozy": true },
 		"models": {
 			"i18n": {
 				"type": "sap.ui.model.resource.ResourceModel",
-				"settings": {
-					"bundleUrl": "i18n/i18n.properties",
-					"supportedLocales": ["en", "pt-BR"],
-					"fallbackLocale": ""
-				}
+				"settings": { "bundleName": "ui5.walkthrough.i18n.i18n" }
 			}
 		},
 		"rootView": {
-			"viewName": "ui5.gestaoequipamento.view.App",
+			"viewName": "ui5.walkthrough.view.App",
 			"type": "XML",
 			"async": true,
 			"id": "app"
@@ -51,22 +33,20 @@
 			"config": {
 				"routerClass": "sap.m.routing.Router",
 				"viewType": "XML",
-				"viewPath": "ui5.gestaoequipamento.view",
+				"viewPath": "ui5.walkthrough.view",
 				"controlId": "app",
 				"controlAggregation": "pages",
 				"async": true
 			},
-			"routes": [
-				{
-					"pattern": "",
-					"name": "principal",
-					"target": "targetPaginaPrincipal"
-				}
-			],
+			"routes": [{
+				"pattern": "",
+				"name": "overview",
+				"target": "overview"
+			}],
 			"targets": {
-				"targetPaginaPrincipal": {
-					"viewName": "PaginaPrincipal",
-					"viewId": ""
+				"overview": {
+					"viewName": "Overview",
+					"viewId": "overview"
 				}
 			}
 		}

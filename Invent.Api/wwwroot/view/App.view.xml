@@ -1,13 +1,15 @@
 <mvc:View
-  controllerName="ui5.gestaoequipamento.controller.App"
+  controllerName="ui5.walkthrough.controller.App"
   xmlns="sap.m"
   xmlns:mvc="sap.ui.core.mvc"
-  displayBlock="true"
->
-  <Shell>  
-    <App
-      class="myApp"
-      id="app"
-    />
-  </Shell>
+  displayBlock="true">
+  <App id="app">
+    <pages>
+      <Page title="{i18n>nomePagina}">
+        <content>
+          <mvc:XMLView viewName="ui5.walkthrough.view.EquipamentoLista"/>
+        </content>
+      </Page>
+    </pages>
+  </App>
 </mvc:View>

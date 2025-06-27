@@ -7,20 +7,27 @@
 ], (Controller, JSONModel, Filter, FilterOperator, formatter) => {
   "use strict";
 
+
+  // Constantes
+  const MODEL_NAME = "equipamentos";
+  const API_BASE_URL = "https://localhost:7178/api";
+  const ENDPOINT_EQUIPAMENTOS = "EquipamentosControlador";
+
   return Controller.extend("ui5.gestaoequipamento.controller.EquipamentoLista", {
-    formatter: formatter,  // disponibiliza formater
+    formatter: formatter,
 
     onInit: function () {
-      // cria o modelo vazio e já o associa à View
-      var oModel = new JSONModel([]);
-      this.getView().setModel(oModel, "equipamentos");
+      
+      // Criamos o modelo vazio e já o associa à View
+      const oModel = new JSONModel([]);
+      this.getView().setModel(oModel, MODEL_NAME);
 
-      // carrega dados do serviço
-      fetch("https://localhost:7178/api/EquipamentosControlador")
-        .then(res => res.json())
-        .then(data => this.getView().getModel("equipamentos").setData(data))
-        .catch(err => console.error(err));
-
+      // Monta a URL via template literal e carrega dados
+      const sUrl = `${API_BASE_URL}/${ENDPOINT_EQUIPAMENTOS}`;
+      fetch(sUrl)
+        .then(res  => res.json())
+        .then(data => this.getView().getModel(MODEL_NAME).setData(data))
+        .catch(err  => console.error("Erro ao carregar equipamentos:", err));
     },
 
     onSearch: function (oEvent) {

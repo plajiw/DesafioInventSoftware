@@ -1,12 +1,15 @@
 sap.ui.define([
 
-], function() {
+], function () {
   "use strict";
+
+  const formatTrue = "Sim";
+  const formatFalse = "Não";
 
   return {
 
-    formatarDisponibilidade: function(bDisponibilidade) {
-      return bDisponibilidade ? "Sim" : "Não";
+    formatarDisponibilidade: function (bDisponibilidade) {
+      return bDisponibilidade ? formatTrue : formatFalse;
     },
   };
 });

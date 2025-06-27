@@ -1,4 +1,4 @@
-﻿<mvc:View
+<mvc:View
   xmlns="sap.m"
   xmlns:mvc="sap.ui.core.mvc"
   xmlns:fmt="ui5.gestaoequipamento.util.formatter"

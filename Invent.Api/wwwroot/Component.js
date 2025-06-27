@@ -1,16 +1,21 @@
 sap.ui.define([
-	"sap/ui/core/UIComponent"
-], (UIComponent) => {
+	"sap/ui/core/UIComponent",
+	"sap/ui/model/json/JSONModel",
+	"sap/ui/Device"
+], (UIComponent, JSONModel, Device) => {
 	"use strict";
 
-	return UIComponent.extend("ui5.gestaoequipamento.Component", {
+	return UIComponent.extend("ui5.walkthrough.Component", {
 		metadata: { manifest: "json" },
-
-		init: function () {
+		init() {
 			UIComponent.prototype.init.apply(this, arguments);
 
-			this.getRouter().initialize();
+			this.setModel(new JSONModel(Device), "device");
+			this.getRouter && this.getRouter().initialize();
+		},
+		
+		getContentDensityClass() {
+			return Device.support.touch ? "sapUiSizeCozy" : "sapUiSizeCompact";
 		}
-
 	});
 });

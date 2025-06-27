@@ -1,101 +1,89 @@
 ﻿<mvc:View
-  controllerName="ui5.walkthrough.controller.EquipamentoLista"
   xmlns="sap.m"
   xmlns:mvc="sap.ui.core.mvc"
-  xmlns:core="sap.ui.core"
+  xmlns:fmt="ui5.gestaoequipamento.util.formatter"
+  controllerName="ui5.gestaoequipamento.controller.EquipamentoLista"
 >
-  <Table
-  width="100%"
-    id="tabelaEquipamentos"
-    inset="false"
-    growing="true"
-    growingThreshold="20"
-    headerToolbar="{
-      path: ''
-    }"
-    items="{equipamentos>/}"
-    noDataText="Nenhum equipamento encontrado."
+  <Panel
+    headerText="{i18n>tituloPainelListagem}"
+    class="sapUiSmallMarginTopBottom"
+    expandable="false"
+    expanded="true"
   >
-    <!-- Barra de busca -->
+    <!-- Barra de buscas -->
     <headerToolbar>
       <Toolbar>
-        <Title text="Equipamentos Cadastrados" />
-        <ToolbarSpacer />
+        <Title
+          text="{i18n>tituloPainelListagem}"
+          level="H2"
+        />
         <SearchField
-          placeholder="Buscar"
-          search=".onSearch"
+          id="searchEquipamentos"
           width="250px"
+          placeholder="{i18n>buscarPlaceholder}"
+          search=".onSearch"
         />
       </Toolbar>
     </headerToolbar>
 
-    <!-- Colunas -->
-    <columns>
-      <Column>
-        <header>
-          <Text text="Id" />
-        </header>
-      </Column>
+    <!-- Tabela de Equipamentos -->
+    <Table
+      id="tabelaEquipamentos"
+      items="{equipamentos>/}"
+      inset="false"
+      growing="true"
+      growingThreshold="20"
+      class="sapUiResponsiveMargin"
+    >
+      <columns>
+        <Column>
+          <Text text="{i18n>idTabela}" />
+        </Column>
+        <Column>
+          <Text text="{i18n>nomeTabela}" />
+        </Column>
+        <Column>
+          <Text text="{i18n>tipoTabela}" />
+        </Column>
+        <Column>
+          <Text text="{i18n>quantidadeTabela}" />
+        </Column>
+        <Column>
+          <Text text="{i18n>dataTabela}" />
+        </Column>
+        <Column>
+          <Text text="{i18n>disponibilidadeTabela}" />
+        </Column>
+      </columns>
 
-      <Column>
-        <header>
-          <Text text="Nome" />
-        </header>
-      </Column>
+      <items>
+        <ColumnListItem>
+          <cells>
+            <!-- ID -->
+            <Text text="{equipamentos>id}" />
 
-      <Column>
-        <header>
-          <Text text="Tipo" />
-        </header>
-      </Column>
+            <!-- Nome -->
+            <Text text="{equipamentos>nome}" />
 
-      <Column>
-        <header>
-          <Text text="Quantidade" />
-        </header>
-      </Column>
+            <!-- Tipo -->
+            <Text text="{equipamentos>tipo}" />
 
-      <Column>
-        <header>
-          <Text text="Data de inclusão" />
-        </header>
-      </Column>
+            <!-- Quantidade -->
+            <ObjectNumber
+              number="{equipamentos>quantidadeEmEstoque}"
+              unit="un"
+            />
 
-      <Column>
-        <header>
-          <Text text="Disponibilidade" />
-        </header>
-      </Column>
-    </columns>
+            <!-- Data -->
+            <Text text="{equipamentos>dataDeInclusao}"/>
 
-    <!-- Linhas -->
-    <items>
-      <ColumnListItem>
-        <cells>
-          <!-- ID -->
-          <Text text="{equipamentos>id}" />
-
-          <!-- Nome -->
-          <Text text="{equipamentos>nome}" />
-
-          <!-- Tipo -->
-          <Text text="{equipamentos>tipo}" />
-
-          <!-- Quantidade -->
-          <ObjectNumber number="{equipamentos>quantidadeEmEstoque}" />
-
-          <!-- Data -->
-          <Text text="{equipamentos>dataDeInclusao}"/>
-
-          <!-- Disponibilidade -->
-
-          <Text text="{equipamentos>temEstoque}"/>
-          <!-- <ObjectStatus text="{= ${equipamentos>temEstoque} ? 'true' : 'false' }"/> -->
-
-          <!-- <Text text="{equipamentos>temEstoque}" /> -->
-
-        </cells>
-      </ColumnListItem>
-    </items>
-  </Table>
+            <!-- Disponibilidade -->
+            <Text
+              text="{ path: 'equipamentos>temEstoque', formatter: '.formatter.formatarDisponibilidade' }"
+            />
+          </cells>
+        </ColumnListItem>
+      </items>
+    </Table>
+  </Panel>
 </mvc:View>

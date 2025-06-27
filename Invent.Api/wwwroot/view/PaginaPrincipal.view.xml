@@ -10,7 +10,7 @@
         class="sapUiContentPadding"
     >
         <content>
-            <!-- <mvc:XMLView viewName="ui5.gestaoequipamento.view.EquipamentoCadastro" /> -->
+            <mvc:XMLView viewName="ui5.gestaoequipamento.view.EquipamentoCadastro" />
             <mvc:XMLView viewName="ui5.gestaoequipamento.view.EquipamentoLista" />
         </content>
     </Page>

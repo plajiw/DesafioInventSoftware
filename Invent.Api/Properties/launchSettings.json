@@ -9,7 +9,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "launchUrl": ""
+      "launchUrl": "swagger"
     }
   },
   "httpss": {
@@ -20,6 +20,6 @@
     "environmentVariables": {
       "ASPNETCORE_ENVIRONMENT": "Development"
     },
-    "launchUrl": ""
+    "launchUrl": "swagger"
   }
 }

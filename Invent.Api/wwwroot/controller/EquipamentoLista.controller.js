@@ -7,18 +7,29 @@
 ], (Controller, JSONModel, Filter, FilterOperator, formatter) => {
   "use strict";
 
+  // Constantes
+
+  const NOME_MODELO_EQUIPAMENTOS = "equipamentos";
+  const PROPRIEDADE_FILTRO_NOME = "nome";
+  const URL_BASE_API = "https://localhost:7178/api";
+  const NOME_CONTROLADOR_EQUIPAMENTOS = "EquipamentosControlador";
+  const ENDPOINT_EQUIPAMENTOS = `${URL_BASE_API}/${NOME_CONTROLADOR_EQUIPAMENTOS}`;
+
   return Controller.extend("ui5.gestaoequipamento.controller.EquipamentoLista", {
-    formatter: formatter,  // disponibiliza formater
+    formatter: formatter,
 
     onInit: function () {
-      // cria o modelo vazio e já o associa à View
-      var oModel = new JSONModel([]);
-      this.getView().setModel(oModel, "equipamentos");
 
-      // carrega dados do serviço
-      fetch("https://localhost:7178/api/EquipamentosControlador")
+      // Criamos um modelo JSON vazio
+      var oModel = new JSONModel([]);
+
+      // Vincula o modelo à View associada
+      this.getView().setModel(oModel, NOME_MODELO_EQUIPAMENTOS);
+
+      // Carrega dados do serviço e popula o modelo
+      fetch(ENDPOINT_EQUIPAMENTOS)
         .then(res => res.json())
-        .then(data => this.getView().getModel("equipamentos").setData(data))
+        .then(data => this.getView().getModel(NOME_MODELO_EQUIPAMENTOS).setData(data))
         .catch(err => console.error(err));
 
     },
@@ -30,7 +41,7 @@
       // Monta o array de filtros
       const aFilters = [];
       if (sQuery) {
-        const oFilter = new Filter("nome", FilterOperator.Contains, sQuery);
+        const oFilter = new Filter(PROPRIEDADE_FILTRO_NOME, FilterOperator.Contains, sQuery);
         aFilters.push(oFilter);
       }
 

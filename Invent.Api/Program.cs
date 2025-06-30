@@ -1,6 +1,7 @@
 ﻿using FluentValidation.AspNetCore;
 using Invent.Api;
 using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.Extensions.FileProviders;
 using Raven.Client.Documents;
 
 var builder = WebApplication.CreateBuilder(args);

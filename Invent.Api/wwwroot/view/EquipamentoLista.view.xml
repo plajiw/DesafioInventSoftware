@@ -1,7 +1,6 @@
 <mvc:View
   xmlns="sap.m"
   xmlns:mvc="sap.ui.core.mvc"
-  xmlns:fmt="ui5.gestaoequipamento.util.formatter"
   controllerName="ui5.gestaoequipamento.controller.EquipamentoLista"
 >
   <Panel
@@ -11,6 +10,7 @@
     expanded="true"
   >
     <!-- Barra de buscas -->
+
     <headerToolbar>
       <Toolbar>
         <Title
@@ -75,12 +75,14 @@
             />
 
             <!-- Data -->
-            <Text text="{equipamentos>dataDeInclusao}"/>
+            <!-- <Text text="{equipamentos>dataDeInclusao}"/> -->
+            <Text text="{ path: 'equipamentos>dataDeInclusao', formatter: '.formatter.formatarData'}"/>
 
             <!-- Disponibilidade -->
             <Text
               text="{ path: 'equipamentos>temEstoque', formatter: '.formatter.formatarDisponibilidade' }"
             />
+
           </cells>
         </ColumnListItem>
       </items>

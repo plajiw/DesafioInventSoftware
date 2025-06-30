@@ -4,12 +4,15 @@
 		"id": "ui5.gestaoequipamento",
 		"type": "application",
 		"i18n": {
-            "bundleUrl": "i18n/i18n.properties",
-            "supportedLocales": [],
-            "fallbackLocale": ""
-        },
-		"title": "{{TituloAplicacao}}",
-		"description": "{{Descricao}}"
+			"bundleUrl": "i18n/i18n.properties",
+			"supportedLocales": [
+				"pt_BR",
+				"en"
+			],
+			"fallbackLocale": "pt_BR"
+		},
+		"title": "{{tituloAplicacao}}",
+		"description": "{{descricaoAplicacao}}"
 	},
 	"sap.ui": {
 		"technology": "UI5",
@@ -35,9 +38,12 @@
 			"i18n": {
 				"type": "sap.ui.model.resource.ResourceModel",
 				"settings": {
-					"bundleUrl": "i18n/i18n.properties",
-					"supportedLocales": ["pt-BR", "en"],
-					"fallbackLocale": ""
+					"bundleName": "ui5.gestaoequipamento.i18n.i18n",
+					"supportedLocales": [
+						"pt_BR",
+						"en"
+					],
+					"fallbackLocale": "pt_BR"
 				}
 			}
 		},

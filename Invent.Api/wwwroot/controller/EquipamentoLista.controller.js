@@ -47,6 +47,12 @@
 
       // Aplica o filtro
       oBinding.filter(aFilters);
+    },
+
+    // Função para trocar página
+    paraCadastro: function()
+    {
+      this.getOwnerComponent().getRouter().navTo("cadastroEquipamento");
     }
   });
 });

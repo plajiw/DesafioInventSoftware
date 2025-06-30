@@ -1,16 +1,27 @@
 <mvc:View
+  xmlns:tnt="sap.tnt"
   xmlns="sap.m"
   xmlns:mvc="sap.ui.core.mvc"
   controllerName="ui5.gestaoequipamento.controller.EquipamentoLista"
 >
+  <!-- Página de Cadastro -->
+  <Panel>
+    <Button
+      icon="sap-icon://add"
+      text="{i18n>botaoCadastrar}"
+      press=".paraCadastro"
+      type="Emphasized"
+    />
+  </Panel>
+
   <Panel
+    id="panelListaEquipamentos"
     headerText="{i18n>tituloPainelListagem}"
     class="sapUiSmallMarginTopBottom"
     expandable="false"
     expanded="true"
   >
     <!-- Barra de buscas -->
-
     <headerToolbar>
       <Toolbar>
         <Title
@@ -75,14 +86,14 @@
             />
 
             <!-- Data -->
-            <!-- <Text text="{equipamentos>dataDeInclusao}"/> -->
-            <Text text="{ path: 'equipamentos>dataDeInclusao', formatter: '.formatter.formatarData'}"/>
+            <Text
+              text="{ path: 'equipamentos>dataDeInclusao', formatter: '.formatter.formatarData'}"
+            />
 
             <!-- Disponibilidade -->
             <Text
               text="{ path: 'equipamentos>temEstoque', formatter: '.formatter.formatarDisponibilidade' }"
             />
-
           </cells>
         </ColumnListItem>
       </items>

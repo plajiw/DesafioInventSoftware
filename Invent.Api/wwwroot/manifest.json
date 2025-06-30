@@ -65,14 +65,21 @@
 			"routes": [
 				{
 					"pattern": "",
-					"name": "principal",
-					"target": "targetPaginaPrincipal"
+					"name": "listaEquipamento",
+					"target": "targetListaEquipamentos"
+				},
+				{
+					"pattern": "cadastro",
+					"name": "cadastroEquipamento",
+					"target": "targetCadastroEquipamentos"
 				}
 			],
 			"targets": {
-				"targetPaginaPrincipal": {
-					"viewName": "PaginaPrincipal",
-					"viewId": ""
+				"targetListaEquipamentos": {
+					"viewName": "EquipamentoLista"
+				},
+				"targetCadastroEquipamentos": {
+					"viewName": "EquipamentoCadastro"
 				}
 			}
 		}

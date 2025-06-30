@@ -15,7 +15,6 @@ sap.ui.define([], () => {
 	return {
 
 		formatarDisponibilidade: function (bEstaDisponivel) {
-
 			// Acessamos a View e obtemos o "i18n"
 			const oModeloI18n = this.getView().getModel(NOME_MODELO_I18N);
 			const oResourceBundle = oModeloI18n.getResourceBundle();
@@ -29,7 +28,6 @@ sap.ui.define([], () => {
 
 		// Função para formatar a data
 		formatarData: function (sData) {
-
 			// Converte a string no modelo ISO 8601 para um objeto Date
 			const oDate = new Date(sData);
 

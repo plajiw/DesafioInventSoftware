@@ -7,13 +7,13 @@ namespace Invent.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class EquipamentosControlador : ControllerBase
+    public class EquipamentosController : ControllerBase
     {
         // referência para o serviço, responsável pelas regras de negócio, validação e banco de dados
         private readonly ServicoEquipamentoEletronico _servicoEquipamento;
 
         // Construtor com a injeção de dependência do serviço
-        public EquipamentosControlador(ServicoEquipamentoEletronico servicoEquipamento)
+        public EquipamentosController(ServicoEquipamentoEletronico servicoEquipamento)
         {
             _servicoEquipamento = servicoEquipamento;
         }

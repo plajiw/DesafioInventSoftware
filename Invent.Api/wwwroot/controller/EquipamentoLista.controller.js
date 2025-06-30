@@ -31,7 +31,6 @@
         .then(res => res.json())
         .then(data => this.getView().getModel(NOME_MODELO_EQUIPAMENTOS).setData(data))
         .catch(err => console.error(err));
-
     },
 
     // Função de busca

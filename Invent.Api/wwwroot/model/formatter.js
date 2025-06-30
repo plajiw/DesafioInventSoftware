@@ -30,14 +30,21 @@ sap.ui.define([], () => {
 			const oDate = new Date(sData);
 
 			// Extrai cada parte da data e acrescente o '0'
-			const dia = String(oDate.getDate()).padStart(2, '0');
-			const mes = String(oDate.getMonth() + INCREMENTA_MES).padStart(2, '0'); // Incrementa, pois por padrão js inicia no mês "0"
+			const quantidadeMaxima = 2;
+			const valorDePreenchimento = '0';
+			const dia = String(oDate.getDate()).padStart(quantidadeMaxima, valorDePreenchimento);
+			const mes = String(this._obterMesComIncremento(oDate.getMonth())).padStart(quantidadeMaxima, valorDePreenchimento); // Incrementa, pois por padrão js inicia no mês "0"
 			const ano = oDate.getFullYear();
 			const hora = oDate.getHours();
 			const minuto = oDate.getMinutes();
 
 			// Junta tudo em uma única string
 			return `${dia}/${mes}/${ano} ${hora}:${minuto}`;
+		},
+
+		_obterMesComIncremento: function(mes) {
+			const incremento = 1;
+			return mes + incremento;
 		}
 	};
 });

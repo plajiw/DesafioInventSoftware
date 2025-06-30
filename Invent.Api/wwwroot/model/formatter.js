@@ -6,13 +6,13 @@ sap.ui.define([], () => {
 	const NOME_MODELO_I18N = "i18n";
 	const CHAVE_I18N_SIM = "textoDisponibilidadeSim";
 	const CHAVE_I18N_NAO = "textoDisponibilidadeNao";
-  const INCREMENTA_MES = 1;
+	const INCREMENTA_MES = 1;
 
 	return {
 
 		formatarDisponibilidade: function (bEstaDisponivel) {
 
-      // Acessamos a View e obtemos o "i18n"
+			// Acessamos a View e obtemos o "i18n"
 			const oModeloI18n = this.getView().getModel(NOME_MODELO_I18N);
 			const oResourceBundle = oModeloI18n.getResourceBundle();
 
@@ -23,14 +23,14 @@ sap.ui.define([], () => {
 			return oResourceBundle.getText(sChaveDeTraducao);
 		},
 
-    // Função para formatar a data
+		// Função para formatar a data
 		formatarData: function (sData) {
 
 			// Converte a string no modelo ISO 8601 para um objeto Date
 			const oDate = new Date(sData);
 
 			// Extrai cada parte da data e acrescente o '0'
-			const dia = String(oDate.getDate()).padStart(2, '0'); 
+			const dia = String(oDate.getDate()).padStart(2, '0');
 			const mes = String(oDate.getMonth() + INCREMENTA_MES).padStart(2, '0'); // Incrementa, pois por padrão js inicia no mês "0"
 			const ano = oDate.getFullYear();
 			const hora = oDate.getHours();

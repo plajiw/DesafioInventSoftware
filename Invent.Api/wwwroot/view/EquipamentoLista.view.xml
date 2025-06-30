@@ -80,9 +80,7 @@
 
             <!-- Disponibilidade -->
             <Text
-              text="{= ${equipamentos>temEstoque} 
-                      ? ${i18n>sim} 
-                      : ${i18n>nao} }"
+              text="{ path: 'equipamentos>temEstoque', formatter: '.formatter.formatarDisponibilidade' }"
             />
 
           </cells>

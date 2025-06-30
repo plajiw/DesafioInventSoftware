@@ -8,26 +8,51 @@
         showNavButton="true"
         navButtonPress=".onNavBack"
     >
-    <content>
-            <!-- Entrada para Nome -->
-            <Label text="Nome do Equipamento" labelFor="inputNomeEquipamento"/>
-            <Input id="inputNomeEquipamento" required="true" />
+        <headerContent>
+            <Button
+                type="Emphasized"
+                text="{i18n>botaoSalvar}"
+                icon="sap-icon://save"
+                press=".onSalvar"
+            />
+            <Button
+                type="Reject"
+                text="{i18n>botaoCancelar}"
+                icon="sap-icon://cancel"
+                press=".onNavBack"
+            />
+        </headerContent>
+        <content>
+            <VBox class="sapUiSmallMargin">
+                <Label
+                    text="{i18n>labelNome}"
+                    required="true"
+                />
+                <Input
+                    id="inputNomeEquipamento"
+                    placeholder="{i18n>placeholderNome}"
+                />
 
-            <!-- Entrada para Tipo -->
-            <Label text="Tipo do Equipamento" labelFor="inputTipoEquipamento"/>
-            <Input id="inputTipoEquipamento" required="true" />
+                <Label
+                    text="{i18n>labelTipo}"
+                    required="true"
+                    class="sapUiSmallMarginTop"
+                />
+                <Input
+                    id="inputTipoEquipamento"
+                    placeholder="{i18n>placeholderTipo}"
+                />
 
-            <!-- Entrada para Tipo -->
-            <Label text="Quantidade em Estoque" labelFor="inputQuantidadeEquipamento"/>
-            <Input id="inputQuantidadeEquipamento" type="Number"/>
+                <Label
+                    text="{i18n>labelQuantidade}"
+                    class="sapUiSmallMarginTop"
+                />
+                <Input
+                    id="inputQuantidadeEquipamento"
+                    type="Number"
+                    placeholder="{i18n>placeholderQuantidade}"
+                />
+            </VBox>
         </content>
-
-        <Button 
-            text="Cadastrar"
-        ></Button>
-
-        <Button 
-            text="Cancelar" type="Default"
-        ></Button>
     </Page>
 </mvc:View>

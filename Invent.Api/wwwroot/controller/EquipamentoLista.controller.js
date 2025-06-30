@@ -15,6 +15,8 @@
   const NOME_CONTROLADOR_EQUIPAMENTOS = "Equipamentos";
   const ENDPOINT_EQUIPAMENTOS = `${URL_BASE_API}/${NOME_CONTROLADOR_EQUIPAMENTOS}`;
   const ID_TABELA_EQUIPAMENTOS = "tabelaEquipamentos";
+  const PROPRIEDADE_ID = "id";
+  const ROTA_PARA_DETALHES = "detalhe";
 
   return Controller.extend("ui5.gestaoequipamento.controller.EquipamentoLista", {
     formatter: formatter,
@@ -50,9 +52,24 @@
     },
 
     // Função para trocar página
-    paraCadastro: function()
-    {
+    paraCadastro: function () {
       this.getOwnerComponent().getRouter().navTo("cadastroEquipamento");
+    },
+
+    // Função para acessar os detalhes do equipamento
+    itemPressionado: function (oEvento) {
+      // Obtem o item da lista que foi pressionado
+      const oItemPressionado = oEvento.getSource();
+
+      // Obtem o contexto do binding
+      const oContexto = oItemPressionado.getBindingContext(NOME_MODELO_EQUIPAMENTOS);
+
+      // A partir do contexto, extrai a propriedade "id" do equipamento
+      const idDoEquipamento = oContexto.getProperty(PROPRIEDADE_ID);
+      const oRoteador = this.getOwnerComponent().getRouter();
+
+      // Navega para a rota "detalhe", passando o ID como um parâmetro na URL
+      oRoteador.navTo(ROTA_PARA_DETALHES, {id: idDoEquipamento});
     }
   });
 });

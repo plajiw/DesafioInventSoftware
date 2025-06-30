@@ -49,7 +49,7 @@
                 </columns>
 
                 <items>
-                    <ColumnListItem type="Navigation">
+                    <ColumnListItem type="Navigation" press=".itemPressionado">
                         <cells>
                             <!-- ID DO EQUIPAMENTO -->
                             <Text text="{equipamentos>id}" />

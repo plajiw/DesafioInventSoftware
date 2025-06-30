@@ -72,6 +72,11 @@
 					"pattern": "cadastro",
 					"name": "cadastroEquipamento",
 					"target": "targetCadastroEquipamentos"
+				},
+				{
+					"pattern": "equipamento/{id}",
+					"name" : "detalhe",
+					"target": "targetCadastroEquipamentos"
 				}
 			],
 			"targets": {

@@ -6,7 +6,13 @@ sap.ui.define([
     return Controller.extend("ui5.gestaoequipamento.controller.EquipamentoCadastro", {
         
         onNavBack: function () {
+            // Retornar página
             this.getOwnerComponent().getRouter().navTo("listaEquipamento");
+        },
+
+        onSalvar: function ()
+        {
+            
         }
 
     });

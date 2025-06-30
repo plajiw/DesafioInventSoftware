@@ -8,8 +8,26 @@
         showNavButton="true"
         navButtonPress=".onNavBack"
     >
-        <content>
-            <Text text="Página de Cadastro de Equipamentos" />
+    <content>
+            <!-- Entrada para Nome -->
+            <Label text="Nome do Equipamento" labelFor="inputNomeEquipamento"/>
+            <Input id="inputNomeEquipamento" required="true" />
+
+            <!-- Entrada para Tipo -->
+            <Label text="Tipo do Equipamento" labelFor="inputTipoEquipamento"/>
+            <Input id="inputTipoEquipamento" required="true" />
+
+            <!-- Entrada para Tipo -->
+            <Label text="Quantidade em Estoque" labelFor="inputQuantidadeEquipamento"/>
+            <Input id="inputQuantidadeEquipamento" type="Number"/>
         </content>
+
+        <Button 
+            text="Cadastrar"
+        ></Button>
+
+        <Button 
+            text="Cancelar" type="Default"
+        ></Button>
     </Page>
 </mvc:View>

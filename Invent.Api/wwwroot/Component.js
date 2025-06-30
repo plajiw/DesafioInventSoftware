@@ -6,6 +6,7 @@ sap.ui.define([
 
   // Constante
   const I18N_MODELO = "i18n";
+  const CHAVE_TITULO_APP = "tituloAplicacao";
 
   // Componente herda as funcionalidades do UIComponent 
   return UIComponent.extend("ui5.gestaoequipamento.Component", {
@@ -20,7 +21,7 @@ sap.ui.define([
       const i18nModel = this.getModel(I18N_MODELO);
       const resourceBundle = i18nModel.getResourceBundle();
 
-      const appTitle = resourceBundle.getText("tituloAplicacao");
+      const appTitle = resourceBundle.getText(CHAVE_TITULO_APP);
 
       // Define o título da aba do navegador
       document.title = appTitle;

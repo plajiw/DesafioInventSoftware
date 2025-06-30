@@ -6,10 +6,10 @@
 		"i18n": {
 			"bundleUrl": "i18n/i18n.properties",
 			"supportedLocales": [
-				"pt_BR",
+				"",
 				"en"
 			],
-			"fallbackLocale": "pt_BR"
+			"fallbackLocale": ""
 		},
 		"title": "{{tituloAplicacao}}",
 		"description": "{{descricaoAplicacao}}"
@@ -40,10 +40,10 @@
 				"settings": {
 					"bundleName": "ui5.gestaoequipamento.i18n.i18n",
 					"supportedLocales": [
-						"pt_BR",
+						"",
 						"en"
 					],
-					"fallbackLocale": "pt_BR"
+					"fallbackLocale": ""
 				}
 			}
 		},

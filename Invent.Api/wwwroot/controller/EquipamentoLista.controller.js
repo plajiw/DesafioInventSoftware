@@ -12,14 +12,14 @@
   const NOME_MODELO_EQUIPAMENTOS = "equipamentos";
   const PROPRIEDADE_FILTRO_NOME = "nome";
   const URL_BASE_API = "https://localhost:7178/api";
-  const NOME_CONTROLADOR_EQUIPAMENTOS = "EquipamentosControlador";
+  const NOME_CONTROLADOR_EQUIPAMENTOS = "Equipamentos";
   const ENDPOINT_EQUIPAMENTOS = `${URL_BASE_API}/${NOME_CONTROLADOR_EQUIPAMENTOS}`;
+  const ID_TABELA_EQUIPAMENTOS = "tabelaEquipamentos";
 
   return Controller.extend("ui5.gestaoequipamento.controller.EquipamentoLista", {
     formatter: formatter,
 
     onInit: function () {
-
       // Criamos um modelo JSON vazio
       var oModel = new JSONModel([]);
 
@@ -36,7 +36,7 @@
     // Função de busca
     onSearch: function (oEvent) {
       const sQuery = oEvent.getParameter("query");
-      const oBinding = this.byId("tabelaEquipamentos").getBinding("items");
+      const oBinding = this.byId(ID_TABELA_EQUIPAMENTOS).getBinding("items");
 
       // Monta o array de filtros
       const aFilters = [];
@@ -48,6 +48,5 @@
       // Aplica o filtro
       oBinding.filter(aFilters);
     }
-
   });
 });

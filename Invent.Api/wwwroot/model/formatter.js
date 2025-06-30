@@ -6,7 +6,11 @@ sap.ui.define([], () => {
 	const NOME_MODELO_I18N = "i18n";
 	const CHAVE_I18N_SIM = "textoDisponibilidadeSim";
 	const CHAVE_I18N_NAO = "textoDisponibilidadeNao";
-	const INCREMENTA_MES = 1;
+
+	function _obterMesComIncremento(mes) {
+		const incremento = 1;
+		return mes + incremento;
+	}
 
 	return {
 
@@ -33,7 +37,7 @@ sap.ui.define([], () => {
 			const quantidadeMaxima = 2;
 			const valorDePreenchimento = '0';
 			const dia = String(oDate.getDate()).padStart(quantidadeMaxima, valorDePreenchimento);
-			const mes = String(this._obterMesComIncremento(oDate.getMonth())).padStart(quantidadeMaxima, valorDePreenchimento); // Incrementa, pois por padrão js inicia no mês "0"
+			const mes = String(_obterMesComIncremento(oDate.getMonth())).padStart(quantidadeMaxima, valorDePreenchimento); // Incrementa, pois por padrão js inicia no mês "0"
 			const ano = oDate.getFullYear();
 			const hora = oDate.getHours();
 			const minuto = oDate.getMinutes();
@@ -41,10 +45,5 @@ sap.ui.define([], () => {
 			// Junta tudo em uma única string
 			return `${dia}/${mes}/${ano} ${hora}:${minuto}`;
 		},
-
-		_obterMesComIncremento: function(mes) {
-			const incremento = 1;
-			return mes + incremento;
-		}
 	};
 });

@@ -58,7 +58,7 @@ sap.ui.define([
                 })
                 .then(dadosCriados => {
 
-                    // 1. Navegamos para a tela de detalhes
+                    // Navegamos para a tela de detalhes
                     this._navegarParaDetalhes(dadosCriados.id);
 
                     // Exibição do MessageToast

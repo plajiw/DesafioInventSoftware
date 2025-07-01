@@ -1,51 +1,49 @@
-<mvc:View
-    xmlns="sap.m"
+<mvc:View xmlns="sap.m"
     xmlns:mvc="sap.ui.core.mvc"
-    xmlns:core="sap.ui.core"
-    controllerName="ui5.gestaoequipamento.controller.EquipamentoLista"
->
-    <Page title="{i18n>tituloAplicacao}">
+    xmlns:core="sap.ui.core" controllerName="ui5.gestaoequipamento.controller.EquipamentoLista">
+    
+    <!-- Página -->
+    <Page title="{i18n>tituloPaginaLista}" titleAlignment="Center">
+
+        <!-- Header -->
         <headerContent>
-            <Button
-                icon="sap-icon://add"
-                text="{i18n>botaoCadastrar}"
-                press=".paraCadastro"
-                type="Emphasized"
-            />
+            <Button icon="sap-icon://add" text="{i18n>botaoCadastrar}" press=".paraCadastro" type="Emphasized" />
         </headerContent>
 
+        <!-- Conteúdo-->
         <content>
-            <Table
-                id="tabelaEquipamentos"
-                items="{equipamentos>/}"
-                growing="true"
-                growingThreshold="20"
-            >
+            <Table id="tabelaEquipamentos" items="{equipamentos>/}" growing="true" growingThreshold="20">
                 <headerToolbar>
                     <Toolbar>
-                        <Title text="{i18n>tituloPainelListagem}" level="H2"/>
                         <ToolbarSpacer />
-                        <SearchField
-                            id="searchEquipamentos"
-                            width="40%"
-                            placeholder="{i18n>buscarPlaceholder}"
-                            search=".onSearch"
-                        />
+                        <SearchField id="searchEquipamentos" width="40%" placeholder="{i18n>buscarPlaceholder}" search=".onSearch" />
                     </Toolbar>
                 </headerToolbar>
 
                 <columns>
-                    <Column width="25%"><Text text="{i18n>idTabela}" /></Column>
+                    <Column width="25%">
+                        <Text text="{i18n>idTabela}" />
+                    </Column>
 
-                    <Column><Text text="{i18n>nomeTabela}" /></Column>
+                    <Column>
+                        <Text text="{i18n>nomeTabela}" />
+                    </Column>
 
-                    <Column><Text text="{i18n>tipoTabela}" /></Column>
+                    <Column>
+                        <Text text="{i18n>tipoTabela}" />
+                    </Column>
 
-                    <Column hAlign="Center"><Text text="{i18n>quantidadeTabela}" /></Column>
+                    <Column hAlign="Center">
+                        <Text text="{i18n>quantidadeTabela}" />
+                    </Column>
 
-                    <Column><Text text="{i18n>dataTabela}" /></Column>
+                    <Column>
+                        <Text text="{i18n>dataTabela}" />
+                    </Column>
 
-                    <Column hAlign="Center"><Text text="{i18n>disponibilidadeTabela}" /></Column>
+                    <Column hAlign="Center">
+                        <Text text="{i18n>disponibilidadeTabela}" />
+                    </Column>
                 </columns>
 
                 <items>
@@ -67,10 +65,7 @@
                             <Text text="{path: 'equipamentos>dataDeInclusao', formatter: '.formatter.formatarData'}"/>
 
                             <!-- DISPONIBILIDADE DO EQUIPAMENTO -->
-                            <ObjectStatus
-                                text="{path: 'equipamentos>temEstoque', formatter: '.formatter.formatarDisponibilidade'}"
-                                state="{= ${equipamentos>temEstoque} ? 'Success' : 'Error' }"
-                            />
+                            <ObjectStatus text="{path: 'equipamentos>temEstoque', formatter: '.formatter.formatarDisponibilidade'}" state="{= ${equipamentos>temEstoque} ? 'Success' : 'Error' }" />
                         </cells>
                     </ColumnListItem>
                 </items>

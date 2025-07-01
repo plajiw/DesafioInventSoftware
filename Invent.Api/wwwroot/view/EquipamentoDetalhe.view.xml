@@ -1,20 +1,14 @@
-<mvc:View
-    xmlns="sap.m"
-    xmlns:mvc="sap.ui.core.mvc"
-    controllerName="ui5.gestaoequipamento.controller.EquipamentoCadastro"
->
-    <Page
-        title="{i18n>tituloPaginaCadastro}"
-        showNavButton="true"
-        navButtonPress=".aoClicarEmVoltar"
-    >
+<mvc:View xmlns="sap.m"
+    xmlns:mvc="sap.ui.core.mvc" controllerName="ui5.gestaoequipamento.controller.EquipamentoDetalhe">
+    
+    <!-- Página -->
+    <Page title="{i18n>tituloPaginaDetalhes}" titleAlignment="Center" showNavButton="true" navButtonPress=".aoClicarEmVoltar">
+        
+        <!-- Header -->
         <headerContent>
-            <Button
-                type="Emphasized"
-                text="{i18n>botaoEditar}"
-                icon="sap-icon://edit"
-                press=".aoClicarEmEditar"
-            />
+            <Button type="Emphasized" text="{i18n>botaoEditar}" icon="sap-icon://edit" press=".aoClicarEmEditar" />
         </headerContent>
+
+        <!-- Conteúdo -->
     </Page>
 </mvc:View>

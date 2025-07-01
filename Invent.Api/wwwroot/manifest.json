@@ -79,7 +79,7 @@
 					"target": "targetDetalhesEquipamentos"
 				},
 				{
-					"pattern": "equipamento/{id}",
+					"pattern": "equipamento/{id}/editar",
 					"name" : "editarEquipamento",
 					"target" : "targetCadastroEquipamentos"
 				}

@@ -36,7 +36,7 @@
     },
 
     // Função de busca
-    onSearch: function (oEvent) {
+    aoBuscar: function (oEvent) {
       const sQuery = oEvent.getParameter("query");
       const oBinding = this.byId(ID_TABELA_EQUIPAMENTOS).getBinding("items");
 
@@ -57,7 +57,7 @@
     },
 
     // Função para acessar os detalhes do equipamento
-    aoClicarEmEquipamento: function (oEvento) {
+    aoPressionarItem: function (oEvento) {
       // Obtem o item da lista que foi pressionado
       const oItemPressionado = oEvento.getSource();
 
@@ -68,7 +68,7 @@
       const idDoEquipamento = oContexto.getProperty(PROPRIEDADE_ID);
       const oRoteador = this.getOwnerComponent().getRouter();
 
-      // Navega para a rota "detalhe", passando o ID como um parâmetro na URL
+      // Navegar para a rota, passando o ID como parâmetro
       oRoteador.navTo(ROTA_PARA_DETALHES, { id: idDoEquipamento });
     }
   });

@@ -5,13 +5,6 @@ sap.ui.define([
 
     return {
         validar: function (view) {
-            
-            // Obter os inputs por id
-            
-
-            // Limpa os alertas de erro
-            
-
             // Coleta os valores para enviar ao validador
             let dadosParaValidar = {
                 nome: view.byId("inputNome").getValue(),

@@ -18,15 +18,15 @@
                 <f:content>
                     <!-- Campo Nome -->
                     <Label text="{i18n>labelNome}" required="true" />
-                    <Input id="inputNome" value="{equipamento>/nome}" placeholder="{i18n>placeholderNome}" />
+                    <Input id="inputNome" value="{equipamento>/nome}" placeholder="{i18n>placeholderNome}" liveChange=".aoDigitar"/>
 
                     <!-- Campo Tipo -->
                     <Label text="{i18n>labelTipo}" required="true" />
-                    <Input id="inputTipo" value="{equipamento>/tipo}" placeholder="{i18n>placeholderTipo}" />
+                    <Input id="inputTipo" value="{equipamento>/tipo}" placeholder="{i18n>placeholderTipo}" liveChange=".aoDigitar" />
 
                     <!-- Campo Quantidade -->
                     <Label text="{i18n>labelQuantidade}" />
-                    <Input id="inputQuantidade" value="{equipamento>/quantidadeEmEstoque}" type="Number" placeholder="{i18n>placeholderQuantidade}" />
+                    <Input id="inputQuantidade" value="{equipamento>/quantidadeEmEstoque}" type="Number" placeholder="{i18n>placeholderQuantidade} " liveChange=".aoDigitar" />
                 </f:content>
             </f:SimpleForm>
         </content>

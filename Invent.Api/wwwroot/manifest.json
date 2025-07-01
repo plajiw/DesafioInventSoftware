@@ -75,8 +75,13 @@
 				},
 				{
 					"pattern": "equipamento/{id}",
-					"name" : "detalhe",
-					"target": "targetCadastroEquipamentos"
+					"name" : "detalheEquipamento",
+					"target": "targetDetalhesEquipamentos"
+				},
+				{
+					"pattern": "equipamento/{id}",
+					"name" : "editarEquipamento",
+					"target" : "targetCadastroEquipamentos"
 				}
 			],
 			"targets": {
@@ -85,6 +90,9 @@
 				},
 				"targetCadastroEquipamentos": {
 					"viewName": "EquipamentoCadastro"
+				},
+				"targetDetalhesEquipamentos" : {
+					"viewName" : "EquipamentoDetalhe"
 				}
 			}
 		}

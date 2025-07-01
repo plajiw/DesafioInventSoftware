@@ -5,7 +5,7 @@ sap.ui.define([
 
       const ROTA_PARA_LISTA = "listaEquipamento";
 
-    return Controller.extend("ui5.gestaoequipamento.controller.EquipamentoCadastro", {
+    return Controller.extend("ui5.gestaoequipamento.controller.EquipamentoDetalhe", {
         
         // Retornar página
         aoClicarEmVoltar: function () {
@@ -13,7 +13,7 @@ sap.ui.define([
         },
 
         // Salvar
-        aoClicarEmSalvar: function ()
+        aoClicarEmEditar: function ()
         {
             
         }

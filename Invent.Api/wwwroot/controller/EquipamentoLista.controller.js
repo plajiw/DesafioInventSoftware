@@ -16,7 +16,7 @@
   const ENDPOINT_EQUIPAMENTOS = `${URL_BASE_API}/${NOME_CONTROLADOR_EQUIPAMENTOS}`;
   const ID_TABELA_EQUIPAMENTOS = "tabelaEquipamentos";
   const PROPRIEDADE_ID = "id";
-  const ROTA_PARA_DETALHES = "detalhe";
+  const ROTA_PARA_DETALHES = "detalheEquipamento";
 
   return Controller.extend("ui5.gestaoequipamento.controller.EquipamentoLista", {
     formatter: formatter,
@@ -57,7 +57,7 @@
     },
 
     // Função para acessar os detalhes do equipamento
-    itemPressionado: function (oEvento) {
+    aoClicarEmEquipamento: function (oEvento) {
       // Obtem o item da lista que foi pressionado
       const oItemPressionado = oEvento.getSource();
 
@@ -69,7 +69,7 @@
       const oRoteador = this.getOwnerComponent().getRouter();
 
       // Navega para a rota "detalhe", passando o ID como um parâmetro na URL
-      oRoteador.navTo(ROTA_PARA_DETALHES, {id: idDoEquipamento});
+      oRoteador.navTo(ROTA_PARA_DETALHES, { id: idDoEquipamento });
     }
   });
 });

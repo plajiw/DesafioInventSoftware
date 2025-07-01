@@ -1,27 +1,34 @@
-<mvc:View xmlns="sap.m"
-    xmlns:mvc="sap.ui.core.mvc" controllerName="ui5.gestaoequipamento.controller.EquipamentoCadastro">
+<mvc:View controllerName="ui5.gestaoequipamento.controller.EquipamentoCadastro"
+    xmlns="sap.m"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:f="sap.ui.layout.form">
 
     <!-- Página -->
-    <Page title="{i18n>tituloPaginaCadastro}" titleAlignment="Center" showNavButton="true" navButtonPress=".aoClicarEmVoltar">
+    <Page id="paginaCadastro" title="{i18n>tituloPaginaCadastro}" showNavButton="true" navButtonPress=".aoClicarEmVoltar">
 
         <!-- Header -->
         <headerContent>
-            <Button type="Emphasized" text="{i18n>botaoSalvar}" icon="sap-icon://save" press=".onSalvar" />
-            <Button type="Reject" text="{i18n>botaoCancelar}" icon="sap-icon://cancel" press=".aoClicarEmVoltar" />
+            <Button type="Emphasized" text="{i18n>botaoSalvar}" icon="sap-icon://save" press=".aoClicarEmSalvar" />
+            <Button text="{i18n>botaoCancelar}" press=".aoClicarEmVoltar" />
         </headerContent>
 
         <!-- Conteúdo -->
         <content>
-            <VBox class="sapUiSmallMargin">
-                <Label text="{i18n>labelNome}" required="true" />
-                <Input id="inputNomeEquipamento" placeholder="{i18n>placeholderNome}" />
+            <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanXL="3" labelSpanL="3" labelSpanM="12" labelSpanS="12" emptySpanXL="4" emptySpanL="4" emptySpanM="0" emptySpanS="0" columnsXL="1" columnsL="1" columnsM="1" class="sapUiResponsiveMargin sapUiMediumMarginTop">
+                <f:content>
+                    <!-- Campo Nome -->
+                    <Label text="{i18n>labelNome}" required="true" />
+                    <Input value="{equipamento>/nome}" placeholder="{i18n>placeholderNome}" />
 
-                <Label text="{i18n>labelTipo}" required="true" class="sapUiSmallMarginTop" />
-                <Input id="inputTipoEquipamento" placeholder="{i18n>placeholderTipo}" />
+                    <!-- Campo Tipo -->
+                    <Label text="{i18n>labelTipo}" required="true" />
+                    <Input value="{equipamento>/tipo}" placeholder="{i18n>placeholderTipo}" />
 
-                <Label text="{i18n>labelQuantidade}" class="sapUiSmallMarginTop" />
-                <Input id="inputQuantidadeEquipamento" type="Number" placeholder="{i18n>placeholderQuantidade}" />
-            </VBox>
+                    <!-- Campo Quantidade -->
+                    <Label text="{i18n>labelQuantidade}" />
+                    <Input value="{equipamento>/quantidadeEmEstoque}" type="Number" placeholder="{i18n>placeholderQuantidade}" />
+                </f:content>
+            </f:SimpleForm>
         </content>
     </Page>
 </mvc:View>

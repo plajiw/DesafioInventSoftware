@@ -1,7 +1,6 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller",
-    "sap/ui/model/json/JSONModel",
-     "../model/formatter"
+    "sap/ui/model/json/JSONModel"
 ], (Controller, JSONModel) => {
     "use strict";
 
@@ -13,7 +12,7 @@ sap.ui.define([
     const ENDPOINT_EQUIPAMENTOS = "api/Equipamentos";
 
     return Controller.extend("ui5.gestaoequipamento.controller.EquipamentoDetalhe", {
-        formatter: formatter,
+
         onInit: function () {
             // Cria um modelo JSON local para armazenar os dados do equipamento detalhado
             const oModelo = new JSONModel();

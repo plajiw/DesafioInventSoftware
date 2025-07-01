@@ -1,80 +1,112 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/ui/model/json/JSONModel",
-    "sap/m/MessageToast"
-], (Controller, JSONModel, MessageToast) => {
+    "sap/m/MessageBox",
+    "sap/ui/core/ValueState",
+], (Controller, JSONModel, MessageBox, ValueState) => {
     "use strict";
 
-    // Constantes
-    const NOME_MODELO_FORMULARIO = "equipamento";
-    const ROTA_LISTA = "listaEquipamento";
-    const ROTA_CADASTRO = "cadastroEquipamento";
-    const ROTA_DETALHE = "detalheEquipamento";
-    const NOME_CONTROLADOR_EQUIPAMENTOS = "Equipamentos";
+    const NOME_MODELO_FORMULARIO = "equipamento"
     const URL_BASE_API = "https://localhost:7178/api";
+    const NOME_CONTROLADOR_EQUIPAMENTOS = "Equipamentos";
     const ENDPOINT_EQUIPAMENTOS = `${URL_BASE_API}/${NOME_CONTROLADOR_EQUIPAMENTOS}`;
+    const ROTA_DETALHES = "detalheEquipamento";
+    const ROTA_LISTA = "listaEquipamento";
 
     return Controller.extend("ui5.gestaoequipamento.controller.EquipamentoCadastro", {
         onInit: function () {
-            // Cria um JSONModel vazio {} e associa à view como “equipamento”
+            // Cria um JSONModel vazio {} e o associa à view como "equipamento"
             this.getView().setModel(new JSONModel({}), NOME_MODELO_FORMULARIO);
-
-            // Obtem o roteador para poder reagir à rota de cadastro (Component.js -> manifest.json)
-            const oRoteador = this.getOwnerComponent().getRouter();
-            oRoteador.getRoute(ROTA_CADASTRO).attachPatternMatched(this._aoCoincidirRotaCadastro, this);
         },
 
+        // Função para salvar o equipamento
         aoClicarEmSalvar: function () {
-            const oDadosDoFormulario = this.getView().getModel(NOME_MODELO_FORMULARIO).getData();
+            // Obtemos a referência da View
+            let view = this.getView();
 
-            // Lógica de Cadastro (POST)
-            this._criarEquipamentoNaAPI(oDadosDoFormulario);
-        },
+            // Obter os inputs por id
+            let inputNome = view.byId("inputNome");
+            let inputTipo = view.byId("inputTipo");
+            let inputQuantidade = view.byId("inputQuantidade");
 
-        // Retornar para a página de lista
-        aoClicarEmVoltar: function () {
-            this.getOwnerComponent().getRouter().navTo(ROTA_LISTA);
-        },
+            // Limpa os alertas de erro
+            inputNome.setValueState(ValueState.None);
+            inputTipo.setValueState(ValueState.None);
+            inputQuantidade.setValueState(ValueState.None);
 
-        // Função para reinicializar o estado do formulário
-        // Assim que acessar "cadastroEquipamento" o método é disparado
-        // Refinimos o modelo "equipamento" para um objeto vazio 
-        _aoCoincidirRotaCadastro: function () {
-            this.getView().getModel(NOME_MODELO_FORMULARIO).setData({});
-        },
+            let formularioValido = true;
+            let mensagensErro = [];
 
-        // Função privada para encapsular a lógica de chamada da API para criar
-        _criarEquipamentoNaAPI: function (oDadosDoEquipamento) {
-            fetch(ENDPOINT_EQUIPAMENTOS, {
+            // Validação do nome
+            let nome = inputNome.getValue();
+            if (!nome || nome.length < 3 || nome.length > 100) {
+                formularioValido = false;
+                inputNome.setValueState(ValueState.Error);
+                mensagensErro.push("O nome é obrigatório e deve ter entre 3 e 100 caracteres.");
+
+            }
+
+            // Validação do tipo
+            let tipo = inputTipo.getValue();
+            if (!tipo || tipo.length < 3 || tipo.length > 100) {
+                formularioValido = false;
+                inputTipo.setValueState(ValueState.Error);
+                mensagensErro.push("O campo Tipo é obrigatório.");
+            }
+
+            // Validação da Quantidade
+            let quantidade = inputQuantidade.getValue();
+            if (quantidade === "") {
+                formularioValido = false;
+                inputQuantidade.setValueState(ValueState.Error);
+                mensagensErro.push("O campo Quantidade é obrigatório.");
+
+            } else if (isNaN(quantidade) || Number(quantidade) < 0 || Number(quantidade) >= 10000) {
+                formularioValido = false;
+                inputQuantidade.setValueState(ValueState.Error);
+                mensagensErro.push("A quantidade deve ser um número entre 0 e 10.000.");
+            }
+
+            // Retorno das validações
+            if (!formularioValido) {
+
+                let mensagemFinal = mensagensErro.join("\n");
+                MessageBox.error(mensagemFinal);
+                return; // Interrompe a função aqui
+            }
+
+            // A partir da View, obtemos o modelo de dados
+            let modeloDoFormulario = view.getModel(NOME_MODELO_FORMULARIO);
+            // Extrai os dados preenchidos
+            let dadosParaSalvar = modeloDoFormulario.getData();
+
+            // Configurações da requisição POST
+            const opcoesDaRequisicao = {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(oDadosDoEquipamento)
-            })
-                .then(resposta => {
-                    if (!resposta.ok) {
-                        return resposta.json().then(erro => { throw new Error(erro.message || "Falha ao criar equipamento") });
-                    }
-                    return resposta.json();
-                })
-                .then(dadosCriados => {
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(dadosParaSalvar)
+            };
 
-                    // Navegamos para a tela de detalhes
-                    this._navegarParaDetalhes(dadosCriados.id);
-
-                    // Exibição do MessageToast
-                    setTimeout(() => {
-                        MessageToast.show("Equipamento cadastrado com sucesso!");
-                    }, 300);
+            // Fetch para realizar o PUT
+            fetch(ENDPOINT_EQUIPAMENTOS, opcoesDaRequisicao)
+                .then(resposta => resposta.json()) // Converte o json em objeto JS
+                .then(equipamentoCriado => {
+                    // Vamos encaminhar para a tela de "detalhes" usando o novo id
+                    let novoId = equipamentoCriado.id;
+                    let componenteRota = this.getOwnerComponent().getRouter();
+                    componenteRota.navTo(ROTA_DETALHES, { id: novoId })
                 })
                 .catch(erro => {
-                    MessageBox.error(`Ocorreu um erro ao tentar cadastrar: ${erro.message}`);
-                });
+                    console.error("Ocorreu um erro ao salvar o equipamento: ", erro);
+                })
         },
 
-        // Função privada para encapsular a lógica de navegação
-        _navegarParaDetalhes: function (sId) {
-            const oRoteador = this.getOwnerComponent().getRouter();
-            oRoteador.navTo(ROTA_DETALHE, { id: sId }, true); // O 'true' limpa o histórico
-        }
+        // Função para retornar até a página de lista
+        aoClicarEmVoltar: function () {
+            let componenteRota = this.getOwnerComponent().getRouter();
+            componenteRota.navTo(ROTA_LISTA)
+        },
     });
 });

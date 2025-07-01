@@ -51,12 +51,10 @@ namespace Invent.Api.Controllers
                 var equipamentoCriado = await _servicoEquipamento.Criar(dadosDoNovoEquipamento);
                 return CreatedAtAction(nameof(ObterPorId), new { id = equipamentoCriado.Id }, equipamentoCriado);
             }
-
             catch (ValidationException ex)
             {
                 return BadRequest(ex.Errors);
             }
-
             catch (Exception ex)
             {
                 return StatusCode(500, $"Um erro interno ocorreu: {ex.Message}");

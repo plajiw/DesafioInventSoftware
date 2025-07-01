@@ -18,15 +18,15 @@
                 <f:content>
                     <!-- Campo Nome -->
                     <Label text="{i18n>labelNome}" required="true" />
-                    <Input value="{equipamento>/nome}" placeholder="{i18n>placeholderNome}" />
+                    <Input id="inputNome" value="{equipamento>/nome}" placeholder="{i18n>placeholderNome}" />
 
                     <!-- Campo Tipo -->
                     <Label text="{i18n>labelTipo}" required="true" />
-                    <Input value="{equipamento>/tipo}" placeholder="{i18n>placeholderTipo}" />
+                    <Input id="inputTipo" value="{equipamento>/tipo}" placeholder="{i18n>placeholderTipo}" />
 
                     <!-- Campo Quantidade -->
                     <Label text="{i18n>labelQuantidade}" />
-                    <Input value="{equipamento>/quantidadeEmEstoque}" type="Number" placeholder="{i18n>placeholderQuantidade}" />
+                    <Input id="inputQuantidade" value="{equipamento>/quantidadeEmEstoque}" type="Number" placeholder="{i18n>placeholderQuantidade}" />
                 </f:content>
             </f:SimpleForm>
         </content>

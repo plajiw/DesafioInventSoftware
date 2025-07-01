@@ -3,7 +3,9 @@ sap.ui.define([
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageBox",
     "sap/ui/core/ValueState",
-], (Controller, JSONModel, MessageBox, ValueState) => {
+    "../services/Validador",
+    "sap/ui/core/UIComponent"
+], (Controller, JSONModel, MessageBox, ValueState, Validador, UIComponent) => {
     "use strict";
 
     const NOME_MODELO_FORMULARIO = "equipamento"
@@ -17,6 +19,20 @@ sap.ui.define([
         onInit: function () {
             // Cria um JSONModel vazio {} e o associa à view como "equipamento"
             this.getView().setModel(new JSONModel({}), NOME_MODELO_FORMULARIO);
+            UIComponent.getRouterFor(this).getRoute("cadastroEquipamento").attachPatternMatched(() => {this._iniciarCamposLimpos(), this});
+        },
+        
+        _iniciarCamposLimpos: function()
+        {
+            let view = this.getView();
+
+            let inputNome = view.byId("inputNome");
+            let inputTipo = view.byId("inputTipo");
+            let inputQuantidade = view.byId("inputQuantidade");
+
+            inputNome.setValueState(ValueState.None);
+            inputTipo.setValueState(ValueState.None);
+            inputQuantidade.setValueState(ValueState.None);
         },
 
         // Função para salvar o equipamento
@@ -24,55 +40,26 @@ sap.ui.define([
             // Obtemos a referência da View
             let view = this.getView();
 
-            // Obter os inputs por id
-            let inputNome = view.byId("inputNome");
-            let inputTipo = view.byId("inputTipo");
-            let inputQuantidade = view.byId("inputQuantidade");
+            // Chamamos nosso serviço para fazer a validação
+            let resultadoValidacao = Validador.validar(view);
 
-            // Limpa os alertas de erro
-            inputNome.setValueState(ValueState.None);
-            inputTipo.setValueState(ValueState.None);
-            inputQuantidade.setValueState(ValueState.None);
-
-            let formularioValido = true;
-            let mensagensErro = [];
-
-            // Validação do nome
-            let nome = inputNome.getValue();
-            if (!nome || nome.length < 3 || nome.length > 100) {
-                formularioValido = false;
-                inputNome.setValueState(ValueState.Error);
-                mensagensErro.push("O nome é obrigatório e deve ter entre 3 e 100 caracteres.");
-
-            }
-
-            // Validação do tipo
-            let tipo = inputTipo.getValue();
-            if (!tipo || tipo.length < 3 || tipo.length > 100) {
-                formularioValido = false;
-                inputTipo.setValueState(ValueState.Error);
-                mensagensErro.push("O campo Tipo é obrigatório.");
-            }
-
-            // Validação da Quantidade
-            let quantidade = inputQuantidade.getValue();
-            if (quantidade === "") {
-                formularioValido = false;
-                inputQuantidade.setValueState(ValueState.Error);
-                mensagensErro.push("O campo Quantidade é obrigatório.");
-
-            } else if (isNaN(quantidade) || Number(quantidade) < 0 || Number(quantidade) >= 10000) {
-                formularioValido = false;
-                inputQuantidade.setValueState(ValueState.Error);
-                mensagensErro.push("A quantidade deve ser um número entre 0 e 10.000.");
-            }
-
-            // Retorno das validações
-            if (!formularioValido) {
-
-                let mensagemFinal = mensagensErro.join("\n");
+            // Verificamos o resultado
+            if (resultadoValidacao.ehInvalido) {
+                let mensagemFinal = resultadoValidacao.mensagens.join("\n");
                 MessageBox.error(mensagemFinal);
-                return; // Interrompe a função aqui
+
+                // Lógica para colorir apenas os campos que deram erro
+                if (resultadoValidacao.mensagens.some(msg => msg.includes("nome"))) {
+                    view.byId("inputNome").setValueState(ValueState.Error);
+                }
+                if (resultadoValidacao.mensagens.some(msg => msg.includes("Tipo"))) {
+                    view.byId("inputTipo").setValueState(ValueState.Error);
+                }
+                if (resultadoValidacao.mensagens.some(msg => msg.includes("Quantidade"))) {
+                    view.byId("inputQuantidade").setValueState(ValueState.Error);
+                }
+                
+                return; // Interrompe a função
             }
 
             // A partir da View, obtemos o modelo de dados
@@ -89,7 +76,7 @@ sap.ui.define([
                 body: JSON.stringify(dadosParaSalvar)
             };
 
-            // Fetch para realizar o PUT
+            // Fetch para realizar o POST
             fetch(ENDPOINT_EQUIPAMENTOS, opcoesDaRequisicao)
                 .then(resposta => resposta.json()) // Converte o json em objeto JS
                 .then(equipamentoCriado => {
@@ -106,7 +93,7 @@ sap.ui.define([
         // Função para retornar até a página de lista
         aoClicarEmVoltar: function () {
             let componenteRota = this.getOwnerComponent().getRouter();
-            componenteRota.navTo(ROTA_LISTA)
+            componenteRota.navTo(ROTA_LISTA, {}, true);
         },
     });
 });

@@ -53,7 +53,7 @@
 
     // Função para trocar página
     paraCadastro: function () {
-      this.getOwnerComponent().getRouter().navTo("cadastroEquipamento");
+      this.getOwnerComponent().getRouter().navTo("cadastroEquipamento", {}, true);
     },
 
     // Função para acessar os detalhes do equipamento

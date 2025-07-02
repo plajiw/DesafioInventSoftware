@@ -4,7 +4,7 @@
     xmlns:f="sap.ui.layout.form">
 
     <!-- Página -->
-    <Page id="paginaCadastro" title="{i18n>tituloPaginaCadastro}" showNavButton="true" navButtonPress=".aoClicarEmVoltar">
+    <Page id="paginaCadastro" title="{i18n>tituloPaginaCadastro}" titleAlignment="Center" showNavButton="true" navButtonPress=".aoClicarEmVoltar">
 
         <!-- Header -->
         <headerContent>

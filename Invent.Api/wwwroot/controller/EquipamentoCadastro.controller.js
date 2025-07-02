@@ -1,67 +1,119 @@
 sap.ui.define([
-    "sap/ui/core/mvc/Controller", // Controlador base do SAPUI5
-    "sap/ui/model/json/JSONModel", // Modelo para os dados do formulário
-    "sap/m/MessageBox", // Para mostrar mensagens de erro
-    "sap/ui/core/ValueState", // Para estados visuais dos campos
-    "../services/Validador", // Serviço de validação
-    "sap/ui/core/UIComponent" // Para gerenciar rotas
-], (Controller, JSONModel, MessageBox, ValueState, Validador, UIComponent) => {
+    "sap/ui/core/mvc/Controller",
+    "sap/ui/model/json/JSONModel",
+    "sap/m/MessageBox",
+    "sap/ui/core/library",
+    "../services/Validador",
+    "sap/ui/core/UIComponent"
+], (Controller, JSONModel, MessageBox, coreLibrary, Validador, UIComponent) => {
     "use strict";
 
-    // Constantes simples
-    const MODELO_FORMULARIO = "equipamento"; // Nome do modelo do formulário
-    const URL_API = "https://localhost:7178/api/Equipamentos"; // URL da API
-    const ROTA_CADASTRO = "cadastroEquipamento"; // Rota da tela de cadastro
-    const ROTA_LISTA = "listaEquipamento"; // Rota da tela de lista
-    const ROTA_DETALHES = "detalheEquipamento"; // Rota da tela de detalhes
+    // Constantes
+    const MODELO_FORMULARIO = "equipamento";
+    const URL_API = "/api/Equipamentos";
+    const ROTA_CADASTRO = "cadastroEquipamento";
+    const ROTA_LISTA = "listaEquipamento";
+    const ROTA_DETALHES = "detalheEquipamento";
+    const ROTA_EDITAR = "editarEquipamento";
+    const ID_INPUT_NOME = "inputNome";
+    const ID_INPUT_TIPO = "inputTipo";
+    const ID_INPUT_QUANTIDADE = "inputQuantidade";
+
+    // Acessamos o ValueState a partir da biblioteca
+    const ValueState = coreLibrary.ValueState;
 
     return Controller.extend("ui5.gestaoequipamento.controller.EquipamentoCadastro", {
         // Inicializa a tela de cadastro
         onInit: function () {
             // Cria um modelo vazio para o formulário
             this.getView().setModel(new JSONModel({}), MODELO_FORMULARIO);
-            // Limpa os campos ao entrar na tela
+            // Obtém o roteador
             const roteador = UIComponent.getRouterFor(this);
-            roteador.getRoute(ROTA_CADASTRO).attachPatternMatched(this._limparCampos, this);
+            // Configura os gatilhos de acesso para as rotas de cadastro e editar
+            roteador.getRoute(ROTA_CADASTRO).attachPatternMatched(this._aoAcessarRota, this);
+            roteador.getRoute(ROTA_EDITAR).attachPatternMatched(this._aoAcessarRota, this);
+        },
+
+        // Executa automaticamente pelo roteador ao entrar na rota
+        _aoAcessarRota: function (oEvento) {
+            // Limpa os campos
+            this._limparCampos();
+
+            console.log("_aoAcessarRota: oEvento", oEvento);
+
+            // Se for edição, carrega os dados
+            let nomeRota = oEvento.getParameter("name");
+            console.log("Nome da rota:", nomeRota);
+
+            if (nomeRota === ROTA_EDITAR) {
+                // Id extraido pelos parâmetros da URL e passa para a função de GET
+                let id = oEvento.getParameter("arguments").id;
+                this._carregarDadosEdicao(id);
+            }
         },
 
         // Limpa os campos do formulário
         _limparCampos: function () {
-            const view = this.getView();
-            const modelo = view.getModel(MODELO_FORMULARIO);
+            let view = this.getView();
+            let modelo = view.getModel(MODELO_FORMULARIO);
             // Reseta os dados do modelo
             modelo.setData({ nome: "", tipo: "", quantidadeEmEstoque: "" });
             // Remove estados de erro dos campos
-            view.byId("inputNome").setValueState(ValueState.None);
-            view.byId("inputTipo").setValueState(ValueState.None);
-            view.byId("inputQuantidade").setValueState(ValueState.None);
+            view.byId(ID_INPUT_NOME).setValueState(ValueState.None);
+            view.byId(ID_INPUT_TIPO).setValueState(ValueState.None);
+            view.byId(ID_INPUT_QUANTIDADE).setValueState(ValueState.None);
+        },
+
+        // Obtém informações do equipamento para edição
+        _carregarDadosEdicao: function (id) {
+            console.log("Editando equipamento com ID:", id);
+            let modelo = this.getView().getModel(MODELO_FORMULARIO);
+            // GET por ID
+            fetch(`${URL_API}/${id}`)
+                .then(res => res.json())
+                .then(dados => {
+                    modelo.setData(dados);
+                    console.log("Dados obtidos:", dados);
+                });
         },
 
         // Valida enquanto o usuário digita
         aoDigitar: function (oEvento) {
+            const SEPARADOR = "--";
+            const POSICAO_APOS_PREFIXO = 1;
+
             // Obter o campo que disparou o evento
             let campoEntrada = oEvento.getSource();
             console.log("Campo disparado:", campoEntrada);
 
-            // Obter o nome do campo no XML (ex.: inputNome)
-            let nomeCampo = campoEntrada.getId().split("--")[1];
+            // Obtem o ID do elemento que disparou o evento
+            let idDoCampo = campoEntrada.getId();
+
+            // Remove o prefixo para obter o ID
+            let nomeCampo = idDoCampo.split(SEPARADOR)[POSICAO_APOS_PREFIXO];
             console.log("Nome do campo no XML:", nomeCampo);
 
             // Define a chave do modelo manualmente
             let chaveModelo;
-            if (nomeCampo === "inputNome") {
-                chaveModelo = "nome";
+
+            switch (nomeCampo) {
+                case (ID_INPUT_NOME):
+                    chaveModelo = "nome";
+                    break;
+
+                case (ID_INPUT_TIPO):
+                    chaveModelo = "tipo";
+                    break;
+
+                case (ID_INPUT_QUANTIDADE):
+                    chaveModelo = "quantidadeEmEstoque";
+                    break;
+
+                default:
+                    console.log("Campo não reconhecido, validação ignorada");
+                    break;
             }
-            else if (nomeCampo === "inputTipo") {
-                chaveModelo = "tipo";
-            }
-            else if (nomeCampo === "inputQuantidade") {
-                chaveModelo = "quantidadeEmEstoque";
-            }
-            else {
-                console.log("Campo não reconhecido, validação ignorada");
-                return;
-            }
+
             console.log("Chave do modelo:", chaveModelo);
 
             // Obtém o valor digitado do evento
@@ -99,9 +151,14 @@ sap.ui.define([
             let dados = modelo.getData();
             console.log("Dados enviados à API:", dados);
 
+            // Define o método e URL
+            let id = dados.id;
+            let metodo = id ? "PUT" : "POST";
+            let url = id ? `${URL_API}/${id}` : URL_API;
+
             // Envia os dados para a API
-            fetch(URL_API, {
-                method: "POST",
+            fetch(url, {
+                method: metodo,
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     nome: dados.nome,

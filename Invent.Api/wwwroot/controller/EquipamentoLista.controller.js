@@ -11,9 +11,7 @@
 
   const NOME_MODELO_EQUIPAMENTOS = "equipamentos";
   const PROPRIEDADE_FILTRO_NOME = "nome";
-  const URL_BASE_API = "https://localhost:7178/api";
-  const NOME_CONTROLADOR_EQUIPAMENTOS = "Equipamentos";
-  const ENDPOINT_EQUIPAMENTOS = `${URL_BASE_API}/${NOME_CONTROLADOR_EQUIPAMENTOS}`;
+  const ENDPOINT_EQUIPAMENTOS = "api/Equipamentos";
   const ID_TABELA_EQUIPAMENTOS = "tabelaEquipamentos";
   const PROPRIEDADE_ID = "id";
   const ROTA_PARA_DETALHES = "detalheEquipamento";

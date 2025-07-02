@@ -47,6 +47,15 @@ sap.ui.define([
 
         // Função para remover
         aoClicarEmRemover: function () {
+            // Obtemos o modelo com os dados atuais do equipamento
+            const oModelo = this.getView.getModel(NOME_MODELO_DETALHES);
+
+            // Obtermos o ID do equipamento a partir do modelo
+            const idDoEquipamento = oModelo.getProperty("/id");
+
+            fetch(`${ENDPOINT_EQUIPAMENTOS}/${idDoEquipamento}`, {
+                method: 'DELETE',
+            });
         },
 
         // Função executada quando a rota de detalhes é acessada

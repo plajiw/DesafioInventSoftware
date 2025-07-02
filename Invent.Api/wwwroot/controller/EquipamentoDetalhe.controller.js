@@ -69,12 +69,12 @@ sap.ui.define([
                 this.oDialogoConfirmacao = new Dialog({
                     title: "Confirmação",
                     type: "Message",
+                    state: "Warning",
                     content: new Text({
                         text: "" // Texto será atualizado dinamicamente
                     }),
                     beginButton: new Button({
                         text: "Confirmar",
-                        type: "Emphasized",
                         press: function () {
                             // Envia a requisição DELETE
                             fetch(`${ENDPOINT_EQUIPAMENTOS}/${this._idEquipamentoRemover}`, { method: "DELETE" })
@@ -95,6 +95,7 @@ sap.ui.define([
                     }),
                     endButton: new Button({
                         text: "Cancelar",
+                        type: "Emphasized",
                         press: function () {
                             // Fecha o diálogo sem remover
                             this.oDialogoConfirmacao.close();
@@ -104,9 +105,7 @@ sap.ui.define([
             }
 
             // Atualiza o texto do diálogo com o nome do equipamento
-            this.oDialogoConfirmacao.getContent()[0].setText(
-                `Deseja remover o equipamento "${nomeDoEquipamento}"?`
-            );
+            this.oDialogoConfirmacao.getContent()[0].setText(`Deseja remover o equipamento "${nomeDoEquipamento}"?`);
 
             // Armazena o ID do equipamento para usar na remoção
             this._idEquipamentoRemover = idDoEquipamento;

@@ -40,11 +40,8 @@ sap.ui.define([
             // Limpa os campos
             this._limparCampos();
 
-            console.log("_aoAcessarRota: oEvento", oEvento);
-
             // Se for edição, carrega os dados
             let nomeRota = oEvento.getParameter("name");
-            console.log("Nome da rota:", nomeRota);
 
             if (nomeRota === ROTA_EDITAR) {
                 // Id extraído pelos parâmetros da URL e passa para a função de GET
@@ -67,14 +64,12 @@ sap.ui.define([
 
         // Obtém informações do equipamento para edição
         _carregarDadosEdicao: function (id) {
-            console.log("Editando equipamento com ID:", id);
             let modelo = this.getView().getModel(MODELO_FORMULARIO);
             // GET por ID
             fetch(`${URL_API}/${id}`)
                 .then(res => res.json())
                 .then(dados => {
                     modelo.setData(dados);
-                    console.log("Dados obtidos:", dados);
                 });
         },
 
@@ -85,14 +80,12 @@ sap.ui.define([
 
             // Obter o campo que disparou o evento
             let campoEntrada = oEvento.getSource();
-            console.log("Campo disparado:", campoEntrada);
 
             // Obtém o ID do elemento que disparou o evento
             let idDoCampo = campoEntrada.getId();
 
             // Remove o prefixo para obter o ID
             let nomeCampo = idDoCampo.split(SEPARADOR)[POSICAO_APOS_PREFIXO];
-            console.log("Nome do campo no XML:", nomeCampo);
 
             // Define a chave do modelo manualmente
             let chaveModelo;
@@ -111,15 +104,11 @@ sap.ui.define([
                     break;
 
                 default:
-                    console.log("Campo não reconhecido, validação ignorada");
                     break;
             }
 
-            console.log("Chave do modelo:", chaveModelo);
-
             // Obtém o valor digitado do evento
             let valorDigitado = oEvento.getParameter("value");
-            console.log("Valor digitado:", valorDigitado);
 
             // Atualiza o modelo
             let modelo = this.getView().getModel(MODELO_FORMULARIO);
@@ -129,7 +118,6 @@ sap.ui.define([
 
             // Valida o campo
             let { estado, mensagemErro } = Validador.validarCampo(chaveModelo, valorDigitado);
-            console.log("Validação - Estado:", estado, "Mensagem:", mensagemErro);
 
             // Aplica o estado e mensagem ao campo
             campoEntrada.setValueState(estado);
@@ -150,7 +138,6 @@ sap.ui.define([
             // Obtém os dados do formulário
             let modelo = view.getModel(MODELO_FORMULARIO);
             let dados = modelo.getData();
-            console.log("Dados enviados à API:", dados);
 
             // Define o método e URL
             let id = dados.id;
@@ -169,12 +156,10 @@ sap.ui.define([
             })
                 .then(resposta => resposta.json())
                 .then(equipamento => {
-                    console.log("Equipamento salvo:", equipamento);
                     // Navega para a tela de detalhes
                     UIComponent.getRouterFor(this).navTo(ROTA_DETALHES, { id: equipamento.id });
                 })
                 .catch(erro => {
-                    console.error("Erro ao salvar:", erro);
                     MessageBox.error("Erro ao salvar o equipamento: " + erro.message);
                 });
         },

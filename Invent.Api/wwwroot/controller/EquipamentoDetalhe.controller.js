@@ -4,8 +4,9 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/m/Dialog",
     "sap/m/Button",
-    "sap/m/Text"
-], (Controller, JSONModel, MessageBox, Dialog, Button, Text) => {
+    "sap/m/Text",
+    "../model/formatter"
+], (Controller, JSONModel, MessageBox, Dialog, Button, Text, formatter) => {
     "use strict";
 
     // --- Constantes do Controller ---
@@ -16,6 +17,7 @@ sap.ui.define([
     const ENDPOINT_EQUIPAMENTOS = "api/Equipamentos";
 
     return Controller.extend("ui5.gestaoequipamento.controller.EquipamentoDetalhe", {
+        formatter: formatter, // Vincula o formatter ao controlador
 
         onInit: function () {
             // Cria um modelo JSON local para armazenar os dados do equipamento detalhado
@@ -75,7 +77,7 @@ sap.ui.define([
                         type: "Emphasized",
                         press: function () {
                             // Envia a requisição DELETE
-                            fetch(`${ENDPOINT_EQUIPAMENTOS}/${this._idEquipamentoRemover}`, { method: "DELETE"})
+                            fetch(`${ENDPOINT_EQUIPAMENTOS}/${this._idEquipamentoRemover}`, { method: "DELETE" })
                                 .then(resposta => {
                                     if (!resposta.ok) throw new Error("Erro ao remover equipamento.");
                                     // Fecha o diálogo

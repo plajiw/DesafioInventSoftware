@@ -4,8 +4,9 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/ui/core/library",
     "../services/Validador",
-    "sap/ui/core/UIComponent"
-], (Controller, JSONModel, MessageBox, coreLibrary, Validador, UIComponent) => {
+    "sap/ui/core/UIComponent",
+    "sap/ui/model/resource/ResourceModel",
+], (Controller, JSONModel, MessageBox, coreLibrary, Validador, UIComponent, ResourceModel) => {
     "use strict";
 
     // Constantes
@@ -25,6 +26,12 @@ sap.ui.define([
     return Controller.extend("ui5.gestaoequipamento.controller.EquipamentoCadastro", {
         // Inicializa a tela de cadastro
         onInit: function () {
+            // Cria e define o modelo i18n
+            const oModeloI18n = new ResourceModel({
+                bundleName: "ui5.gestaoequipamento.i18n.i18n"
+            });
+            this.getView().setModel(oModeloI18n, "i18n");
+
             // Cria um modelo vazio para o formulário
             this.getView().setModel(new JSONModel({}), MODELO_FORMULARIO);
             // Obtém o roteador
@@ -46,7 +53,7 @@ sap.ui.define([
             console.log("Nome da rota:", nomeRota);
 
             if (nomeRota === ROTA_EDITAR) {
-                // Id extraido pelos parâmetros da URL e passa para a função de GET
+                // Id extraído pelos parâmetros da URL e passa para a função de GET
                 let id = oEvento.getParameter("arguments").id;
                 this._carregarDadosEdicao(id);
             }
@@ -86,7 +93,7 @@ sap.ui.define([
             let campoEntrada = oEvento.getSource();
             console.log("Campo disparado:", campoEntrada);
 
-            // Obtem o ID do elemento que disparou o evento
+            // Obtém o ID do elemento que disparou o evento
             let idDoCampo = campoEntrada.getId();
 
             // Remove o prefixo para obter o ID

@@ -15,7 +15,7 @@ sap.ui.define([], () => {
 	return {
 
 		formatarDisponibilidade: function (bEstaDisponivel) {
-			// Acessamos a View e obtemos o "i18n"
+			// Acessa a View e obtemos o "i18n"
 			const oModeloI18n = this.getView().getModel(NOME_MODELO_I18N);
 			const oResourceBundle = oModeloI18n.getResourceBundle();
 

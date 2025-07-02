@@ -1,50 +1,94 @@
 sap.ui.define([
-    "sap/ui/core/ValueState",
+    "sap/ui/core/ValueState" // Para estados visuais dos campos
 ], (ValueState) => {
     "use strict";
 
     return {
-        validar: function (view) {
-            // Coleta os valores para enviar ao validador
-            let dadosParaValidar = {
-                nome: view.byId("inputNome").getValue(),
-                tipo: view.byId("inputTipo").getValue(),
-                quantidade: view.byId("inputQuantidade").getValue()
-            };
+        // Valida um campo com base em seu nome e valor inserido
+        validarCampo: function (nomeCampo, valor) {
+            // Inicializa estado (sem erro) e mensagem vazia
+            let estado = ValueState.None;
+            let mensagemErro = "";
 
-            // Inicia as variáveis de controle da validação.
-            let formularioValido = false;
+            // Verifica o campo nome
+            if (nomeCampo === "nome") {
+                // Nome não pode ser vazio ou ter menos de 3 ou mais de 100 caracteres
+                if (!valor) {
+                    mensagemErro = "O nome é obrigatório.";
+                    estado = ValueState.Error;
+                } else if (valor.length < 3 || valor.length > 100) {
+                    mensagemErro = "O nome deve ter entre 3 e 100 caracteres.";
+                    estado = ValueState.Error;
+                }
+            }
+            // Verifica o campo tipo
+            else if (nomeCampo === "tipo") {
+                // Tipo não pode ser vazio
+                if (!valor) {
+                    mensagemErro = "O tipo é obrigatório.";
+                    estado = ValueState.Error;
+                }
+            }
+            // Verifica o campo quantidade
+            else if (nomeCampo === "quantidadeEmEstoque") {
+                // Quantidade deve ser um número entre 0 e 10.000 e não pode ser vazio
+                if (valor === "" || valor === null || valor === undefined) {
+                    mensagemErro = "A quantidade é obrigatória.";
+                    estado = ValueState.Error;
+                } else if (isNaN(valor) || Number(valor) < 0) {
+                    mensagemErro = "A quantidade deve ser maior ou igual a zero.";
+                    estado = ValueState.Error;
+                } else if (Number(valor) > 10000) {
+                    mensagemErro = "A quantidade não pode exceder 10.000.";
+                    estado = ValueState.Error;
+                }
+            }
+
+            // Retorna um objeto com os estados e mensagens de erro
+            return { estado, mensagemErro };
+        },
+
+        // Valida todos os campos do formulário
+        validarFormulario: function (view) {
+            // Obtém os valores dos campos na View
+            let valorNome = view.byId("inputNome").getValue();
+            let valorTipo = view.byId("inputTipo").getValue();
+            let valorQuantidade = view.byId("inputQuantidade").getValue();
+
+            console.log("Valores do formulário:", { valorNome, valorTipo, valorQuantidade });
+
+            // Armazena as mensagens de erro
             let mensagensErro = [];
 
-            // Validação do nome
-            let nome = dadosParaValidar.nome;
-            if (!nome || nome.length < 3 || nome.length > 100) {
-                formularioValido = true;
-                mensagensErro.push("O nome é obrigatório e deve ter entre 3 e 100 caracteres.");
+            // Valida o campo nome
+            let validacaoNome = this.validarCampo("nome", valorNome);
+
+            if (validacaoNome.mensagemErro) {
+                mensagensErro.push(validacaoNome.mensagemErro);
+                view.byId("inputNome").setValueState(validacaoNome.estado);
+                view.byId("inputNome").setValueStateText(validacaoNome.mensagemErro);
             }
 
-            // Validação do tipo
-            let tipo = dadosParaValidar.tipo;
-            if (!tipo || tipo.length < 3 || tipo.length > 100) {
-                formularioValido = true;
-                mensagensErro.push("O campo Tipo é obrigatório e deve ter entre 3 e 100 caracteres.");
+            // Valida o campo tipo
+            let validacaoTipo = this.validarCampo("tipo", valorTipo);
+
+            if (validacaoTipo.mensagemErro) {
+                mensagensErro.push(validacaoTipo.mensagemErro);
+                view.byId("inputTipo").setValueState(validacaoTipo.estado);
+                view.byId("inputTipo").setValueStateText(validacaoTipo.mensagemErro);
             }
 
-            // Validação da Quantidade
-            let quantidade = dadosParaValidar.quantidade;
-            if (quantidade === "") {
-                formularioValido = true;
-                mensagensErro.push("O campo Quantidade é obrigatório.");
-            } else if (isNaN(quantidade) || Number(quantidade) < 0 || Number(quantidade) >= 10000) {
-                formularioValido = true;
-                mensagensErro.push("A quantidade deve ser um número entre 0 e 9.999.");
+            // Valida o campo quantidade
+            let validacaoQuantidade = this.validarCampo("quantidadeEmEstoque", valorQuantidade);
+            
+            if (validacaoQuantidade.mensagemErro) {
+                mensagensErro.push(validacaoQuantidade.mensagemErro);
+                view.byId("inputQuantidade").setValueState(validacaoQuantidade.estado);
+                view.byId("inputQuantidade").setValueStateText(validacaoQuantidade.mensagemErro);
             }
 
-            // Retorna um objeto com o resultado final
-            return {
-                ehInvalido: formularioValido,
-                mensagens: mensagensErro
-            };
+            // Retorna mensagens de erro concatenadas
+            return mensagensErro.join("\n");
         }
     };
 });

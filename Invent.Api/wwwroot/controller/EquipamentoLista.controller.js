@@ -3,8 +3,9 @@
   "sap/ui/model/json/JSONModel",
   "sap/ui/model/Filter",
   "sap/ui/model/FilterOperator",
-  "../model/formatter"
-], (Controller, JSONModel, Filter, FilterOperator, formatter) => {
+  "../model/formatter",
+  "sap/ui/core/UIComponent"
+], (Controller, JSONModel, Filter, FilterOperator, formatter, UIComponent) => {
   "use strict";
 
   // Constantes
@@ -15,6 +16,7 @@
   const ID_TABELA_EQUIPAMENTOS = "tabelaEquipamentos";
   const PROPRIEDADE_ID = "id";
   const ROTA_PARA_DETALHES = "detalheEquipamento";
+  const ROTA_PARA_LISTA = "listaEquipamento";
 
   return Controller.extend("ui5.gestaoequipamento.controller.EquipamentoLista", {
     formatter: formatter,
@@ -26,13 +28,21 @@
       // Vincula o modelo à View associada
       this.getView().setModel(oModel, NOME_MODELO_EQUIPAMENTOS);
 
-      // Carrega dados do serviço e popula o modelo
-      fetch(ENDPOINT_EQUIPAMENTOS)
-        .then(res => res.json())
-        .then(data => this.getView().getModel(NOME_MODELO_EQUIPAMENTOS).setData(data))
-        .catch(err => console.error(err));
+      // Obter o roteador
+      const roteador = UIComponent.getRouterFor(this);
+      // Listener para capturar a rota e lançar a função _carregarEquipamentos
+      roteador.getRoute(ROTA_PARA_LISTA).attachPatternMatched(this._carregarEquipamentos, this);
     },
 
+    _carregarEquipamentos() {
+      // Obtém o modelo
+      const oModelo = this.getView().getModel(NOME_MODELO_EQUIPAMENTOS);
+
+      fetch(ENDPOINT_EQUIPAMENTOS)
+        .then(res => res.json())
+        .then(data => oModelo.setData(data))
+        .catch(err => console.error(err));
+    },
     // Função de busca
     aoBuscar: function (oEvent) {
       const sQuery = oEvent.getParameter("query");

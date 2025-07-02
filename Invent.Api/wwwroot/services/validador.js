@@ -1,54 +1,44 @@
 sap.ui.define([
-    "sap/ui/core/ValueState" // Para estados visuais dos campos
-], (ValueState) => {
+    "sap/ui/core/library"
+], (coreLibrary) => {
     "use strict";
 
+    const ValueState = coreLibrary.ValueState;
+
     return {
-        // Valida um campo com base em seu nome e valor inserido
         validarCampo: function (nomeCampo, valor) {
-            // Inicializa estado (sem erro) e mensagem vazia
-            let estado = ValueState.None;
+            let estadoDoCampo = ValueState.None; 
             let mensagemErro = "";
 
-            // Verifica o campo nome
-            if (nomeCampo === "nome") {
-                // Nome não pode ser vazio ou ter menos de 3 ou mais de 100 caracteres
-                if (!valor) {
-                    mensagemErro = "O nome é obrigatório.";
-                    estado = ValueState.Error;
-                } else if (valor.length < 3 || valor.length > 100) {
-                    mensagemErro = "O nome deve ter entre 3 e 100 caracteres.";
-                    estado = ValueState.Error;
-                }
-            }
-            // Verifica o campo tipo
-            else if (nomeCampo === "tipo") {
-                // Tipo não pode ser vazio
-                if (!valor) {
-                    mensagemErro = "O tipo é obrigatório.";
-                    estado = ValueState.Error;
-                }
-            }
-            // Verifica o campo quantidade
-            else if (nomeCampo === "quantidadeEmEstoque") {
-                // Quantidade deve ser um número entre 0 e 10.000 e não pode ser vazio
-                if (valor === "" || valor === null || valor === undefined) {
-                    mensagemErro = "A quantidade é obrigatória.";
-                    estado = ValueState.Error;
-                } else if (isNaN(valor) || Number(valor) < 0) {
-                    mensagemErro = "A quantidade deve ser maior ou igual a zero.";
-                    estado = ValueState.Error;
-                } else if (Number(valor) > 10000) {
-                    mensagemErro = "A quantidade não pode exceder 10.000.";
-                    estado = ValueState.Error;
-                }
+            switch (nomeCampo) {
+                case "nome":
+                    if (!valor)
+                        mensagemErro = "O nome é obrigatório.";
+                    if (valor.length < 3 || valor.length > 100)
+                        mensagemErro = "O nome deve ter entre 3 e 100 caracteres.";
+                    break;
+
+                case "tipo":
+                    if (!valor)
+                        mensagemErro = "O tipo é obrigatório.";
+                    break;
+
+                case "quantidadeEmEstoque":
+                    if (!valor)
+                        mensagemErro = "A quantidade é obrigatória.";
+                    if (Number(valor) < 0)
+                        mensagemErro = "A quantidade deve ser maior ou igual a zero.";
+                    if (Number(valor) > 10000)
+                        mensagemErro = "A quantidade não pode exceder 10.000.";
+                    break;
             }
 
-            // Retorna um objeto com os estados e mensagens de erro
-            return { estado, mensagemErro };
+            if (mensagemErro)
+                estadoDoCampo = ValueState.Error;
+
+            return { estadoDoCampo, mensagemErro };
         },
 
-        // Valida todos os campos do formulário
         validarFormulario: function (view) {
             // Obtém os valores dos campos na View
             let valorNome = view.byId("inputNome").getValue();
@@ -80,7 +70,7 @@ sap.ui.define([
 
             // Valida o campo quantidade
             let validacaoQuantidade = this.validarCampo("quantidadeEmEstoque", valorQuantidade);
-            
+
             if (validacaoQuantidade.mensagemErro) {
                 mensagensErro.push(validacaoQuantidade.mensagemErro);
                 view.byId("inputQuantidade").setValueState(validacaoQuantidade.estado);

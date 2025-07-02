@@ -29,9 +29,9 @@
       this.getView().setModel(oModel, NOME_MODELO_EQUIPAMENTOS);
 
       // Obter o roteador
-      const roteador = UIComponent.getRouterFor(this);
+      this.roteador = UIComponent.getRouterFor(this);
       // Listener para capturar a rota e lançar a função _carregarEquipamentos
-      roteador.getRoute(ROTA_PARA_LISTA).attachPatternMatched(this._carregarEquipamentos, this);
+      this.roteador.getRoute(ROTA_PARA_LISTA).attachPatternMatched(this._carregarEquipamentos, this);
     },
 
     _carregarEquipamentos() {
@@ -61,7 +61,7 @@
 
     // Função para trocar página
     paraCadastro: function () {
-      this.getOwnerComponent().getRouter().navTo("cadastroEquipamento", {}, true);
+      this.roteador.navTo("cadastroEquipamento", {}, true);
     },
 
     // Função para acessar os detalhes do equipamento
@@ -74,10 +74,9 @@
 
       // A partir do contexto, extrai a propriedade "id" do equipamento
       const idDoEquipamento = oContexto.getProperty(PROPRIEDADE_ID);
-      const oRoteador = this.getOwnerComponent().getRouter();
 
       // Navegar para a rota, passando o ID como parâmetro
-      oRoteador.navTo(ROTA_PARA_DETALHES, { id: idDoEquipamento });
+      this.roteador.navTo(ROTA_PARA_DETALHES, { id: idDoEquipamento });
     }
   });
 });

@@ -1,12 +1,9 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/ui/model/json/JSONModel",
-    "sap/m/MessageBox",
-    "sap/m/Dialog",
-    "sap/m/Button",
-    "sap/m/Text",
-    "../model/formatter"
-], (Controller, JSONModel, MessageBox, Dialog, Button, Text, formatter) => {
+    "../model/formatter",
+    "sap/ui/core/UIComponent"
+], (Controller, JSONModel, formatter, UIComponent) => {
     "use strict";
 
     // --- Constantes do Controller ---
@@ -25,8 +22,8 @@ sap.ui.define([
             this.getView().setModel(oModelo, NOME_MODELO_DETALHES);
 
             // Obtem a rota e anexa o listener para quando ela for acessada
-            const oRoteador = this.getOwnerComponent().getRouter();
-            oRoteador.getRoute(NOME_ROTA_DETALHES).attachPatternMatched(this._aoCoincidirRota, this);
+            const roteador = UIComponent.getRouterFor(this);
+            roteador.getRoute(NOME_ROTA_DETALHES).attachPatternMatched(this._aoCoincidirRota, this);
         },
 
         // Função para voltar para a lista de equipamentos

@@ -26,31 +26,25 @@ sap.ui.define([
         // Inicializa a tela de cadastro
         onInit: function () {
 
-            // Cria um modelo vazio para o formulário
             this.getView().setModel(new JSONModel({}), MODELO_FORMULARIO);
             // Obtém o roteador
-            const roteador = UIComponent.getRouterFor(this);
+            this.roteador = UIComponent.getRouterFor(this);
             // Configura os gatilhos de acesso para as rotas de cadastro e editar
-            roteador.getRoute(ROTA_CADASTRO).attachPatternMatched(this._aoAcessarRota, this);
-            roteador.getRoute(ROTA_EDITAR).attachPatternMatched(this._aoAcessarRota, this);
+            this.roteador.getRoute(ROTA_CADASTRO).attachPatternMatched(this._aoAcessarRota, this);
+            this.roteador.getRoute(ROTA_EDITAR).attachPatternMatched(this._aoAcessarRota, this);
         },
 
-        // Executa automaticamente pelo roteador ao entrar na rota
         _aoAcessarRota: function (oEvento) {
-            // Limpa os campos
             this._limparCampos();
 
-            // Se for edição, carrega os dados
             let nomeRota = oEvento.getParameter("name");
-
             if (nomeRota === ROTA_EDITAR) {
-                // Id extraído pelos parâmetros da URL e passa para a função de GET
+                // Id extraído pelos parâmetros do evento e passa para a função de GET
                 let id = oEvento.getParameter("arguments").id;
                 this._carregarDadosEdicao(id);
             }
         },
 
-        // Limpa os campos do formulário
         _limparCampos: function () {
             let view = this.getView();
             let modelo = view.getModel(MODELO_FORMULARIO);
@@ -62,7 +56,6 @@ sap.ui.define([
             view.byId(ID_INPUT_QUANTIDADE).setValueState(ValueState.None);
         },
 
-        // Obtém informações do equipamento para edição
         _carregarDadosEdicao: function (id) {
             let modelo = this.getView().getModel(MODELO_FORMULARIO);
             // GET por ID
@@ -73,7 +66,6 @@ sap.ui.define([
                 });
         },
 
-        // Valida enquanto o usuário digita
         aoDigitar: function (oEvento) {
             const SEPARADOR = "--";
             const POSICAO_APOS_PREFIXO = 1;
@@ -87,9 +79,7 @@ sap.ui.define([
             // Remove o prefixo para obter o ID
             let nomeCampo = idDoCampo.split(SEPARADOR)[POSICAO_APOS_PREFIXO];
 
-            // Define a chave do modelo manualmente
             let chaveModelo;
-
             switch (nomeCampo) {
                 case (ID_INPUT_NOME):
                     chaveModelo = "nome";
@@ -124,27 +114,24 @@ sap.ui.define([
             campoEntrada.setValueStateText(mensagemErro);
         },
 
-        // Salva os dados do formulário
         aoClicarEmSalvar: function () {
+            let metodo ="POST";
+            let url = URL_API;
+
             const view = this.getView();
-            // Valida todos os campos
-            let mensagemErro = Validador.validarFormulario(view);
-            // Mostra erro se houver
-            if (mensagemErro) {
-                MessageBox.error(mensagemErro);
+            let errosEncontrados = Validador.validarFormulario(view);
+            if (errosEncontrados) {
+                MessageBox.error(errosEncontrados);
                 return;
             }
 
-            // Obtém os dados do formulário
             let modelo = view.getModel(MODELO_FORMULARIO);
             let dados = modelo.getData();
+            if(dados.id){
+                metodo = "PUT";
+                url = `${URL_API}/${dados.id}`
+            }
 
-            // Define o método e URL
-            let id = dados.id;
-            let metodo = id ? "PUT" : "POST";
-            let url = id ? `${URL_API}/${id}` : URL_API;
-
-            // Envia os dados para a API
             fetch(url, {
                 method: metodo,
                 headers: { "Content-Type": "application/json" },
@@ -156,17 +143,15 @@ sap.ui.define([
             })
                 .then(resposta => resposta.json())
                 .then(equipamento => {
-                    // Navega para a tela de detalhes
-                    UIComponent.getRouterFor(this).navTo(ROTA_DETALHES, { id: equipamento.id });
+                    this.roteador.navTo(ROTA_DETALHES, { id: equipamento.id });
                 })
                 .catch(erro => {
                     MessageBox.error("Erro ao salvar o equipamento: " + erro.message);
                 });
         },
 
-        // Volta para a tela de lista
         aoClicarEmVoltar: function () {
-            UIComponent.getRouterFor(this).navTo(ROTA_LISTA, {}, true);
+            this.roteador.navTo(ROTA_LISTA, {}, true);
         }
     });
 });

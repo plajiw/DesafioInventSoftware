@@ -1,7 +1,11 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller",
-    "sap/ui/model/json/JSONModel"
-], (Controller, JSONModel) => {
+    "sap/ui/model/json/JSONModel",
+    "sap/m/MessageBox",
+    "sap/m/Dialog",
+    "sap/m/Button",
+    "sap/m/Text"
+], (Controller, JSONModel, MessageBox, Dialog, Button, Text) => {
     "use strict";
 
     // --- Constantes do Controller ---
@@ -32,6 +36,7 @@ sap.ui.define([
         aoClicarEmEditar: function () {
             // Obtemos o modelo com os dados atuais do equipamento
             const oModelo = this.getView().getModel(NOME_MODELO_DETALHES);
+            console.log("MODELO DETALHES:", oModelo);
 
             // Obtermos o ID do equipamento a partir do modelo
             const idDoEquipamento = oModelo.getProperty("/id");
@@ -47,15 +52,65 @@ sap.ui.define([
 
         // Função para remover
         aoClicarEmRemover: function () {
-            // Obtemos o modelo com os dados atuais do equipamento
-            const oModelo = this.getView.getModel(NOME_MODELO_DETALHES);
+            // Obtém o modelo com os dados atuais do equipamento
+            const oModelo = this.getView().getModel(NOME_MODELO_DETALHES);
 
-            // Obtermos o ID do equipamento a partir do modelo
+            // Obtém o ID e nome do equipamento
             const idDoEquipamento = oModelo.getProperty("/id");
+            const nomeDoEquipamento = oModelo.getProperty("/nome");
 
-            fetch(`${ENDPOINT_EQUIPAMENTOS}/${idDoEquipamento}`, {
-                method: 'DELETE',
-            });
+            // Log para depuração
+            console.log("Abrindo diálogo para remover:", { id: idDoEquipamento, nome: nomeDoEquipamento });
+
+            // Cria-se o diálogo se ainda não existe
+            if (!this.oDialogoConfirmacao) {
+                this.oDialogoConfirmacao = new Dialog({
+                    title: "Confirmação",
+                    type: "Message",
+                    content: new Text({
+                        text: "" // Texto será atualizado dinamicamente
+                    }),
+                    beginButton: new Button({
+                        text: "Confirmar",
+                        type: "Emphasized",
+                        press: function () {
+                            // Envia a requisição DELETE
+                            fetch(`${ENDPOINT_EQUIPAMENTOS}/${this._idEquipamentoRemover}`, { method: "DELETE"})
+                                .then(resposta => {
+                                    if (!resposta.ok) throw new Error("Erro ao remover equipamento.");
+                                    // Fecha o diálogo
+                                    this.oDialogoConfirmacao.close();
+                                    // Navega para a lista
+                                    this.getOwnerComponent().getRouter().navTo(NOME_ROTA_LISTA, {}, true);
+                                    // Mostra mensagem de sucesso
+                                    MessageBox.success("Equipamento removido com sucesso!");
+                                })
+                                .catch(erro => {
+                                    console.error("Erro ao remover:", erro);
+                                    MessageBox.error("Erro ao remover o equipamento: " + erro.message);
+                                });
+                        }.bind(this)
+                    }),
+                    endButton: new Button({
+                        text: "Cancelar",
+                        press: function () {
+                            // Fecha o diálogo sem remover
+                            this.oDialogoConfirmacao.close();
+                        }.bind(this)
+                    })
+                });
+            }
+
+            // Atualiza o texto do diálogo com o nome do equipamento
+            this.oDialogoConfirmacao.getContent()[0].setText(
+                `Deseja remover o equipamento "${nomeDoEquipamento}"?`
+            );
+
+            // Armazena o ID do equipamento para usar na remoção
+            this._idEquipamentoRemover = idDoEquipamento;
+
+            // Abre o diálogo
+            this.oDialogoConfirmacao.open();
         },
 
         // Função executada quando a rota de detalhes é acessada

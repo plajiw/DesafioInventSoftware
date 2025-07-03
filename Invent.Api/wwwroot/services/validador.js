@@ -3,33 +3,46 @@ sap.ui.define([
 ], (coreLibrary) => {
     "use strict";
 
+    // CHAVES I18N
+    const CHAVE_I18N_NOME_OBRIGATORIO = "validacaoNomeObrigatorio";
+    const CHAVE_I18N_NOME_TAMANHO = "validacaoNomeTamanho";
+    const CHAVE_I18N_TIPO_OBRIGATORIO = "validacaoTipoObrigatorio";
+    const CHAVE_I18N_QUANTIDADE_OBRIGATORIO = "validacaoQuantidadeObrigatoria";
+    const CHAVE_I18N_QUANTIDADE_MINIMO = "validacaoQuantidadeMinima";
+    const CHAVE_I18N_QUANTIDADE_MAXIMO = "validacaoQuantidadeMaxima";
+
     const ValueState = coreLibrary.ValueState;
 
     return {
-        validarCampo: function (nomeCampo, valor) {
+        validarCampo: function (nomeCampo, valor, oResourceBundle) {
+            const nomeMinimoDeCaracteres = 3;
+            const nomeMaximoDeCaracteres = 100;
+            const quantidadeMinimaDeEstoque = 0;
+            const quantidadeMaximaDeEstoque = 10000;
+
             let estadoDoCampo = ValueState.None; 
             let mensagemErro = "";
-
+            
             switch (nomeCampo) {
                 case "nome":
                     if (!valor)
-                        mensagemErro = "O nome é obrigatório.";
-                    if (valor.length < 3 || valor.length > 100)
-                        mensagemErro = "O nome deve ter entre 3 e 100 caracteres.";
+                        mensagemErro = oResourceBundle.getText(CHAVE_I18N_NOME_OBRIGATORIO);
+                    if (valor && (valor.length < nomeMinimoDeCaracteres || valor.length > nomeMaximoDeCaracteres))
+                        mensagemErro = oResourceBundle.getText(CHAVE_I18N_NOME_TAMANHO);
                     break;
 
                 case "tipo":
                     if (!valor)
-                        mensagemErro = "O tipo é obrigatório.";
+                        mensagemErro = oResourceBundle.getText(CHAVE_I18N_TIPO_OBRIGATORIO);
                     break;
 
                 case "quantidadeEmEstoque":
                     if (!valor)
-                        mensagemErro = "A quantidade é obrigatória.";
-                    if (Number(valor) < 0)
-                        mensagemErro = "A quantidade deve ser maior ou igual a zero.";
-                    if (Number(valor) > 10000)
-                        mensagemErro = "A quantidade não pode exceder 10.000.";
+                        mensagemErro = oResourceBundle.getText(CHAVE_I18N_QUANTIDADE_OBRIGATORIO);
+                    if (parseInt(valor) < quantidadeMinimaDeEstoque)
+                        mensagemErro = oResourceBundle.getText(CHAVE_I18N_QUANTIDADE_MINIMO);
+                    if (parseInt(valor) > quantidadeMaximaDeEstoque)
+                        mensagemErro = oResourceBundle.getText(CHAVE_I18N_QUANTIDADE_MAXIMO);
                     break;
             }
 
@@ -39,7 +52,7 @@ sap.ui.define([
             return { estadoDoCampo, mensagemErro };
         },
 
-        validarFormulario: function (view) {
+        validarFormulario: function (view, oResourceBundle) {
             // Obtém os valores dos campos na View
             let valorNome = view.byId("inputNome").getValue();
             let valorTipo = view.byId("inputTipo").getValue();
@@ -51,7 +64,7 @@ sap.ui.define([
             let mensagensErro = [];
 
             // Valida o campo nome
-            let validacaoNome = this.validarCampo("nome", valorNome);
+            let validacaoNome = this.validarCampo("nome", valorNome, oResourceBundle);
 
             if (validacaoNome.mensagemErro) {
                 mensagensErro.push(validacaoNome.mensagemErro);
@@ -60,7 +73,7 @@ sap.ui.define([
             }
 
             // Valida o campo tipo
-            let validacaoTipo = this.validarCampo("tipo", valorTipo);
+            let validacaoTipo = this.validarCampo("tipo", valorTipo, oResourceBundle);
 
             if (validacaoTipo.mensagemErro) {
                 mensagensErro.push(validacaoTipo.mensagemErro);
@@ -69,7 +82,7 @@ sap.ui.define([
             }
 
             // Valida o campo quantidade
-            let validacaoQuantidade = this.validarCampo("quantidadeEmEstoque", valorQuantidade);
+            let validacaoQuantidade = this.validarCampo("quantidadeEmEstoque", valorQuantidade, oResourceBundle);
 
             if (validacaoQuantidade.mensagemErro) {
                 mensagensErro.push(validacaoQuantidade.mensagemErro);

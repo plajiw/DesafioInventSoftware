@@ -106,11 +106,13 @@ sap.ui.define([
             dados[chaveModelo] = valorDigitado;
             modelo.setData(dados);
 
+            const oResourceBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
+
             // Valida o campo
-            let { estado, mensagemErro } = Validador.validarCampo(chaveModelo, valorDigitado);
+            let { estadoDoCampo, mensagemErro } = Validador.validarCampo(chaveModelo, valorDigitado, oResourceBundle);
 
             // Aplica o estado e mensagem ao campo
-            campoEntrada.setValueState(estado);
+            campoEntrada.setValueState(estadoDoCampo);
             campoEntrada.setValueStateText(mensagemErro);
         },
 
@@ -119,7 +121,9 @@ sap.ui.define([
             let url = URL_API;
 
             const view = this.getView();
-            let errosEncontrados = Validador.validarFormulario(view);
+            const oResourceBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
+            
+            let errosEncontrados = Validador.validarFormulario(view, oResourceBundle);
             if (errosEncontrados) {
                 MessageBox.error(errosEncontrados);
                 return;

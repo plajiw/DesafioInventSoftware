@@ -25,7 +25,7 @@
                     <Input id="inputTipo" value="{equipamento>/tipo}" placeholder="{i18n>placeholderTipo}" liveChange=".aoDigitar" />
 
                     <!-- Campo Quantidade -->
-                    <Label text="{i18n>labelQuantidade}" />
+                    <Label text="{i18n>labelQuantidade}" required="true" />
                     <Input id="inputQuantidade" value="{equipamento>/quantidadeEmEstoque}" type="Number" placeholder="{i18n>placeholderQuantidade} " liveChange=".aoDigitar" />
                 </f:content>
             </f:SimpleForm>

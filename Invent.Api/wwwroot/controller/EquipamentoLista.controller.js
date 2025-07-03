@@ -9,7 +9,6 @@
   "use strict";
 
   // Constantes
-
   const NOME_MODELO_EQUIPAMENTOS = "equipamentos";
   const PROPRIEDADE_FILTRO_NOME = "nome";
   const ENDPOINT_EQUIPAMENTOS = "api/Equipamentos";

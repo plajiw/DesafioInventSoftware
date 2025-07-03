@@ -15,13 +15,8 @@ sap.ui.define([], function () {
         // Formata a disponibilidade com base no valor booleano
         formatarDisponibilidade: function (bEstaDisponivel) {
             // Acessa o modelo i18n do componente
-            const oResourceBundle = this.getOwnerComponent()?.getModel("i18n")?.getResourceBundle();
-
-            // Verifica se o ResourceBundle está disponível
-            if (!oResourceBundle) {
-                // Retorna valores padrão se o modelo não estiver disponível
-                return bEstaDisponivel ? "Sim" : "Não";
-            }
+            const oResourceBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
+            console.log("oResourceBundle =", oResourceBundle);
 
             // Escolhe a chave de tradução com base no valor booleano
             const sChaveDeTraducao = bEstaDisponivel ? CHAVE_I18N_SIM : CHAVE_I18N_NAO;

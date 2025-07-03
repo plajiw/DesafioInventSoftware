@@ -33,7 +33,7 @@ sap.ui.define([
             this.roteador.getRoute(ROTA_EDITAR).attachPatternMatched(this._aoAcessarEditar, this);
         },
 
-        _aoAcessarCadastro: function (oEvento) {
+        _aoAcessarCadastro: function () {
             this._limparCampos();
         },
 
@@ -116,27 +116,18 @@ sap.ui.define([
             campoEntrada.setValueStateText(mensagemErro);
         },
 
-        aoClicarEmSalvar: function () {
-            const view = this.getView();
-            const oResourceBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
+        _configurarRequisicao: function (id, dados) {
+            const metodoPUT = "PUT";
+            const metodoPOST = "POST";
 
-            let errosEncontrados = Validador.validarFormulario(view, oResourceBundle);
-            if (errosEncontrados) {
-                MessageBox.error(errosEncontrados);
-                return;
-            }
+            const metodo = id ? metodoPUT : metodoPOST;
+            const url = id ? `${URL_API}/${id}` : URL_API;
 
-            let modelo = view.getModel(MODELO_FORMULARIO);
-            let dados = modelo.getData();
+            const corpoDaRequisicao = this._configurarCorpoDaRequisicao(dados);
+            this._executarRequisicao(metodo, url, corpoDaRequisicao);
+        },
 
-            let metodo = "POST";
-            let url = URL_API;
-
-            if (dados.id) {
-                metodo = "PUT";
-                url = `${URL_API}/${dados.id}`
-            }
-
+        _configurarCorpoDaRequisicao: function (dados) {
             const corpoDaRequisicao = {
                 id: dados.id || null,
                 nome: dados.nome,
@@ -144,18 +135,37 @@ sap.ui.define([
                 quantidadeEmEstoque: parseInt(dados.quantidadeEmEstoque)
             };
 
+            return corpoDaRequisicao;
+        },
+
+        _executarRequisicao: function (metodo, url, corpoDaRequisicao) {
             fetch(url, {
                 method: metodo,
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(corpoDaRequisicao)
             })
                 .then(resposta => resposta.json())
-                .then(equipamento => {
-                    this.roteador.navTo(ROTA_DETALHES, { id: equipamento.id });
-                })
-                .catch(erro => {
-                    MessageBox.error("Erro ao salvar o equipamento: " + erro.message);
-                });
+                .then(equipamento => this.roteador.navTo(ROTA_DETALHES, { id: equipamento.id }))
+        },
+
+        _validarFormulario: function () {
+            const view = this.getView();
+            const oResourceBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
+            const errosEncontrados = Validador.validarFormulario(view, oResourceBundle);
+
+            if (errosEncontrados) {
+                MessageBox.error(errosEncontrados);
+                return false;
+            }
+
+            return true
+        },
+
+        aoClicarEmSalvar: function () {
+            if (this._validarFormulario()) {
+                let dados = view.getModel(MODELO_FORMULARIO).getData();
+                this._configurarRequisicao(dados.id, dados);
+            }
         },
 
         aoClicarEmVoltar: function () {

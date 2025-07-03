@@ -12,20 +12,14 @@ sap.ui.define([], function () {
     }
 
     return {
-        // Formata a disponibilidade com base no valor booleano
         formatarDisponibilidade: function (bEstaDisponivel) {
-            // Acessa o modelo i18n do componente
             const oResourceBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
-            console.log("oResourceBundle =", oResourceBundle);
 
-            // Escolhe a chave de tradução com base no valor booleano
             const sChaveDeTraducao = bEstaDisponivel ? CHAVE_I18N_SIM : CHAVE_I18N_NAO;
 
-            // Retorna o texto traduzido
             return oResourceBundle.getText(sChaveDeTraducao);
         },
 
-        // Formata a data no padrão DD/MM/YYYY HH:MM
         formatarData: function (sData) {
             // Converte a string ISO 8601 para objeto Date
             const oDate = new Date(sData);
@@ -39,7 +33,6 @@ sap.ui.define([], function () {
             const hora = String(oDate.getHours()).padStart(quantidadeMaxima, valorDePreenchimento);
             const minuto = String(oDate.getMinutes()).padStart(quantidadeMaxima, valorDePreenchimento);
 
-            // Retorna a data formatada
             return `${dia}/${mes}/${ano} ${hora}:${minuto}`;
         }
     };

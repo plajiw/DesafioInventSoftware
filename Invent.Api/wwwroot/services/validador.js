@@ -11,6 +11,11 @@ sap.ui.define([
     const CHAVE_I18N_QUANTIDADE_MINIMO = "validacaoQuantidadeMinima";
     const CHAVE_I18N_QUANTIDADE_MAXIMO = "validacaoQuantidadeMaxima";
 
+    // Constantes
+    const ID_INPUT_NOME = "inputNome";
+    const ID_INPUT_TIPO = "inputTipo";
+    const ID_INPUT_QUANTIDADE = "inputQuantidade";
+
     const ValueState = coreLibrary.ValueState;
 
     return {
@@ -20,9 +25,9 @@ sap.ui.define([
             const quantidadeMinimaDeEstoque = 0;
             const quantidadeMaximaDeEstoque = 10000;
 
-            let estadoDoCampo = ValueState.None; 
+            let estadoDoCampo = ValueState.None;
             let mensagemErro = "";
-            
+
             switch (nomeCampo) {
                 case "nome":
                     if (!valor)
@@ -54,11 +59,9 @@ sap.ui.define([
 
         validarFormulario: function (view, oResourceBundle) {
             // Obtém os valores dos campos na View
-            let valorNome = view.byId("inputNome").getValue();
-            let valorTipo = view.byId("inputTipo").getValue();
-            let valorQuantidade = view.byId("inputQuantidade").getValue();
-
-            console.log("Valores do formulário:", { valorNome, valorTipo, valorQuantidade });
+            let valorNome = view.byId(ID_INPUT_NOME).getValue();
+            let valorTipo = view.byId(ID_INPUT_TIPO).getValue();
+            let valorQuantidade = view.byId(ID_INPUT_QUANTIDADE).getValue();
 
             // Armazena as mensagens de erro
             let mensagensErro = [];
@@ -68,8 +71,8 @@ sap.ui.define([
 
             if (validacaoNome.mensagemErro) {
                 mensagensErro.push(validacaoNome.mensagemErro);
-                view.byId("inputNome").setValueState(validacaoNome.estado);
-                view.byId("inputNome").setValueStateText(validacaoNome.mensagemErro);
+                view.byId(ID_INPUT_NOME).setValueState(validacaoNome.estado);
+                view.byId(ID_INPUT_NOME).setValueStateText(validacaoNome.mensagemErro);
             }
 
             // Valida o campo tipo
@@ -77,8 +80,8 @@ sap.ui.define([
 
             if (validacaoTipo.mensagemErro) {
                 mensagensErro.push(validacaoTipo.mensagemErro);
-                view.byId("inputTipo").setValueState(validacaoTipo.estado);
-                view.byId("inputTipo").setValueStateText(validacaoTipo.mensagemErro);
+                view.byId(ID_INPUT_TIPO).setValueState(validacaoTipo.estado);
+                view.byId(ID_INPUT_TIPO).setValueStateText(validacaoTipo.mensagemErro);
             }
 
             // Valida o campo quantidade
@@ -86,8 +89,8 @@ sap.ui.define([
 
             if (validacaoQuantidade.mensagemErro) {
                 mensagensErro.push(validacaoQuantidade.mensagemErro);
-                view.byId("inputQuantidade").setValueState(validacaoQuantidade.estado);
-                view.byId("inputQuantidade").setValueStateText(validacaoQuantidade.mensagemErro);
+                view.byId(ID_INPUT_QUANTIDADE).setValueState(validacaoQuantidade.estado);
+                view.byId(ID_INPUT_QUANTIDADE).setValueStateText(validacaoQuantidade.mensagemErro);
             }
 
             // Retorna mensagens de erro concatenadas

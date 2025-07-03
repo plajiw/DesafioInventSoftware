@@ -21,15 +21,11 @@
     formatter: formatter,
 
     onInit: function () {
-      // Criamos um modelo JSON vazio
       var oModel = new JSONModel([]);
 
-      // Vincula o modelo à View associada
       this.getView().setModel(oModel, NOME_MODELO_EQUIPAMENTOS);
 
-      // Obter o roteador
       this.roteador = UIComponent.getRouterFor(this);
-      // Listener para capturar a rota e lançar a função _carregarEquipamentos
       this.roteador.getRoute(ROTA_PARA_LISTA).attachPatternMatched(this._carregarEquipamentos, this);
     },
 
@@ -42,33 +38,30 @@
         .then(data => oModelo.setData(data))
         .catch(err => console.error(err));
     },
-    // Função de busca
-    aoBuscar: function (oEvent) {
-      const sQuery = oEvent.getParameter("query");
-      const oBinding = this.byId(ID_TABELA_EQUIPAMENTOS).getBinding("items");
 
-      // Monta o array de filtros
+    aoBuscar: function (oEvent) {
+      const consultaRealizada = "query";
+      const conjutoDeEquipamentos = "items";
+
+      const sQuery = oEvent.getParameter(consultaRealizada);
+      const oBinding = this.byId(ID_TABELA_EQUIPAMENTOS).getBinding(conjutoDeEquipamentos);
+
       const aFilters = [];
       if (sQuery) {
         const oFilter = new Filter(PROPRIEDADE_FILTRO_NOME, FilterOperator.Contains, sQuery);
         aFilters.push(oFilter);
       }
 
-      // Aplica o filtro
       oBinding.filter(aFilters);
     },
 
-    // Função para trocar página
-    paraCadastro: function () {
-      this.roteador.navTo("cadastroEquipamento", {}, true);
+    aoClicarEmCadastrar: function () {
+      const rotaDeCadastro = "cadastroEquipamento";
+      this.roteador.navTo(rotaDeCadastro, {}, true);
     },
 
-    // Função para acessar os detalhes do equipamento
     aoPressionarItem: function (oEvento) {
-      // Obtem o item da lista que foi pressionado
       const oItemPressionado = oEvento.getSource();
-
-      // Obtem o contexto do binding
       const oContexto = oItemPressionado.getBindingContext(NOME_MODELO_EQUIPAMENTOS);
 
       // A partir do contexto, extrai a propriedade "id" do equipamento

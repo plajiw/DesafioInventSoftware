@@ -7,7 +7,7 @@
 
         <!-- Header -->
         <headerContent>
-            <Button icon="sap-icon://add" text="{i18n>botaoCadastrar}" press=".paraCadastro" type="Emphasized" />
+            <Button icon="sap-icon://add" text="{i18n>botaoCadastrar}" press=".aoClicarEmCadastrar" type="Emphasized" />
         </headerContent>
 
         <!-- Conteúdo-->

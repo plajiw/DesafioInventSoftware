@@ -25,35 +25,37 @@ sap.ui.define([
     return Controller.extend("ui5.gestaoequipamento.controller.EquipamentoCadastro", {
         // Inicializa a tela de cadastro
         onInit: function () {
-
             this.getView().setModel(new JSONModel({}), MODELO_FORMULARIO);
             // Obtém o roteador
             this.roteador = UIComponent.getRouterFor(this);
             // Configura os gatilhos de acesso para as rotas de cadastro e editar
-            this.roteador.getRoute(ROTA_CADASTRO).attachPatternMatched(this._aoAcessarRota, this);
-            this.roteador.getRoute(ROTA_EDITAR).attachPatternMatched(this._aoAcessarRota, this);
+            this.roteador.getRoute(ROTA_CADASTRO).attachPatternMatched(this._aoAcessarCadastro, this);
+            this.roteador.getRoute(ROTA_EDITAR).attachPatternMatched(this._aoAcessarEditar, this);
         },
 
-        _aoAcessarRota: function (oEvento) {
+        _aoAcessarCadastro: function (oEvento) {
             this._limparCampos();
+        },
 
-            let nomeRota = oEvento.getParameter("name");
-            if (nomeRota === ROTA_EDITAR) {
-                // Id extraído pelos parâmetros do evento e passa para a função de GET
-                let id = oEvento.getParameter("arguments").id;
-                this._carregarDadosEdicao(id);
-            }
+        _aoAcessarEditar: function (oEvento) {
+            const argumentosDaRota = "arguments"
+            this._limparCampos();
+            const id = oEvento.getParameter(argumentosDaRota).id;
+            this._carregarDadosEdicao(id);
+        },
+
+        _limparValueStateCampos(idDoInput) {
+            const view = this.getView();
+            const campo = view.byId(idDoInput);
+            campo.setValueState(ValueState.None);
         },
 
         _limparCampos: function () {
             let view = this.getView();
-            let modelo = view.getModel(MODELO_FORMULARIO);
-            // Reseta os dados do modelo
-            modelo.setData({ nome: "", tipo: "", quantidadeEmEstoque: "" });
-            // Remove estados de erro dos campos
-            view.byId(ID_INPUT_NOME).setValueState(ValueState.None);
-            view.byId(ID_INPUT_TIPO).setValueState(ValueState.None);
-            view.byId(ID_INPUT_QUANTIDADE).setValueState(ValueState.None);
+            view.setModel(new JSONModel({}), MODELO_FORMULARIO);
+            this._limparValueStateCampos(ID_INPUT_NOME);
+            this._limparValueStateCampos(ID_INPUT_TIPO);
+            this._limparValueStateCampos(ID_INPUT_QUANTIDADE);
         },
 
         _carregarDadosEdicao: function (id) {
@@ -67,17 +69,15 @@ sap.ui.define([
         },
 
         aoDigitar: function (oEvento) {
-            const SEPARADOR = "--";
-            const POSICAO_APOS_PREFIXO = 1;
+            const separador = "--";
+            const posicaoAposPrefixo = 1;
 
             // Obter o campo que disparou o evento
             let campoEntrada = oEvento.getSource();
-
             // Obtém o ID do elemento que disparou o evento
             let idDoCampo = campoEntrada.getId();
-
             // Remove o prefixo para obter o ID
-            let nomeCampo = idDoCampo.split(SEPARADOR)[POSICAO_APOS_PREFIXO];
+            let nomeCampo = idDoCampo.split(separador)[posicaoAposPrefixo];
 
             let chaveModelo;
             switch (nomeCampo) {
@@ -129,10 +129,10 @@ sap.ui.define([
             let modelo = view.getModel(MODELO_FORMULARIO);
             let dados = modelo.getData();
 
-            let metodo ="POST";
+            let metodo = "POST";
             let url = URL_API;
 
-            if(dados.id){
+            if (dados.id) {
                 metodo = "PUT";
                 url = `${URL_API}/${dados.id}`
             }

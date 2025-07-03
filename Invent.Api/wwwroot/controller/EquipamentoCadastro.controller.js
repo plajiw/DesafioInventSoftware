@@ -117,12 +117,9 @@ sap.ui.define([
         },
 
         aoClicarEmSalvar: function () {
-            let metodo ="POST";
-            let url = URL_API;
-
             const view = this.getView();
             const oResourceBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
-            
+
             let errosEncontrados = Validador.validarFormulario(view, oResourceBundle);
             if (errosEncontrados) {
                 MessageBox.error(errosEncontrados);
@@ -131,19 +128,26 @@ sap.ui.define([
 
             let modelo = view.getModel(MODELO_FORMULARIO);
             let dados = modelo.getData();
+
+            let metodo ="POST";
+            let url = URL_API;
+
             if(dados.id){
                 metodo = "PUT";
                 url = `${URL_API}/${dados.id}`
             }
 
+            const corpoDaRequisicao = {
+                id: dados.id || null,
+                nome: dados.nome,
+                tipo: dados.tipo,
+                quantidadeEmEstoque: parseInt(dados.quantidadeEmEstoque)
+            };
+
             fetch(url, {
                 method: metodo,
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    nome: dados.nome,
-                    tipo: dados.tipo,
-                    quantidadeEmEstoque: Number(dados.quantidadeEmEstoque)
-                })
+                body: JSON.stringify(corpoDaRequisicao)
             })
                 .then(resposta => resposta.json())
                 .then(equipamento => {

@@ -9,7 +9,9 @@ sap.ui.define([
     "use strict";
 
     // I18N
+    const CHAVE_I18N_TITULO_REMOCAO = "tituloConfirmarRemocao"
     const CHAVE_I18N_VALIDAR_REMOCAO = "confirmarRemocaoEquipamento";
+    const CHAVE_I18N_SUCESSO_REMOCAO = "equipamentoRemovido"
 
     // Constantes
     const MODELO_DETALHES = "detalhes";
@@ -55,23 +57,21 @@ sap.ui.define([
         },
 
         _alertaAoRemover: function (id) {
-            
+            const oResourceBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
 
-            MessageBox.warning("Alerta", {
-                title: "Titulo",
-                InitialFocus: MessageBox.Action.NO,
+            MessageBox.warning(oResourceBundle.getText(CHAVE_I18N_VALIDAR_REMOCAO, [id]), {
+                title: oResourceBundle.getText(CHAVE_I18N_TITULO_REMOCAO),
                 actions: [MessageBox.Action.YES, MessageBox.Action.NO],
                 emphasizedAction: MessageBox.Action.YES,
-                onClose(escolhaUsuario) {
-                    debugger
-                    console.log(escolhaUsuario);
-                    MessageToast.show("Removido");
-                    this._removerEquipamento(id);
-
+                
+                onClose: (botaoSelecionado) => {
+                    if (botaoSelecionado === MessageBox.Action.YES) {
+                        MessageToast.show(oResourceBundle.getText(CHAVE_I18N_SUCESSO_REMOCAO));
+                        this._removerEquipamento(id);
+                    }
                 }
-            })
+            });
         },
-
 
         _aoCoincidirRota: function (oEvento) {
             let id = oEvento.getParameter(ARGUMENTOS_DA_ROTA).id;

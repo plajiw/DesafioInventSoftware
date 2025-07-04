@@ -154,7 +154,7 @@ sap.ui.define([
 
             if (errosEncontrados) MessageBox.error(errosEncontrados);
 
-            return !!errosEncontrados;
+            return !errosEncontrados;
         },
 
         aoClicarEmSalvar: function () {

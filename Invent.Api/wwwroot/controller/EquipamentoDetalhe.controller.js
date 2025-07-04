@@ -2,9 +2,14 @@ sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/ui/model/json/JSONModel",
     "../model/formatter",
-    "sap/ui/core/UIComponent"
-], (Controller, JSONModel, formatter, UIComponent) => {
+    "sap/ui/core/UIComponent",
+    "sap/m/MessageBox",
+    "sap/m/MessageToast"
+], (Controller, JSONModel, formatter, UIComponent, MessageBox, MessageToast) => {
     "use strict";
+
+    // I18N
+    const CHAVE_I18N_VALIDAR_REMOCAO = "confirmarRemocaoEquipamento";
 
     // Constantes
     const MODELO_DETALHES = "detalhes";
@@ -36,7 +41,37 @@ sap.ui.define([
         },
 
         aoClicarEmRemover: function () {
+            const caminhoIdEquipamento = "/id";
+            let id = this.getView().getModel(MODELO_DETALHES).getProperty(caminhoIdEquipamento);
+            this._alertaAoRemover(id);
         },
+
+        _removerEquipamento: function (id) {
+            const urlApi = `${ENDPOINT_EQUIPAMENTOS}/${id}`
+            fetch(urlApi, {
+                method: 'DELETE',
+            })
+                .then(() => this._roteador.navTo(ROTA_LISTA, {}, true));
+        },
+
+        _alertaAoRemover: function (id) {
+            
+
+            MessageBox.warning("Alerta", {
+                title: "Titulo",
+                InitialFocus: MessageBox.Action.NO,
+                actions: [MessageBox.Action.YES, MessageBox.Action.NO],
+                emphasizedAction: MessageBox.Action.YES,
+                onClose(escolhaUsuario) {
+                    debugger
+                    console.log(escolhaUsuario);
+                    MessageToast.show("Removido");
+                    this._removerEquipamento(id);
+
+                }
+            })
+        },
+
 
         _aoCoincidirRota: function (oEvento) {
             let id = oEvento.getParameter(ARGUMENTOS_DA_ROTA).id;

@@ -23,10 +23,10 @@ sap.ui.define([
     const ValueState = coreLibrary.ValueState;
 
     return Controller.extend("ui5.gestaoequipamento.controller.EquipamentoCadastro", {
-        // Inicializa a tela de cadastro
         onInit: function () {
-            this.getView().setModel(new JSONModel({}), MODELO_FORMULARIO);
-            // Obtém o roteador
+            let oModelo = new JSONModel([]);
+            this.getView().setModel(oModelo, MODELO_FORMULARIO);
+            
             this.roteador = UIComponent.getRouterFor(this);
             // Configura os gatilhos de acesso para as rotas de cadastro e editar
             this.roteador.getRoute(ROTA_CADASTRO).attachPatternMatched(this._aoAcessarCadastro, this);
@@ -108,10 +108,8 @@ sap.ui.define([
 
             const oResourceBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
 
-            // Valida o campo
             let { estadoDoCampo, mensagemErro } = Validador.validarCampo(chaveModelo, valorDigitado, oResourceBundle);
 
-            // Aplica o estado e mensagem ao campo
             campoEntrada.setValueState(estadoDoCampo);
             campoEntrada.setValueStateText(mensagemErro);
         },
@@ -145,7 +143,8 @@ sap.ui.define([
                 body: JSON.stringify(corpoDaRequisicao)
             })
                 .then(resposta => resposta.json())
-                .then(equipamento => this.roteador.navTo(ROTA_DETALHES, { id: equipamento.id }))
+                .then(equipamento => this.roteador.navTo(ROTA_DETALHES, { id: equipamento.id })
+            );
         },
 
         _validarFormulario: function () {
@@ -163,6 +162,7 @@ sap.ui.define([
 
         aoClicarEmSalvar: function () {
             if (this._validarFormulario()) {
+                let view = this.getView();
                 let dados = view.getModel(MODELO_FORMULARIO).getData();
                 this._configurarRequisicao(dados.id, dados);
             }

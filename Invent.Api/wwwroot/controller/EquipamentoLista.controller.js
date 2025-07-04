@@ -16,22 +16,21 @@
   const PROPRIEDADE_ID = "id";
   const ROTA_PARA_DETALHES = "detalheEquipamento";
   const ROTA_PARA_LISTA = "listaEquipamento";
+  const ROTA_PARA_CADASTRO = "cadastroEquipamento"
 
   return Controller.extend("ui5.gestaoequipamento.controller.EquipamentoLista", {
     formatter: formatter,
 
     onInit: function () {
-      var oModel = new JSONModel([]);
-
-      this.getView().setModel(oModel, NOME_MODELO_EQUIPAMENTOS);
+      let oModelo = new JSONModel([]);
+      this.getView().setModel(oModelo, NOME_MODELO_EQUIPAMENTOS);
 
       this.roteador = UIComponent.getRouterFor(this);
       this.roteador.getRoute(ROTA_PARA_LISTA).attachPatternMatched(this._carregarEquipamentos, this);
     },
 
     _carregarEquipamentos() {
-      // Obtém o modelo
-      const oModelo = this.getView().getModel(NOME_MODELO_EQUIPAMENTOS);
+      let oModelo = this.getView().getModel(NOME_MODELO_EQUIPAMENTOS);
 
       fetch(ENDPOINT_EQUIPAMENTOS)
         .then(res => res.json())
@@ -56,17 +55,14 @@
     },
 
     aoClicarEmCadastrar: function () {
-      const rotaDeCadastro = "cadastroEquipamento";
-      this.roteador.navTo(rotaDeCadastro, {}, true);
+      this.roteador.navTo(ROTA_PARA_CADASTRO, {}, true);
     },
 
     aoPressionarItem: function (oEvento) {
       const oItemPressionado = oEvento.getSource();
       const oContexto = oItemPressionado.getBindingContext(NOME_MODELO_EQUIPAMENTOS);
-
       // A partir do contexto, extrai a propriedade "id" do equipamento
       const idDoEquipamento = oContexto.getProperty(PROPRIEDADE_ID);
-
       // Navegar para a rota, passando o ID como parâmetro
       this.roteador.navTo(ROTA_PARA_DETALHES, { id: idDoEquipamento });
     }

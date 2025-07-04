@@ -152,12 +152,9 @@ sap.ui.define([
             const oResourceBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
             const errosEncontrados = Validador.validarFormulario(view, oResourceBundle);
 
-            if (errosEncontrados) {
-                MessageBox.error(errosEncontrados);
-                return false;
-            }
+            if (errosEncontrados) MessageBox.error(errosEncontrados);
 
-            return true
+            return !!errosEncontrados;
         },
 
         aoClicarEmSalvar: function () {

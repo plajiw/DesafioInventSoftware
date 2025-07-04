@@ -5,12 +5,12 @@ sap.ui.define([
     "sap/ui/core/library",
     "../services/Validador",
     "sap/ui/core/UIComponent"
-], (Controller, JSONModel, MessageBox, coreLibrary, Validador, UIComponent,) => {
+], (Controller, JSONModel, MessageBox, coreLibrary, Validador, UIComponent) => {
     "use strict";
 
     // Constantes
-    const MODELO_FORMULARIO = "equipamento";
-    const URL_API = "/api/Equipamentos";
+    const MODELO_EQUIPAMENTO = "equipamentos";
+    const ENDPOINT_EQUIPAMENTOS = "api/Equipamentos";
     const ROTA_CADASTRO = "cadastroEquipamento";
     const ROTA_LISTA = "listaEquipamento";
     const ROTA_DETALHES = "detalheEquipamento";
@@ -24,13 +24,17 @@ sap.ui.define([
 
     return Controller.extend("ui5.gestaoequipamento.controller.EquipamentoCadastro", {
         onInit: function () {
-            let oModelo = new JSONModel([]);
-            this.getView().setModel(oModelo, MODELO_FORMULARIO);
-            
+            let oModelo = new JSONModel({});
+            this.getView().setModel(oModelo, MODELO_EQUIPAMENTO);
+
             this.roteador = UIComponent.getRouterFor(this);
             // Configura os gatilhos de acesso para as rotas de cadastro e editar
             this.roteador.getRoute(ROTA_CADASTRO).attachPatternMatched(this._aoAcessarCadastro, this);
             this.roteador.getRoute(ROTA_EDITAR).attachPatternMatched(this._aoAcessarEditar, this);
+        },
+
+        _obterModeloEquipamento: function () {
+            return this.getView().getModel(MODELO_EQUIPAMENTO);
         },
 
         _aoAcessarCadastro: function () {
@@ -38,7 +42,7 @@ sap.ui.define([
         },
 
         _aoAcessarEditar: function (oEvento) {
-            const argumentosDaRota = "arguments"
+            const argumentosDaRota = "arguments";
             this._limparCampos();
             const id = oEvento.getParameter(argumentosDaRota).id;
             this._carregarDadosEdicao(id);
@@ -52,19 +56,31 @@ sap.ui.define([
 
         _limparCampos: function () {
             let view = this.getView();
-            view.setModel(new JSONModel({}), MODELO_FORMULARIO);
+            view.setModel(new JSONModel({}), MODELO_EQUIPAMENTO);
             this._limparValueStateCampos(ID_INPUT_NOME);
             this._limparValueStateCampos(ID_INPUT_TIPO);
             this._limparValueStateCampos(ID_INPUT_QUANTIDADE);
         },
 
         _carregarDadosEdicao: function (id) {
-            let modelo = this.getView().getModel(MODELO_FORMULARIO);
+            let oModelo = this._obterModeloEquipamento();
             // GET por ID
-            fetch(`${URL_API}/${id}`)
-                .then(res => res.json())
+            fetch(`${ENDPOINT_EQUIPAMENTOS}/${id}`)
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error(`Erro HTTP: ${res.status}`);
+                    }
+                    return res.json();
+                })
                 .then(dados => {
-                    modelo.setData(dados);
+                    if (Array.isArray(dados)) {
+                        throw new Error("API retornou uma lista em vez de um único equipamento");
+                    }
+                    oModelo.setData(dados);
+                })
+                .catch(err => {
+                    console.error("Erro ao carregar dados para edição:", err);
+                    MessageBox.error(this.getOwnerComponent().getModel("i18n").getResourceBundle().getText("erroCarregarEquipamento"));
                 });
         },
 
@@ -101,10 +117,10 @@ sap.ui.define([
             let valorDigitado = oEvento.getParameter("value");
 
             // Atualiza o modelo
-            let modelo = this.getView().getModel(MODELO_FORMULARIO);
-            let dados = modelo.getData();
+            let oModelo = this._obterModeloEquipamento();
+            let dados = oModelo.getData();
             dados[chaveModelo] = valorDigitado;
-            modelo.setData(dados);
+            oModelo.setData(dados);
 
             const oResourceBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
 
@@ -119,7 +135,7 @@ sap.ui.define([
             const metodoPOST = "POST";
 
             const metodo = id ? metodoPUT : metodoPOST;
-            const url = id ? `${URL_API}/${id}` : URL_API;
+            const url = id ? `${ENDPOINT_EQUIPAMENTOS}/${id}` : ENDPOINT_EQUIPAMENTOS;
 
             const corpoDaRequisicao = this._configurarCorpoDaRequisicao(dados);
             this._executarRequisicao(metodo, url, corpoDaRequisicao);
@@ -143,8 +159,7 @@ sap.ui.define([
                 body: JSON.stringify(corpoDaRequisicao)
             })
                 .then(resposta => resposta.json())
-                .then(equipamento => this.roteador.navTo(ROTA_DETALHES, { id: equipamento.id })
-            );
+                .then(equipamento => this.roteador.navTo(ROTA_DETALHES, { id: equipamento.id }));
         },
 
         _validarFormulario: function () {
@@ -159,8 +174,7 @@ sap.ui.define([
 
         aoClicarEmSalvar: function () {
             if (this._validarFormulario()) {
-                let view = this.getView();
-                let dados = view.getModel(MODELO_FORMULARIO).getData();
+                let dados = this._obterModeloEquipamento().getData();
                 this._configurarRequisicao(dados.id, dados);
             }
         },

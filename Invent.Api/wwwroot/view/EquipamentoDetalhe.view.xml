@@ -43,35 +43,35 @@
                                     <!-- ID DO DETALHE -->
                                     <f:FormElement label="{i18n>idTabela}">
                                         <f:fields>
-                                            <Text text="{detalhes>/id}" />
+                                            <Text text="{equipamentos>/id}" />
                                         </f:fields>
                                     </f:FormElement>
                                     
                                     <!-- NOME DO DETALHE -->
                                     <f:FormElement label="{i18n>nomeTabela}">
                                         <f:fields>
-                                            <Text text="{detalhes>/nome}" />
+                                            <Text text="{equipamentos>/nome}" />
                                         </f:fields>
                                     </f:FormElement>
                                     
                                     <!-- TIPO DO DETALHE -->
                                     <f:FormElement label="{i18n>tipoTabela}">
                                         <f:fields>
-                                            <Text text="{detalhes>/tipo}" />
+                                            <Text text="{equipamentos>/tipo}" />
                                         </f:fields>
                                     </f:FormElement>
                                     
                                     <!-- QUANTIDADE DO DETALHE -->
                                     <f:FormElement label="{i18n>quantidadeTabela}">
                                         <f:fields>
-                                            <ObjectNumber number="{detalhes>/quantidadeEmEstoque}" unit="un" />
+                                            <ObjectNumber number="{equipamentos>/quantidadeEmEstoque}" unit="un" />
                                         </f:fields>
                                     </f:FormElement>
                                     
                                     <!-- DATA DO DETALHE -->
                                     <f:FormElement label="{i18n>dataTabela}">
                                         <f:fields>
-                                            <Text text="{path: 'detalhes>/dataDeInclusao', formatter: '.formatter.formatarData'}" />
+                                            <Text text="{path: 'equipamentos>/dataDeInclusao', formatter: '.formatter.formatarData'}" />
                                         </f:fields>
                                     </f:FormElement>
                                     
@@ -79,8 +79,8 @@
                                     <f:FormElement label="{i18n>disponibilidadeTabela}">
                                         <f:fields>
                                             <ObjectStatus
-                                                text="{path: 'detalhes>/temEstoque', formatter: '.formatter.formatarDisponibilidade'}"
-                                                state="{= ${detalhes>/temEstoque} ? 'Success' : 'Error' }" />
+                                                text="{path: 'equipamentos>/temEstoque', formatter: '.formatter.formatarDisponibilidade'}"
+                                                state="{= ${equipamentos>/temEstoque} ? 'Success' : 'Error' }" />
                                         </f:fields>
                                     </f:FormElement>
 

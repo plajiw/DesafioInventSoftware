@@ -4,38 +4,55 @@
   "sap/ui/model/Filter",
   "sap/ui/model/FilterOperator",
   "../model/formatter",
-  "sap/ui/core/UIComponent"
-], (Controller, JSONModel, Filter, FilterOperator, formatter, UIComponent) => {
+  "sap/ui/core/UIComponent",
+  "sap/m/MessageBox"
+], (Controller, JSONModel, Filter, FilterOperator, formatter, UIComponent, MessageBox) => {
   "use strict";
 
   // Constantes
-  const NOME_MODELO_EQUIPAMENTOS = "equipamentos";
-  const PROPRIEDADE_FILTRO_NOME = "nome";
+  const MODELO_EQUIPAMENTO = "equipamentos";
+  const PROPRIEDADE_NOME = "nome";
   const ENDPOINT_EQUIPAMENTOS = "api/Equipamentos";
   const ID_TABELA_EQUIPAMENTOS = "tabelaEquipamentos";
   const PROPRIEDADE_ID = "id";
-  const ROTA_PARA_DETALHES = "detalheEquipamento";
-  const ROTA_PARA_LISTA = "listaEquipamento";
-  const ROTA_PARA_CADASTRO = "cadastroEquipamento"
+  const ROTA_DETALHES = "detalheEquipamento";
+  const ROTA_LISTA = "listaEquipamento";
+  const ROTA_CADASTRO = "cadastroEquipamento";
 
   return Controller.extend("ui5.gestaoequipamento.controller.EquipamentoLista", {
     formatter: formatter,
 
     onInit: function () {
       let oModelo = new JSONModel([]);
-      this.getView().setModel(oModelo, NOME_MODELO_EQUIPAMENTOS);
+      this.getView().setModel(oModelo, MODELO_EQUIPAMENTO);
 
       this.roteador = UIComponent.getRouterFor(this);
-      this.roteador.getRoute(ROTA_PARA_LISTA).attachPatternMatched(this._carregarEquipamentos, this);
+      this.roteador.getRoute(ROTA_LISTA).attachPatternMatched(this._carregarEquipamentos, this);
+    },
+
+    _obterModeloEquipamento: function () {
+        return this.getView().getModel(MODELO_EQUIPAMENTO);
     },
 
     _carregarEquipamentos() {
-      let oModelo = this.getView().getModel(NOME_MODELO_EQUIPAMENTOS);
-
+      let oModelo = this._obterModeloEquipamento();
       fetch(ENDPOINT_EQUIPAMENTOS)
-        .then(res => res.json())
-        .then(data => oModelo.setData(data))
-        .catch(err => console.error(err));
+        .then(res => {
+            if (!res.ok) {
+                throw new Error(`Erro HTTP: ${res.status}`);
+            }
+            return res.json();
+        })
+        .then(data => {
+            if (!Array.isArray(data)) {
+                throw new Error("API não retornou uma lista de equipamentos");
+            }
+            oModelo.setData(data);
+        })
+        .catch(err => {
+            console.error("Erro ao carregar equipamentos:", err);
+            MessageBox.error(this.getOwnerComponent().getModel("i18n").getResourceBundle().getText("erroCarregarEquipamentos"));
+        });
     },
 
     aoBuscar: function (oEvent) {
@@ -47,7 +64,7 @@
 
       const aFilters = [];
       if (sQuery) {
-        const oFilter = new Filter(PROPRIEDADE_FILTRO_NOME, FilterOperator.Contains, sQuery);
+        const oFilter = new Filter(PROPRIEDADE_NOME, FilterOperator.Contains, sQuery);
         aFilters.push(oFilter);
       }
 
@@ -55,16 +72,16 @@
     },
 
     aoClicarEmCadastrar: function () {
-      this.roteador.navTo(ROTA_PARA_CADASTRO, {}, true);
+      this.roteador.navTo(ROTA_CADASTRO, {}, true);
     },
 
     aoPressionarItem: function (oEvento) {
       const oItemPressionado = oEvento.getSource();
-      const oContexto = oItemPressionado.getBindingContext(NOME_MODELO_EQUIPAMENTOS);
+      const oContexto = oItemPressionado.getBindingContext(MODELO_EQUIPAMENTO);
       // A partir do contexto, extrai a propriedade "id" do equipamento
       const idDoEquipamento = oContexto.getProperty(PROPRIEDADE_ID);
       // Navegar para a rota, passando o ID como parâmetro
-      this.roteador.navTo(ROTA_PARA_DETALHES, { id: idDoEquipamento });
+      this.roteador.navTo(ROTA_DETALHES, { id: idDoEquipamento });
     }
   });
 });

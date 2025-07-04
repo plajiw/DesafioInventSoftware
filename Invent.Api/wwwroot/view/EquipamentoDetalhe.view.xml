@@ -1,0 +1,95 @@
+<mvc:View
+    controllerName="ui5.gestaoequipamento.controller.EquipamentoDetalhe"
+    xmlns="sap.m"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:l="sap.ui.layout">
+
+    <!-- Página -->
+    <Page title="{i18n>tituloPaginaDetalhes}" titleAlignment="Center" showNavButton="true" navButtonPress=".aoClicarEmVoltar">
+        <!-- Header -->
+        <headerContent>
+            <Button type="Emphasized" text="{i18n>botaoEditar}" icon="sap-icon://edit" press=".aoClicarEmEditar" />
+            <Button type="Reject" text="{i18n>botaoRemover}" icon="sap-icon://cancel" press=".aoClicarEmRemover" />
+        </headerContent>
+
+        <!-- Conteúdo -->
+        <content>
+            <Panel
+                class="sapUiResponsiveMargin sapUiSmallMarginTop"
+                width="auto"
+                backgroundDesign="Transparent">
+                <content>
+                    <f:Form id="formDetalhes" editable="false">
+                        <f:layout>
+                            <f:ResponsiveGridLayout
+                                labelSpanXL="4"
+                                labelSpanL="3"
+                                labelSpanM="12"
+                                labelSpanS="12"
+                                adjustLabelSpan="false"
+                                emptySpanXL="0"
+                                emptySpanL="4"
+                                emptySpanM="0"
+                                emptySpanS="0"
+                                columnsXL="1"
+                                columnsL="1"
+                                columnsM="1"
+                                singleContainerFullSize="false" />
+                        </f:layout>
+                        <f:formContainers>
+                            <f:FormContainer>
+                                <f:formElements>
+                                    <!-- ID DO DETALHE -->
+                                    <f:FormElement label="{i18n>idTabela}">
+                                        <f:fields>
+                                            <Text text="{detalhes>/id}" />
+                                        </f:fields>
+                                    </f:FormElement>
+                                    
+                                    <!-- NOME DO DETALHE -->
+                                    <f:FormElement label="{i18n>nomeTabela}">
+                                        <f:fields>
+                                            <Text text="{detalhes>/nome}" />
+                                        </f:fields>
+                                    </f:FormElement>
+                                    
+                                    <!-- TIPO DO DETALHE -->
+                                    <f:FormElement label="{i18n>tipoTabela}">
+                                        <f:fields>
+                                            <Text text="{detalhes>/tipo}" />
+                                        </f:fields>
+                                    </f:FormElement>
+                                    
+                                    <!-- QUANTIDADE DO DETALHE -->
+                                    <f:FormElement label="{i18n>quantidadeTabela}">
+                                        <f:fields>
+                                            <ObjectNumber number="{detalhes>/quantidadeEmEstoque}" unit="un" />
+                                        </f:fields>
+                                    </f:FormElement>
+                                    
+                                    <!-- DATA DO DETALHE -->
+                                    <f:FormElement label="{i18n>dataTabela}">
+                                        <f:fields>
+                                            <Text text="{path: 'detalhes>/dataDeInclusao', formatter: '.formatter.formatarData'}" />
+                                        </f:fields>
+                                    </f:FormElement>
+                                    
+                                    <!-- DISPONIBILIDADE DO DETALHE -->
+                                    <f:FormElement label="{i18n>disponibilidadeTabela}">
+                                        <f:fields>
+                                            <ObjectStatus
+                                                text="{path: 'detalhes>/temEstoque', formatter: '.formatter.formatarDisponibilidade'}"
+                                                state="{= ${detalhes>/temEstoque} ? 'Success' : 'Error' }" />
+                                        </f:fields>
+                                    </f:FormElement>
+
+                                </f:formElements>
+                            </f:FormContainer>
+                        </f:formContainers>
+                    </f:Form>
+                </content>
+            </Panel>
+        </content>
+    </Page>
+</mvc:View>

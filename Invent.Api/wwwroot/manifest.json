@@ -27,7 +27,8 @@
 			"minUI5Version": "1.108.0",
 			"libs": {
 				"sap.m": {},
-				"sap.ui.core": {}
+				"sap.ui.core": {},
+				"sap.ui.layout": {}
 			}
 		},
 		"contentDensities": {
@@ -65,14 +66,34 @@
 			"routes": [
 				{
 					"pattern": "",
-					"name": "principal",
-					"target": "targetPaginaPrincipal"
+					"name": "listaEquipamento",
+					"target": "targetListaEquipamentos"
+				},
+				{
+					"pattern": "cadastro",
+					"name": "cadastroEquipamento",
+					"target": "targetCadastroEquipamentos"
+				},
+				{
+					"pattern": "equipamento/{id}",
+					"name" : "detalheEquipamento",
+					"target": "targetDetalhesEquipamentos"
+				},
+				{
+					"pattern": "equipamento/{id}/editar",
+					"name" : "editarEquipamento",
+					"target" : "targetCadastroEquipamentos"
 				}
 			],
 			"targets": {
-				"targetPaginaPrincipal": {
-					"viewName": "PaginaPrincipal",
-					"viewId": ""
+				"targetListaEquipamentos": {
+					"viewName": "EquipamentoLista"
+				},
+				"targetCadastroEquipamentos": {
+					"viewName": "EquipamentoCadastro"
+				},
+				"targetDetalhesEquipamentos" : {
+					"viewName" : "EquipamentoDetalhe"
 				}
 			}
 		}

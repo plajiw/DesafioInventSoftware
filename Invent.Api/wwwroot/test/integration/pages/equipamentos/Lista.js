@@ -1,6 +1,8 @@
 sap.ui.define([
-    "sap/ui/test/Opa5"
-], function (Opa5) {
+    "sap/ui/test/Opa5",
+    "sap/ui/test/matchers/AggregationLengthEquals",
+    "sap/ui/test/matchers/I18NText"
+], function (Opa5, AggregationLengthEquals, I18NText) {
     "use strict";
 
     const VIEW_NAME = "EquipamentoLista";
@@ -8,33 +10,35 @@ sap.ui.define([
     Opa5.createPageObjects({
         naPaginaDeListagemDeEquipamentos: {
             actions: {},
-
             assertions: {
-
                 paginaDeListaAberta: function () {
                     return this.waitFor({
                         controlType: "sap.m.Page",
                         viewName: VIEW_NAME,
-                        i18NText: {
+                        matchers: new I18NText({
                             propertyName: "title",
                             key: "tituloPaginaLista"
-                        },
+                        }),
                         success: function () {
                             Opa5.assert.ok(true, "Página de lista foi carregada conforme esperado.");
-                        }
+                        },
+                        errorMessage: "Erro ao carregar a página de lista."
                     });
                 },
 
                 tabelaCarregadaComDados: function () {
-                    const quantidadeMinimaDeEquipamentos = 1;
+                    const quantidadeEsperadaDeEquipamentos = 2;
                     return this.waitFor({
-                        id: "tabelaEquipamentos",
                         viewName: VIEW_NAME,
                         controlType: "sap.m.Table",
-                        success: function (oTable) {
-                            var iItems = oTable.getItems().length;
-                            Opa5.assert.ok(iItems >= quantidadeMinimaDeEquipamentos, "Tabela carregou com pelo menos um item");
-                        }
+                        matchers: new AggregationLengthEquals({
+                            name: "items",
+                            length: quantidadeEsperadaDeEquipamentos
+                        }),
+                        success: function () {
+                            Opa5.assert.ok(true, "Tabela contém exatamente " + quantidadeEsperadaDeEquipamentos + "itens");
+                        },
+                        errorMessage: "Erro: a tabela não contém " + quantidadeEsperadaDeEquipamentos + " itens."
                     });
                 }
             }

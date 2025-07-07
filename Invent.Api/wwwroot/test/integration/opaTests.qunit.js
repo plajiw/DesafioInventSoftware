@@ -1,13 +1,11 @@
-/* global QUnit */
-sap.ui.define([
-    "sap/ui/test/Opa5",
+QUnit.config.autostart = false;
+
+sap.ui.getCore().attachInit(function() {
+  "use strict";
+
+  sap.ui.require([
     "ui5/gestaoequipamento/test/integration/AllJourneys"
-], () => {
-    "use strict";
-
-    QUnit.config.autostart = false;
-
-    sap.ui.getCore().attachInit(() => {
-        QUnit.start();
-    });
+  ], function() {
+    QUnit.start();
+  });
 });

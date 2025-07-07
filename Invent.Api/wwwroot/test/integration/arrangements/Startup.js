@@ -1,25 +1,43 @@
 sap.ui.define([
-	"sap/ui/test/Opa5"
-], (Opa5) => {
+	"sap/ui/test/Opa5",
+	"sap/ui/model/odata/v2/ODataModel"
+], function(Opa5, ODataModel) {
 	"use strict";
 
 	return Opa5.extend("ui5.gestaoequipamento.test.integration.arrangements.Startup", {
-		// Inicia a aplicação para os testes
-		iStartMyApp: function (oOptions) {
-			const options = oOptions || {};
-			return this.iStartMyUIComponent({
+
+		/**
+		 * Initializes mock server, then starts the app component
+		 * @param {object} oOptionsParameter An object that contains the configuration for starting up the app
+		 * @param {int} oOptionsParameter.delay A custom delay to start the app with
+		 * @param {string} [oOptionsParameter.hash] The in app hash can also be passed separately for better readability in tests
+		 * @param {boolean} [oOptionsParameter.autoWait=true] Automatically wait for pending requests while the application is starting up.
+		 */
+		iStartMyApp : function (oOptionsParameter) {
+			var oOptions = oOptionsParameter || {};
+
+			this._clearSharedData();
+
+			// start the app with a minimal delay to make tests fast but still async to discover basic timing issues
+			oOptions.delay = oOptions.delay || 1;
+
+			// configure mock server with the current options
+			// var oMockserverInitialized = mockserver.init(oOptions);
+
+			// this.iWaitForPromise(oMockserverInitialized);
+			// start the app UI component
+			this.iStartMyUIComponent({
 				componentConfig: {
 					name: "ui5.gestaoequipamento",
 					async: true
 				},
-				hash: options.hash || "",
+				hash: oOptions.hash,
 				autoWait: oOptions.autoWait
 			});
 		},
 
-		// Finaliza a aplicação após os testes
-		iTearDownMyApp: function () {
-			return this.iTeardownMyUIComponent();
+		_clearSharedData: function () {
+			ODataModel.mSharedData = { server: {}, service: {}, meta: {} };
 		}
 	});
 });

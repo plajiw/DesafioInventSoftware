@@ -20,7 +20,7 @@ sap.ui.define([
                             key: "tituloPaginaLista"
                         },
                         success: function () {
-                            Opa5.assert.ok(true, "Página de lista foi aberta com o título correto");
+                            Opa5.assert.ok(true, "Página de lista foi carregada conforme esperado.");
                         }
                     });
                 },

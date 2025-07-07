@@ -4,18 +4,21 @@ sap.ui.define([
     "use strict";
 
 	const SEGUNDO_SEGMENTO_DA_URL = 1;
+	const ID_INICIAL_MOCK = 3;
 
     let equipamentos = [
-        { id: "Equip-1-A", nome: "Teste 1", tipo: "Eletrônico", quantidadeEmEstoque: 10 },
-        { id: "Equip-2-A", nome: "Teste 2", tipo: "Eletrônico", quantidadeEmEstoque: 100 }
+        { id: "Equipamento-1-A", nome: "Teste 1", tipo: "Eletrônico", quantidadeEmEstoque: 10 },
+        { id: "Equipamento-2-A", nome: "Teste 2", tipo: "Eletrônico", quantidadeEmEstoque: 100 }
     ];
+	
+	let proximoId = ID_INICIAL_MOCK;
 
     // Função para simular chamadas API
     function mockFetch(url, opcoesFetch) {
         if (opcoesFetch && opcoesFetch.method === "POST") {
             const novoEquipamento = JSON.parse(opcoesFetch.body);
-			// Gera um ID único
-            novoEquipamento.id = "Equip-" + Date.now();
+			// Gera um ID
+            novoEquipamento.id = `Equipamento-${proximoId++}-A`;
             equipamentos.push(novoEquipamento);
 
             return Promise.resolve({ ok: true, json: () => Promise.resolve(novoEquipamento) });

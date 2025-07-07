@@ -4,7 +4,7 @@ sap.ui.define([
 ], function (opaTest) {
 	"use strict";
 
-	QUnit.module("TelaDeListagem", () => {
+	QUnit.module("Tela de Listagem de Equipamento", () => {
 
 		opaTest("Tela de listagem deve ser carregada com sucesso", function (Given, When, Then) {
 			// Arrangements

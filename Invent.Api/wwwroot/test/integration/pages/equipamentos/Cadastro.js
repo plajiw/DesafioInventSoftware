@@ -1,0 +1,108 @@
+sap.ui.define([
+    "sap/ui/test/Opa5",
+    "sap/ui/test/matchers/I18NText",
+    "sap/ui/test/actions/EnterText",
+    "sap/ui/test/actions/Press",
+    "sap/ui/test/matchers/PropertyStrictEquals"
+], function (Opa5, I18NText, EnterText, Press, PropertyStrictEquals) {
+    "use strict";
+
+    const VIEW_NAME = "EquipamentoCadastro";
+
+    Opa5.createPageObjects({
+        naPaginaDeCadastroDeEquipamentos: {
+            actions: {
+
+                // Teste de nome
+                preenchoONome: function (sNome) {
+                    return this.waitFor({
+                        controlType: "sap.m.Input",
+                        viewName: VIEW_NAME,
+                        matchers: new I18NText({
+                            propertyName: "placeholder",
+                            key: "placeholderNome"
+                        }),
+                        actions: new EnterText({ text: sNome }),
+                        success: function () {
+                            Opa5.assert.ok(true, "Preenchi o nome com: " + sNome);
+                        },
+                        errorMessage: "Não encontrei o campo Nome na página de cadastro."
+                    });
+                },
+
+                // Teste de Tipo
+                preenchoOTipo: function (sTipo) {
+                    return this.waitFor({
+                        controlType: "sap.m.Input",
+                        viewName: VIEW_NAME,
+                        matchers: new I18NText({
+                            propertyName: "placeholder",
+                            key: "placeholderTipo"
+                        }),
+                        actions: new EnterText({ text: sTipo }),
+                        success: function () {
+                            Opa5.assert.ok(true, "Preenchi o tipo com: " + sTipo);
+                        },
+                        errorMessage: "Não encontrei o campo Tipo na página de cadastro."
+                    });
+                },
+
+                // Teste de Quantidade
+                preenchoAQuantidade: function (sQuantidade) {
+                    return this.waitFor({
+                        controlType: "sap.m.Input",
+                        viewName: VIEW_NAME,
+                        matchers: new I18NText({
+                            propertyName: "placeholder",
+                            key: "placeholderQuantidade"
+                        }),
+                        matchers: new PropertyStrictEquals({
+                            name: "type",
+                            value: "Number",
+                        }),
+                        actions: new EnterText({ text: sQuantidade }),
+                        success: function () {
+                            Opa5.assert.ok(true, "Preenchi a quantidade com: " + sQuantidade);
+                        },
+                        errorMessage: "Não encontrei o campo Quantidade na página de cadastro."
+                    });
+                },
+
+                // Teste Salvar
+                euClicoEmSalvar: function () {
+                    return this.waitFor({
+                        controlType: "sap.m.Button",
+                        viewName: VIEW_NAME,
+                        matchers: new I18NText({
+                            propertyName: "text",
+                            key: "botaoSalvar"
+                        }),
+                        actions: new Press(),
+                        success: function () {
+                            Opa5.assert.ok(true, "Botão Salvar foi clicado com sucesso.");
+                        },
+                        errorMessage: "Botão Salvar não foi encontrado na página de cadastro."
+                    });
+                }
+
+            },
+
+            assertions: {
+                paginaDeCadastroAberta: function () {
+                    return this.waitFor({
+                        controlType: "sap.m.Page",
+                        viewName: VIEW_NAME,
+                        matchers: new I18NText({
+                            propertyName: "title",
+                            key: "tituloPaginaCadastro"
+                        }),
+                        success: function () {
+                            Opa5.assert.ok(true, "Página de cadastro foi aberta corretamente.");
+                        },
+                        errorMessage: "Página de cadastro não abriu corretamente."
+                    });
+                }
+            }
+        }
+    });
+});

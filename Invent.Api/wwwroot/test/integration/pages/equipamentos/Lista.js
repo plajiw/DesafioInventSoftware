@@ -1,15 +1,34 @@
 sap.ui.define([
     "sap/ui/test/Opa5",
     "sap/ui/test/matchers/AggregationLengthEquals",
-    "sap/ui/test/matchers/I18NText"
-], function (Opa5, AggregationLengthEquals, I18NText) {
+    "sap/ui/test/matchers/I18NText",
+    "sap/ui/test/actions/Press"
+], function (Opa5, AggregationLengthEquals, I18NText, Press) {
     "use strict";
 
     const VIEW_NAME = "EquipamentoLista";
+    const QUANTIDADE_DE_EQUIPAMENTOS_ESPERADA = 2;
 
     Opa5.createPageObjects({
         naPaginaDeListagemDeEquipamentos: {
-            actions: {},
+            actions: {
+                euClicoNoBotaoDeCadastro: function () {
+                    return this.waitFor({
+                        controlType: "sap.m.Button",
+                        viewName: VIEW_NAME,
+                        matchers: new I18NText({
+                            propertyName: "text",
+                            key: "botaoCadastrar"
+                        }),
+                        actions: new Press(),
+                        success: function () {
+                            Opa5.assert.ok(true, "Botão Cadastrar foi clicado com sucesso.");
+                        },
+                        errorMessage: "Botão Cadastrar não foi encontrado na página de lista."
+                    });
+                }
+            },
+
             assertions: {
                 paginaDeListaAberta: function () {
                     return this.waitFor({
@@ -27,18 +46,17 @@ sap.ui.define([
                 },
 
                 tabelaCarregadaComDados: function () {
-                    const quantidadeEsperadaDeEquipamentos = 2;
                     return this.waitFor({
-                        viewName: VIEW_NAME,
                         controlType: "sap.m.Table",
+                        viewName: VIEW_NAME,
                         matchers: new AggregationLengthEquals({
                             name: "items",
-                            length: quantidadeEsperadaDeEquipamentos
+                            length: QUANTIDADE_DE_EQUIPAMENTOS_ESPERADA
                         }),
                         success: function () {
-                            Opa5.assert.ok(true, "Tabela contém exatamente " + quantidadeEsperadaDeEquipamentos + "itens");
+                            Opa5.assert.ok(true, "Tabela contém exatamente " + QUANTIDADE_DE_EQUIPAMENTOS_ESPERADA + " itens");
                         },
-                        errorMessage: "Erro: a tabela não contém " + quantidadeEsperadaDeEquipamentos + " itens."
+                        errorMessage: "Erro: a tabela não contém " + QUANTIDADE_DE_EQUIPAMENTOS_ESPERADA + " itens."
                     });
                 }
             }

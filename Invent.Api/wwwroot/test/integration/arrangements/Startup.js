@@ -1,43 +1,55 @@
 sap.ui.define([
-	"sap/ui/test/Opa5",
-	"sap/ui/model/odata/v2/ODataModel"
-], function(Opa5, ODataModel) {
-	"use strict";
+    "sap/ui/test/Opa5"
+], function (Opa5) {
+    "use strict";
 
-	return Opa5.extend("ui5.gestaoequipamento.test.integration.arrangements.Startup", {
-		iStartMyApp : function (oOptionsParameter) {
-			var oOptions = oOptionsParameter || {};
-			this._clearSharedData();
+	const SEGUNDO_SEGMENTO_DA_URL = 1;
 
-			oOptions.delay = oOptions.delay || 1;
+    let equipamentos = [
+        { id: "Equip-1-A", nome: "Teste 1", tipo: "Eletrônico", quantidadeEmEstoque: 10 },
+        { id: "Equip-2-A", nome: "Teste 2", tipo: "Eletrônico", quantidadeEmEstoque: 100 }
+    ];
 
-			var aMockData = [
-				{ id: "EquipamentoEletronicos-1-A", nome: "Teste 1", tipo: "Eletrônico", quantidadeEmEstoque: 10, dataDeInclusao : "2025-07-04T14:31:53.9636692Z", temEstoque : true },
-				{ id: "EquipamentoEletronicos-2-A", nome: "Teste 2", tipo: "Eletrônico", quantidadeEmEstoque: 100, dataDeInclusao : "2025-07-04T14:31:53.9636692Z", temEstoque: true }
-			];
+    // Função para simular chamadas API
+    function mockFetch(url, opcoesFetch) {
+        if (opcoesFetch && opcoesFetch.method === "POST") {
+            const novoEquipamento = JSON.parse(opcoesFetch.body);
+			// Gera um ID único
+            novoEquipamento.id = "Equip-" + Date.now();
+            equipamentos.push(novoEquipamento);
 
-			window.fetch = function()
-			{
-				return Promise.resolve({
-					ok: true,
-					json: function() {
-						return Promise.resolve(aMockData);
-					}
-				});
-			};
+            return Promise.resolve({ ok: true, json: () => Promise.resolve(novoEquipamento) });
+        }
 
-			this.iStartMyUIComponent({
-				componentConfig: {
-					name: "ui5.gestaoequipamento",
-					async: true
-				},
-				hash: oOptions.hash,
-				autoWait: oOptions.autoWait
-			});
-		},
+        // Extrai o segundo segmento da URL para identificar a requisição
+        const partes = url.split("/");
+        const ultimoSegmento = partes[partes.length - SEGUNDO_SEGMENTO_DA_URL];
 
-		_clearSharedData: function () {
-			ODataModel.mSharedData = { server: {}, service: {}, meta: {} };
-		}
-	});
+        // Simula a listagem dos equipamentos
+        if (ultimoSegmento === "Equipamentos") {
+            return Promise.resolve({ ok: true, json: () => Promise.resolve(equipamentos) });
+        }
+
+        // Simula a busca de um equipamento específico por ID
+        const equipamento = equipamentos.find(e => e.id === ultimoSegmento);
+        if (equipamento) {
+            return Promise.resolve({ ok: true, json: () => Promise.resolve(equipamento) });
+        }
+
+        return Promise.resolve({ ok: true, json: () => Promise.resolve({}) });
+    }
+
+    return Opa5.extend("ui5.gestaoequipamento.test.integration.arrangements.Startup", {
+        iStartMyApp: function (opcoesRecebidas) {
+            const opcoes = opcoesRecebidas || {};
+
+            window.fetch = mockFetch;
+
+            this.iStartMyUIComponent({
+                componentConfig: { name: "ui5.gestaoequipamento", async: true },
+                hash: opcoes.hash,
+                autoWait: opcoes.autoWait
+            });
+        }
+    });
 });

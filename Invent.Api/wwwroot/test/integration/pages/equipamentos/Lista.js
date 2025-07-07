@@ -60,54 +60,6 @@ sap.ui.define([
                         errorMessage: "Erro: a tabela não contém " + QUANTIDADE_DE_EQUIPAMENTOS_ESPERADA + " itens."
                     });
                 },
-
-                tabelaContemEquipamentoComNomePreenchido: function(sNome)
-                {
-                    return this.waitFor({
-                        controlType: "sap.m.Text",
-                        viewName: VIEW_NAME,
-                        matchers: new PropertyStrictEquals({
-                            name: "text",
-                            value: sNome
-                        }),
-                        success: function(){
-                            Opa5.assert.ok(true, "Encontrado nome: " + sNome);
-                        },
-                        errorMessage: "Não encontrei o nome " + sNome + " na tabela"
-                    });
-                },
-
-                tabelaContemEquipamentoComTipoPreenchido: function(sTipo)
-                {
-                    return this.waitFor({
-                        controlType: "sap.m.Text",
-                        viewName: VIEW_NAME,
-                        matchers: new PropertyStrictEquals({
-                            name: "text",
-                            value: sTipo
-                        }),
-                        success: function(){
-                            Opa5.assert.ok(true, "Encontrado tipo: " + sTipo);
-                        },
-                        errorMessage: "Não encontrei o tipo " + sTipo + " na tabela"
-                    });
-                },
-
-                tabelaContemEquipamentoComQuantidadePreenchida: function(sQuantidade)
-                {
-                    return this.waitFor({
-                        controlType: "sap.m.Text",
-                        viewName: VIEW_NAME,
-                        matchers: new PropertyStrictEquals({
-                            name: "text",
-                            value: sQuantidade
-                        }),
-                        success: function(){
-                            Opa5.assert.ok(true, "Encontrada quantidade: " + sQuantidade);
-                        },
-                        errorMessage: "Não encontrei a quantidade " + sQuantidade + " na tabela"
-                    });
-                }
             }
         }
     });

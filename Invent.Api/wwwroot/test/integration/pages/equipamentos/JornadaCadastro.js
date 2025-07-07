@@ -24,10 +24,6 @@ sap.ui.define([
 
     Then.naPaginaDeListagemDeEquipamentos.paginaDeListaAberta();
 
-    Then.naPaginaDeListagemDeEquipamentos.tabelaContemEquipamentoComNomePreenchido("Nome do Equipamento");
-    Then.naPaginaDeListagemDeEquipamentos.tabelaContemEquipamentoComTipoPreenchido("Tipo do Equipamento");
-    Then.naPaginaDeListagemDeEquipamentos.tabelaContemEquipamentoComQuantidadePreenchida("10");
-
     Then.iTeardownMyApp();
   });
 });

@@ -1,24 +1,33 @@
 sap.ui.define([
-    "sap/ui/test/opaQunit",
-    "./Lista",
-    "./Cadastro"
+  "sap/ui/test/opaQunit",
+  "./Lista",
+  "./Cadastro",
+  "./Detalhe"
 ], function (opaTest) {
-    "use strict";
+  "use strict";
 
-    QUnit.module("Fluxo de Cadastro de Equipamento");
+  QUnit.module("Fluxo de Cadastro de Equipamento");
 
-    opaTest("Ao clicar em Cadastrar a página de cadastro é aberta", function (Given, When, Then) {
-        Given.iStartMyApp();
+  opaTest("Preenche formulário, salva e vê item na lista", function (Given, When, Then) {
+    Given.iStartMyApp();
+    When.naPaginaDeListagemDeEquipamentos.euClicoNoBotaoDeCadastro();
+    Then.naPaginaDeCadastroDeEquipamentos.paginaDeCadastroAberta();
 
-        When.naPaginaDeListagemDeEquipamentos.euClicoNoBotaoDeCadastro();
+    When.naPaginaDeCadastroDeEquipamentos.preenchoONome("Nome do Equipamento");
+    When.naPaginaDeCadastroDeEquipamentos.preenchoOTipo("Tipo do Equipamento");
+    When.naPaginaDeCadastroDeEquipamentos.preenchoAQuantidade("10");
+    When.naPaginaDeCadastroDeEquipamentos.euClicoEmSalvar();
 
-        Then.naPaginaDeCadastroDeEquipamentos.paginaDeCadastroAberta();
-        When.naPaginaDeCadastroDeEquipamentos.preenchoONome("Nome do Equipamento");
-        When.naPaginaDeCadastroDeEquipamentos.preenchoOTipo("Tipo do Equipamento");
-        When.naPaginaDeCadastroDeEquipamentos.preenchoAQuantidade("10");
-        When.naPaginaDeCadastroDeEquipamentos.euClicoEmSalvar();
-        
-        Then.iTeardownMyApp();
-    });
+    Then.naPaginaDeDetalheDeEquipamento.paginaDeDetalheAberta();
 
+    When.naPaginaDeDetalheDeEquipamento.iPressBotaoVoltar();
+
+    Then.naPaginaDeListagemDeEquipamentos.paginaDeListaAberta();
+
+    Then.naPaginaDeListagemDeEquipamentos.tabelaContemEquipamentoComNomePreenchido("Nome do Equipamento");
+    Then.naPaginaDeListagemDeEquipamentos.tabelaContemEquipamentoComTipoPreenchido("Tipo do Equipamento");
+    Then.naPaginaDeListagemDeEquipamentos.tabelaContemEquipamentoComQuantidadePreenchida("10");
+
+    Then.iTeardownMyApp();
+  });
 });

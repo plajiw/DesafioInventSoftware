@@ -1,6 +1,7 @@
 ﻿using FluentValidation.AspNetCore;
 using Invent.Api;
 using Microsoft.AspNetCore.StaticFiles;
+using System.Threading.Tasks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,7 +9,6 @@ ModuloInjecaoAplicacao.BindServices(builder.Services);
 
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddControllers();
-
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -49,6 +49,18 @@ app.UseCors("AllowAll");
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Mapeia a rota padrão para o arquivo index.html
 app.MapFallbackToFile("index.html");
+
+// Rota  de desenvolvimento específica para testes
+if (app.Environment.IsDevelopment())
+{
+    app.MapGet("/tests", context =>
+    {
+        context.Response.Redirect("/test/integration/opaTests.qunit.html");
+        return Task.CompletedTask;
+    });
+}
 
 app.Run();

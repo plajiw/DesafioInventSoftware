@@ -11,7 +11,8 @@ sap.ui.define([
 			Given.iStartMyApp();
 
 			// Assertions
-			Then.naPaginaDeListagemDeEquipamentos.listaDeEquipamentosFoiCarregadaConformeEsperado().and.listaDeveEstarCarregada();
+			Then.naPaginaDeListagemDeEquipamentos.paginaDeListaAberta();
+            Then.naPaginaDeListagemDeEquipamentos.tabelaCarregadaComDados();
 
 			// Cleanup
 			Then.iTeardownMyApp(); // Esse método deve ser sempre chamado uma única vez na jornada inteira. 

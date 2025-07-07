@@ -5,27 +5,27 @@ sap.ui.define([
 	"use strict";
 
 	return Opa5.extend("ui5.gestaoequipamento.test.integration.arrangements.Startup", {
-
-		/**
-		 * Initializes mock server, then starts the app component
-		 * @param {object} oOptionsParameter An object that contains the configuration for starting up the app
-		 * @param {int} oOptionsParameter.delay A custom delay to start the app with
-		 * @param {string} [oOptionsParameter.hash] The in app hash can also be passed separately for better readability in tests
-		 * @param {boolean} [oOptionsParameter.autoWait=true] Automatically wait for pending requests while the application is starting up.
-		 */
 		iStartMyApp : function (oOptionsParameter) {
 			var oOptions = oOptionsParameter || {};
-
 			this._clearSharedData();
 
-			// start the app with a minimal delay to make tests fast but still async to discover basic timing issues
 			oOptions.delay = oOptions.delay || 1;
 
-			// configure mock server with the current options
-			// var oMockserverInitialized = mockserver.init(oOptions);
+			var aMockData = [
+				{ id: "EquipamentoEletronicos-1-A", nome: "Teste 1", tipo: "Eletrônico", quantidadeEmEstoque: 10, dataDeInclusao : "2025-07-04T14:31:53.9636692Z", temEstoque : true },
+				{ id: "EquipamentoEletronicos-2-A", nome: "Teste 2", tipo: "Eletrônico", quantidadeEmEstoque: 100, dataDeInclusao : "2025-07-04T14:31:53.9636692Z", temEstoque: true }
+			];
 
-			// this.iWaitForPromise(oMockserverInitialized);
-			// start the app UI component
+			window.fetch = function()
+			{
+				return Promise.resolve({
+					ok: true,
+					json: function() {
+						return Promise.resolve(aMockData);
+					}
+				});
+			};
+
 			this.iStartMyUIComponent({
 				componentConfig: {
 					name: "ui5.gestaoequipamento",

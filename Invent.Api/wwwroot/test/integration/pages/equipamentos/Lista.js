@@ -26,14 +26,14 @@ sap.ui.define([
                 },
 
                 tabelaCarregadaComDados: function () {
-                    const quantidadeMinimaDeEquipamentos = 0;
+                    const quantidadeMinimaDeEquipamentos = 1;
                     return this.waitFor({
                         id: "tabelaEquipamentos",
                         viewName: VIEW_NAME,
                         controlType: "sap.m.Table",
                         success: function (oTable) {
                             var iItems = oTable.getItems().length;
-                            Opa5.assert.ok(iItems > quantidadeMinimaDeEquipamentos, "Tabela carregou com pelo menos um item");
+                            Opa5.assert.ok(iItems >= quantidadeMinimaDeEquipamentos, "Tabela carregou com pelo menos um item");
                         }
                     });
                 }

@@ -20,7 +20,7 @@ sap.ui.define([
 
     Then.naPaginaDeDetalheDeEquipamento.paginaDeDetalheAberta();
 
-    When.naPaginaDeDetalheDeEquipamento.iPressBotaoVoltar();
+    When.naPaginaDeDetalheDeEquipamento.euClicoEmVoltar();
 
     Then.naPaginaDeListagemDeEquipamentos.paginaDeListaAberta();
 

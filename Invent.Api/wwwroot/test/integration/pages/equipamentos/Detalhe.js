@@ -11,7 +11,7 @@ sap.ui.define([
   Opa5.createPageObjects({
     naPaginaDeDetalheDeEquipamento: {
       actions: {
-        iPressBotaoVoltar: function () {
+        euClicoEmVoltar: function () {
           return this.waitFor({
             controlType: "sap.m.Button",
             viewName: VIEW_NAME,

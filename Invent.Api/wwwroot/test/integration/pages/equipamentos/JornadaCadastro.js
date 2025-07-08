@@ -6,7 +6,7 @@ sap.ui.define([
 ], function (opaTest) {
   "use strict";
 
-  QUnit.module("Fluxo de Cadastro de Equipamentos");
+  QUnit.module("Fluxo Cadastro de Equipamento");
 
   opaTest("Fluxo de cadastro completo", function (Given, When, Then) {
     Given.iStartMyApp({ hash: "/cadastro" });

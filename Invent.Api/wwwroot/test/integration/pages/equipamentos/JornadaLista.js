@@ -6,7 +6,7 @@ sap.ui.define([
 ], function (opaTest) {
 	"use strict";
 
-	QUnit.module("Tela de Listagem de Equipamento");
+	QUnit.module("Tela Listagem de Equipamento");
 
 	opaTest("Fluxo de listagem completo", function (Given, When, Then) {
 		Given.iStartMyApp();

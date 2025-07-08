@@ -27,6 +27,75 @@ sap.ui.define([
             },
             errorMessage: "Não encontrei o botão Voltar na tela de Detalhe."
           });
+        },
+        euClicoEmRemover: function()
+        {
+            return this.waitFor({
+                controlType: "sap.m.Button",
+                viewName: VIEW_NAME,
+                matchers: new I18NText({
+                    propertyName: "text",
+                    key: "botaoRemover"
+                }),
+                actions: new Press(),
+                success: function()
+                {
+                    Opa5.assert.ok(true, "Cliquei em Remover na tela de Detalhe");
+                },
+                errorMessage: "Não encontrei o botão Remover na tela de Detalhe."
+            });
+        },
+        euClicoEmEditar: function()
+        {
+            return this.waitFor({
+                controlType: "sap.m.Button",
+                viewName: VIEW_NAME,
+                matchers: new I18NText({
+                    propertyName: "text",
+                    key: "botaoEditar"
+                }),
+                actions: new Press(),
+                success: function()
+                {
+                    Opa5.assert.ok(true, "Cliquei em Editar na tela de Detalhe");
+                },
+                errorMessage: "Não encontrei o botão Editar na tela de Detalhe."
+            });
+        },
+
+        euConfirmoRemocao: function()
+        {
+            return this.waitFor({
+                controlType: "sap.m.Button",
+                // Ancestor
+                matchers: new PropertyStrictEquals({
+                    name: "text",
+                    value: "Sim"
+                }),
+                actions: new Press(),
+                success: function()
+                {
+                    Opa5.assert.ok(true, "Confirmou remoção do equipamento.");
+                },
+                errorMessage: "Não foi possível localizar a opção para confirmar a remoção."
+            });
+        },
+
+        euNaoConfirmoRemocao: function()
+        {
+            return this.waitFor({
+                controlType: "sap.m.Button",
+                matchers: new PropertyStrictEquals({
+                    name: "text",
+                    value: "Não"
+                }),
+                actions: new Press(),
+                success: function()
+                {
+                    Opa5.assert.ok(true, "Confirmou a não remoção do equipamento.");
+                },
+                errorMessage: "Não foi possível localizar a opção para negar a remoção."
+            });
         }
       },
 
@@ -40,7 +109,7 @@ sap.ui.define([
               key: "tituloPaginaDetalhes"
             }),
             success: function () {
-              Opa5.assert.ok(true, "Tela de Detalhe aberta com o título correto");
+              Opa5.assert.ok(true, "Tela de Detalhe acessada corretamente.");
             },
             errorMessage: "Tela de Detalhe não abriu como esperado."
           });

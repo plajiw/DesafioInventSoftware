@@ -13,8 +13,23 @@ sap.ui.define([
         naPaginaDeCadastroDeEquipamentos: {
             actions: {
 
+                euClicoEmVoltar: function () {
+                    return this.waitFor({
+                        controlType: "sap.m.Button",
+                        viewName: VIEW_NAME,
+                        matchers: new PropertyStrictEquals({
+                            name: "type",
+                            value: "Back"
+                        }),
+                        actions: new Press(),
+                        success: function () {
+                            Opa5.assert.ok(true, "Cliquei em Voltar na tela de Cadastro");
+                        },
+                        errorMessage: "Não encontrei o botão Voltar na tela de Cadastro."
+                    });
+                },
                 // Teste de nome
-                preenchoONome: function (sNome) {
+                preenchoONome: function (nome) {
                     return this.waitFor({
                         controlType: "sap.m.Input",
                         viewName: VIEW_NAME,
@@ -22,16 +37,16 @@ sap.ui.define([
                             propertyName: "placeholder",
                             key: "placeholderNome"
                         }),
-                        actions: new EnterText({ text: sNome }),
+                        actions: new EnterText({ text: nome }),
                         success: function () {
-                            Opa5.assert.ok(true, "Preenchi o nome com: " + sNome);
+                            Opa5.assert.ok(true, "Preenchi o nome com: " + nome);
                         },
                         errorMessage: "Não encontrei o campo Nome na página de cadastro."
                     });
                 },
 
                 // Teste de Tipo
-                preenchoOTipo: function (sTipo) {
+                preenchoOTipo: function (tipo) {
                     return this.waitFor({
                         controlType: "sap.m.Input",
                         viewName: VIEW_NAME,
@@ -39,16 +54,16 @@ sap.ui.define([
                             propertyName: "placeholder",
                             key: "placeholderTipo"
                         }),
-                        actions: new EnterText({ text: sTipo }),
+                        actions: new EnterText({ text: tipo }),
                         success: function () {
-                            Opa5.assert.ok(true, "Preenchi o tipo com: " + sTipo);
+                            Opa5.assert.ok(true, "Preenchi o tipo com: " + tipo);
                         },
                         errorMessage: "Não encontrei o campo Tipo na página de cadastro."
                     });
                 },
 
                 // Teste de Quantidade
-                preenchoAQuantidade: function (sQuantidade) {
+                preenchoAQuantidade: function (quantidade) {
                     return this.waitFor({
                         controlType: "sap.m.Input",
                         viewName: VIEW_NAME,
@@ -60,9 +75,9 @@ sap.ui.define([
                             name: "type",
                             value: "Number",
                         }),
-                        actions: new EnterText({ text: sQuantidade }),
+                        actions: new EnterText({ text: quantidade }),
                         success: function () {
-                            Opa5.assert.ok(true, "Preenchi a quantidade com: " + sQuantidade);
+                            Opa5.assert.ok(true, "Preenchi a quantidade com: " + quantidade);
                         },
                         errorMessage: "Não encontrei o campo Quantidade na página de cadastro."
                     });

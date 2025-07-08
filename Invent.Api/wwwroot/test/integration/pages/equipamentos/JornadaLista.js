@@ -1,23 +1,44 @@
 sap.ui.define([
 	"sap/ui/test/opaQunit",
-	"./Lista"
+	"./Lista",
+	"./Detalhe",
+	"./Cadastro"
 ], function (opaTest) {
 	"use strict";
 
-	QUnit.module("TelaDeListagem", () => {
+	QUnit.module("Tela de Listagem de Equipamento");
 
-		opaTest("Tela de listagem deve ser carregada com sucesso", function (Given, When, Then) {
-			// Arrangements
-			Given.iStartMyApp();
+	opaTest("Fluxo de listagem completo", function (Given, When, Then) {
+		Given.iStartMyApp();
 
-			// Assertions
-			Then.naPaginaDeListagemDeEquipamentos.paginaDeListaAberta();
-            Then.naPaginaDeListagemDeEquipamentos.tabelaCarregadaComDados();
+		// Carregar a tela de listagem
+		Then.naPaginaDeListagemDeEquipamentos.paginaDeListaAberta();
+		Then.naPaginaDeListagemDeEquipamentos.tabelaCarregadaComDados();
 
-			// Cleanup
-			Then.iTeardownMyApp(); // Esse método deve ser sempre chamado uma única vez na jornada inteira. 
-			// Como nesse exemplo só existe um teste, então por esse motivo ele está logo no primeiro.
-		});
+		// Buscar item existente
+		When.naPaginaDeListagemDeEquipamentos.euBuscoPorNome("Teste 1");
+		Then.naPaginaDeListagemDeEquipamentos.tabelaContemItem("Teste 1");
+
+		// Navegar para detalhe e voltar
+		When.naPaginaDeListagemDeEquipamentos.euClicoNoItemPeloNome("Teste 1");
+		Then.naPaginaDeDetalheDeEquipamento.paginaDeDetalheAberta();
+		When.naPaginaDeDetalheDeEquipamento.euClicoEmVoltar();
+		Then.naPaginaDeListagemDeEquipamentos.paginaDeListaAberta();
+
+		// Buscar item inexistente
+		When.naPaginaDeListagemDeEquipamentos.euBuscoPorNome("Não existe");
+		Then.naPaginaDeListagemDeEquipamentos.tabelaVazia();
+
+		// Reexibir todos os dados limpando filtro
+		When.naPaginaDeListagemDeEquipamentos.euBuscoPorNome("");
+		Then.naPaginaDeListagemDeEquipamentos.tabelaCarregadaComDados();
+
+		// Navegar para cadastro e voltar
+		When.naPaginaDeListagemDeEquipamentos.euClicoNoBotaoDeCadastro();
+		Then.naPaginaDeCadastroDeEquipamentos.paginaDeCadastroAberta();
+		When.naPaginaDeCadastroDeEquipamentos.euClicoEmVoltar();
+		Then.naPaginaDeListagemDeEquipamentos.paginaDeListaAberta();
+
+		Then.iTeardownMyApp();
 	});
-
 });

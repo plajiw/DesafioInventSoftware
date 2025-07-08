@@ -1,43 +1,54 @@
 sap.ui.define([
-	"sap/ui/test/Opa5",
-	"sap/ui/model/odata/v2/ODataModel"
-], function(Opa5, ODataModel) {
-	"use strict";
+    "sap/ui/test/Opa5"
+], function (Opa5) {
+    "use strict";
 
-	return Opa5.extend("ui5.gestaoequipamento.test.integration.arrangements.Startup", {
-		iStartMyApp : function (oOptionsParameter) {
-			var oOptions = oOptionsParameter || {};
-			this._clearSharedData();
+    const ID_INICIAL_MOCK = 3;
 
-			oOptions.delay = oOptions.delay || 1;
+    let equipamentos = [
+        { id: "Equipamento-1-A", nome: "Teste 1", tipo: "Eletrônico", quantidadeEmEstoque: 10, dataDeInclusao: "2025-07-08T13:39:38.1443059Z", temEstoque: true },
+        { id: "Equipamento-2-A", nome: "Teste 2", tipo: "Mecânico", quantidadeEmEstoque: 0, dataDeInclusao: "2025-07-08T13:39:38.1443059Z", temEstoque: false }
+    ];
+    let proximoId = ID_INICIAL_MOCK;
 
-			var aMockData = [
-				{ id: "EquipamentoEletronicos-1-A", nome: "Teste 1", tipo: "Eletrônico", quantidadeEmEstoque: 10, dataDeInclusao : "2025-07-04T14:31:53.9636692Z", temEstoque : true },
-				{ id: "EquipamentoEletronicos-2-A", nome: "Teste 2", tipo: "Eletrônico", quantidadeEmEstoque: 100, dataDeInclusao : "2025-07-04T14:31:53.9636692Z", temEstoque: true }
-			];
+    function mockFetch(url, opcoesFetch) {
+        // cadastro
+        if (opcoesFetch?.method === "POST") {
+            const novoEquipamento = JSON.parse(opcoesFetch.body);
+            novoEquipamento.id = `Equipamento-${proximoId++}-A`;
+            equipamentos.push(novoEquipamento);
+            return Promise.resolve({ ok: true, json: () => Promise.resolve(novoEquipamento) });
+        }
 
-			window.fetch = function()
-			{
-				return Promise.resolve({
-					ok: true,
-					json: function() {
-						return Promise.resolve(aMockData);
-					}
-				});
-			};
+        // listagem
+        if (url.endsWith("/Equipamentos")) {
+            return Promise.resolve({ ok: true, json: () => Promise.resolve(equipamentos) });
+        }
 
-			this.iStartMyUIComponent({
-				componentConfig: {
-					name: "ui5.gestaoequipamento",
-					async: true
-				},
-				hash: oOptions.hash,
-				autoWait: oOptions.autoWait
-			});
-		},
+        // detalhes
+        const id = url.split("/").pop();
+        const equipamento = equipamentos.find(e => e.id === id);
+        return Promise.resolve({ ok: true, json: () => Promise.resolve(equipamento) });
+    }
 
-		_clearSharedData: function () {
-			ODataModel.mSharedData = { server: {}, service: {}, meta: {} };
-		}
-	});
+    return Opa5.extend("ui5.gestaoequipamento.test.integration.arrangements.Startup", {
+        iStartMyApp: function (opcoes = {}) {
+            window.fetch = mockFetch;
+            this.iStartMyUIComponent({
+                componentConfig: { name: "ui5.gestaoequipamento", async: true },
+                hash: opcoes.hash,
+                autoWait: true
+            });
+        },
+
+        iTearDownMyApp: function () {
+            window.fetch = undefined; // Limpa o mock
+            equipamentos = [
+                { id: "Equipamento-1-A", nome: "Teste 1", tipo: "Eletrônico", quantidadeEmEstoque: 10, dataDeInclusao: "2025-07-08T13:39:38.1443059Z", temEstoque: true },
+                { id: "Equipamento-2-A", nome: "Teste 2", tipo: "Mecânico", quantidadeEmEstoque: 0, dataDeInclusao: "2025-07-08T13:39:38.1443059Z", temEstoque: false }
+            ];
+            proximoId = ID_INICIAL_MOCK; // Reseta o contador
+            return this.iTeardownMyUIComponent();
+        }
+    });
 });

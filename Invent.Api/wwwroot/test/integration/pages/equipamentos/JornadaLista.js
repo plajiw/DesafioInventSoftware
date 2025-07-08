@@ -8,7 +8,7 @@ sap.ui.define([
 
 	QUnit.module("Tela de Listagem de Equipamento");
 
-	opaTest("Fluxo de listagem completo com reexibição de dados", function (Given, When, Then) {
+	opaTest("Fluxo de listagem completo", function (Given, When, Then) {
 		Given.iStartMyApp();
 
 		// Carregar a tela de listagem

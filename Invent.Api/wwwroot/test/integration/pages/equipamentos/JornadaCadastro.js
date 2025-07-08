@@ -1,29 +1,66 @@
 sap.ui.define([
   "sap/ui/test/opaQunit",
-  "./Lista",
   "./Cadastro",
+  "./Lista",
   "./Detalhe"
 ], function (opaTest) {
   "use strict";
 
-  QUnit.module("Fluxo de Cadastro de Equipamento");
+  QUnit.module("Fluxo de Cadastro de Equipamentos");
 
-  opaTest("Preenche formulário, salva e vê item na lista", function (Given, When, Then) {
-    Given.iStartMyApp();
-    // When.naPaginaDeListagemDeEquipamentos.euClicoNoBotaoDeCadastro();
-    // Then.naPaginaDeCadastroDeEquipamentos.paginaDeCadastroAberta();
+  opaTest("Fluxo de cadastro completo", function (Given, When, Then) {
+    Given.iStartMyApp({ hash: "/cadastro" });
 
-    // When.naPaginaDeCadastroDeEquipamentos.preenchoONome("Nome do Equipamento");
-    // When.naPaginaDeCadastroDeEquipamentos.preenchoOTipo("Tipo do Equipamento");
-    // When.naPaginaDeCadastroDeEquipamentos.preenchoAQuantidade("10");
-    // When.naPaginaDeCadastroDeEquipamentos.euClicoEmSalvar();
+    // Verifica abertura da página de cadastro
+    Then.naPaginaDeCadastroDeEquipamentos.paginaDeCadastroAberta();
 
-    // Then.naPaginaDeDetalheDeEquipamento.paginaDeDetalheAberta();
+    // Voltar sem salvar, retorna à lista
+    When.naPaginaDeCadastroDeEquipamentos.euClicoEmVoltar();
+    Then.naPaginaDeListagemDeEquipamentos.paginaDeListaAberta();
 
-    // When.naPaginaDeDetalheDeEquipamento.euClicoEmVoltar();
+    // Voltar para cadastro
+    When.naPaginaDeListagemDeEquipamentos.euClicoNoBotaoDeCadastro();
+    Then.naPaginaDeCadastroDeEquipamentos.paginaDeCadastroAberta();
 
-    // Then.naPaginaDeListagemDeEquipamentos.paginaDeListaAberta();
+    // Tentar salvar vazio, erros obrigatórios
+    When.naPaginaDeCadastroDeEquipamentos.euClicoEmSalvar();
+    When.naPaginaDeCadastroDeEquipamentos.euClicoEmFecharValidacaoErro();
+    
+    // Dados obrigatorios em branco
+    When.naPaginaDeCadastroDeEquipamentos.preenchoONome("");
+    When.naPaginaDeCadastroDeEquipamentos.preenchoOTipo("");
+    When.naPaginaDeCadastroDeEquipamentos.preenchoAQuantidade("")
+    Then.naPaginaDeCadastroDeEquipamentos.nomeComErroDeValidacao();
+    Then.naPaginaDeCadastroDeEquipamentos.tipoComErroDeValidacao();
+    Then.naPaginaDeCadastroDeEquipamentos.quantidadeComErroDeValidacao();
+    When.naPaginaDeCadastroDeEquipamentos.euClicoEmSalvar();
+    When.naPaginaDeCadastroDeEquipamentos.euClicoEmFecharValidacaoErro();
+    
+    // Preenche o nome
+    When.naPaginaDeCadastroDeEquipamentos.preenchoONome("Teste 2");
+    When.naPaginaDeCadastroDeEquipamentos.euClicoEmSalvar();
+    When.naPaginaDeCadastroDeEquipamentos.euClicoEmFecharValidacaoErro();
+
+    // Preenche o tipo
+    When.naPaginaDeCadastroDeEquipamentos.preenchoOTipo("Manual");
+    When.naPaginaDeCadastroDeEquipamentos.euClicoEmSalvar();
+    When.naPaginaDeCadastroDeEquipamentos.euClicoEmFecharValidacaoErro();
+
+    // Preenche a quantidade, incorretamente
+    When.naPaginaDeCadastroDeEquipamentos.preenchoAQuantidade("-1");
+    When.naPaginaDeCadastroDeEquipamentos.euClicoEmSalvar();
+    When.naPaginaDeCadastroDeEquipamentos.euClicoEmFecharValidacaoErro();
+
+    // Preenche a quantidade, incorretamente mais uma vez
+    When.naPaginaDeCadastroDeEquipamentos.preenchoAQuantidade("99999");
+    When.naPaginaDeCadastroDeEquipamentos.euClicoEmSalvar();
+    When.naPaginaDeCadastroDeEquipamentos.euClicoEmFecharValidacaoErro();
+
+    // Preenche a quantidade
+    When.naPaginaDeCadastroDeEquipamentos.preenchoAQuantidade("10");
+    When.naPaginaDeCadastroDeEquipamentos.euClicoEmSalvar();
 
     Then.iTeardownMyApp();
   });
+
 });

@@ -3,8 +3,9 @@ sap.ui.define([
     "sap/ui/test/matchers/I18NText",
     "sap/ui/test/actions/EnterText",
     "sap/ui/test/actions/Press",
-    "sap/ui/test/matchers/PropertyStrictEquals"
-], function (Opa5, I18NText, EnterText, Press, PropertyStrictEquals) {
+    "sap/ui/test/matchers/PropertyStrictEquals",
+    "sap/m/MessageBox"
+], function (Opa5, I18NText, EnterText, Press, PropertyStrictEquals, MessageBox) {
     "use strict";
 
     const VIEW_NAME = "EquipamentoCadastro";
@@ -98,6 +99,21 @@ sap.ui.define([
                         },
                         errorMessage: "Botão Salvar não foi encontrado na página de cadastro."
                     });
+                },
+
+                euClicoEmFecharValidacaoErro: function () {
+                    return this.waitFor({
+                        controlType: "sap.m.Button",
+                        matchers: new PropertyStrictEquals({
+                            name: "text",
+                            value: "Fechar"
+                        }),
+                        actions: new Press(),
+                        success: function () {
+                            Opa5.assert.ok(true, "Fechar da MessageBox clicado");
+                        },
+                        errorMessage: "Botão da MessageBox não encontrado."
+                    });
                 }
 
             },
@@ -115,6 +131,49 @@ sap.ui.define([
                             Opa5.assert.ok(true, "Página de cadastro foi aberta corretamente.");
                         },
                         errorMessage: "Página de cadastro não abriu corretamente."
+                    });
+                },
+
+                nomeComErroDeValidacao: function () {
+                    return this.waitFor({
+                        controlType: "sap.m.Input",
+                        viewName: VIEW_NAME,
+                        matchers: new PropertyStrictEquals({
+                            name: "valueState",
+                            value: "Error"
+                        }),
+                        success: function () {
+                            Opa5.assert.ok(true, "Campo Nome está em Error state.");
+                        },
+                        errorMessage: "Campo Nome não apresentou erro."
+                    });
+                },
+                tipoComErroDeValidacao: function () {
+                    return this.waitFor({
+                        controlType: "sap.m.Input",
+                        viewName: VIEW_NAME,
+                        matchers: new PropertyStrictEquals({
+                            name: "valueState",
+                            value: "Error"
+                        }),
+                        success: function () {
+                            Opa5.assert.ok(true, "Campo Tipo está em Error state.");
+                        },
+                        errorMessage: "Campo Tipo não apresentou erro."
+                    });
+                },
+                quantidadeComErroDeValidacao: function () {
+                    return this.waitFor({
+                        controlType: "sap.m.Input",
+                        viewName: VIEW_NAME,
+                        matchers: new PropertyStrictEquals({
+                            name: "valueState",
+                            value: "Error"
+                        }),
+                        success: function () {
+                            Opa5.assert.ok(true, "Campo Quantidade está em Error state.");
+                        },
+                        errorMessage: "Campo Quantidade não apresentou erro."
                     });
                 }
             }

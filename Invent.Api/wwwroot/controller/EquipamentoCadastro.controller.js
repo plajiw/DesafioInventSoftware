@@ -180,7 +180,8 @@ sap.ui.define([
         },
 
         aoClicarEmVoltar: function () {
-            this.roteador.navTo(ROTA_LISTA, {}, true);
+            window.history.back();
         }
+
     });
 });

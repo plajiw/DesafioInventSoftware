@@ -47,7 +47,7 @@ sap.ui.define([
         aoClicarEmEditar: function () {
             let oModelo = this._obterModeloEquipamento();
             let idDoEquipamento = oModelo.getProperty(PROPRIEDADE_ID);
-            this._roteador.navTo(ROTA_EDITAR, { id: idDoEquipamento }, true);
+            this._roteador.navTo(ROTA_EDITAR, { id: idDoEquipamento });
         },
 
         aoClicarEmRemover: function () {

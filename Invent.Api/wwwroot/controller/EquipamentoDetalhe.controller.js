@@ -3,15 +3,20 @@ sap.ui.define([
     "sap/ui/model/json/JSONModel",
     "../model/formatter",
     "sap/ui/core/UIComponent",
-    "sap/m/MessageBox",
-    "sap/m/MessageToast"
-], (Controller, JSONModel, formatter, UIComponent, MessageBox, MessageToast) => {
+    "sap/m/MessageToast",
+    "sap/m/Dialog",
+    "sap/m/library",
+    "sap/m/Button",
+    "sap/m/Text"
+], (Controller, JSONModel, formatter, UIComponent, MessageToast, Dialog, mobileLibrary, Button, Text) => {
     "use strict";
 
     // I18N
     const CHAVE_I18N_TITULO_REMOCAO = "tituloConfirmarRemocao";
     const CHAVE_I18N_VALIDAR_REMOCAO = "confirmarRemocaoEquipamento";
     const CHAVE_I18N_SUCESSO_REMOCAO = "equipamentoRemovido";
+    const CHAVE_I18N_BOTAO_REMOVER = "botaoRemover";
+    const CHAVE_I18N_BOTAO_CANCELAR = "botaoCancelar";
 
     // Constantes
     const MODELO_EQUIPAMENTO = "equipamentos";
@@ -29,9 +34,7 @@ sap.ui.define([
         onInit: function () {
             this._view = this.getView();
             this._roteador = UIComponent.getRouterFor(this);
-
-            let oModelo = new JSONModel();
-
+            const oModelo = new JSONModel();
             this._view.setModel(oModelo, MODELO_EQUIPAMENTO);
             this._roteador.getRoute(ROTA_DETALHES).attachPatternMatched(this._aoCoincidirRota, this);
         },
@@ -45,8 +48,8 @@ sap.ui.define([
         },
 
         aoClicarEmEditar: function () {
-            let oModelo = this._obterModeloEquipamento();
-            let idDoEquipamento = oModelo.getProperty(PROPRIEDADE_ID);
+            const oModelo = this._obterModeloEquipamento();
+            const idDoEquipamento = oModelo.getProperty(PROPRIEDADE_ID);
             this._roteador.navTo(ROTA_EDITAR, { id: idDoEquipamento });
         },
 
@@ -63,34 +66,51 @@ sap.ui.define([
         },
 
         _alertaAoRemover: function () {
+            let DialogType = mobileLibrary.DialogType;
+            let ButtonType = mobileLibrary.ButtonType;
+            let oResourceBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
             let oModelo = this._obterModeloEquipamento();
-            let id = oModelo.getProperty(PROPRIEDADE_ID);
             let nome = oModelo.getProperty(PROPRIEDADE_NOME);
 
-            const oResourceBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
-            MessageBox.warning(oResourceBundle.getText(CHAVE_I18N_VALIDAR_REMOCAO, [nome]), {
-                title: oResourceBundle.getText(CHAVE_I18N_TITULO_REMOCAO),
-                actions: [MessageBox.Action.YES, MessageBox.Action.NO],
-                initialFocus: MessageBox.Action.NO,
-                emphasizedAction: MessageBox.Action.YES,
+            if (!this.dialogAprovarRemocao) {
+                this.dialogAprovarRemocao = new Dialog({
+                    type: DialogType.Message,
+                    title: oResourceBundle.getText(CHAVE_I18N_TITULO_REMOCAO),
+                    content: new Text({
+                        text: oResourceBundle.getText(CHAVE_I18N_VALIDAR_REMOCAO, [nome]),
+                    }),
+                    beginButton: new Button({
+                        type: ButtonType.Emphasized,
+                        text: oResourceBundle.getText(CHAVE_I18N_BOTAO_REMOVER),
+                        press: () => {
+                            const id = oModelo.getProperty(PROPRIEDADE_ID);
+                            MessageToast.show(oResourceBundle.getText(CHAVE_I18N_SUCESSO_REMOCAO));
+                            this._removerEquipamento(id);
+                            this.dialogAprovarRemocao.close();
+                        }
+                    }),
+                    endButton: new Button({
+                        text: oResourceBundle.getText(CHAVE_I18N_BOTAO_CANCELAR),
+                        press: () => {
+                            this.dialogAprovarRemocao.close();
+                        }
+                    })
+                });
 
-                onClose: (botaoSelecionado) => {
-                    if (botaoSelecionado === MessageBox.Action.YES) {
-                        MessageToast.show(oResourceBundle.getText(CHAVE_I18N_SUCESSO_REMOCAO));
-                        this._removerEquipamento(id);
-                    }
-                }
-            });
+                this.getView().addDependent(this.dialogAprovarRemocao);
+            }
+
+            this.dialogAprovarRemocao.open();
         },
 
         _aoCoincidirRota: function (oEvento) {
-            let id = oEvento.getParameter(ARGUMENTOS_DA_ROTA).id;
+            const id = oEvento.getParameter(ARGUMENTOS_DA_ROTA).id;
             this._buscarDadosEquipamento(id);
         },
 
         _buscarDadosEquipamento(id) {
-            let oModelo = this._obterModeloEquipamento();
-            let urlApi = `${ENDPOINT_EQUIPAMENTOS}/${id}`;
+            const oModelo = this._obterModeloEquipamento();
+            const urlApi = `${ENDPOINT_EQUIPAMENTOS}/${id}`;
 
             fetch(urlApi)
                 .then(res => res.json())

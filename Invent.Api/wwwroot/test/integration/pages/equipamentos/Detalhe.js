@@ -61,9 +61,9 @@ sap.ui.define([
                     return this.waitFor({
                         controlType: "sap.m.Button",
                         searchOpenDialogs: true,
-                        matchers: new PropertyStrictEquals({
-                            name: "text",
-                            value: "Sim"
+                        matchers: new I18NText({
+                            propertyName: "text",
+                            key: "botaoRemover"
                         }),
                         actions: new Press(),
                         success: function () {
@@ -77,9 +77,9 @@ sap.ui.define([
                     return this.waitFor({
                         controlType: "sap.m.Button",
                         searchOpenDialogs: true,
-                        matchers: new PropertyStrictEquals({
-                            name: "text",
-                            value: "Não"
+                        matchers: new I18NText({
+                            propertyName: "text",
+                            key: "botaoCancelar"
                         }),
                         actions: new Press(),
                         success: function () {

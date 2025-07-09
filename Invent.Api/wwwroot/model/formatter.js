@@ -2,7 +2,6 @@
 sap.ui.define([], function () {
     "use strict";
 
-    // Constantes
     const CHAVE_I18N_SIM = "textoDisponibilidadeSim";
     const CHAVE_I18N_NAO = "textoDisponibilidadeNao";
 
@@ -21,10 +20,8 @@ sap.ui.define([], function () {
         },
 
         formatarData: function (sData) {
-            // Converte a string ISO 8601 para objeto Date
             const oDate = new Date(sData);
 
-            // Extrai cada parte da data e adiciona zeros à esquerda
             const quantidadeMaxima = 2;
             const valorDePreenchimento = "0";
             const dia = String(oDate.getDate()).padStart(quantidadeMaxima, valorDePreenchimento);

@@ -5,15 +5,12 @@
     xmlns:f="sap.ui.layout.form"
     xmlns:l="sap.ui.layout">
 
-    <!-- Página -->
     <Page title="{i18n>tituloPaginaDetalhes}" titleAlignment="Center" showNavButton="true" navButtonPress=".aoClicarEmVoltar">
-        <!-- Header -->
         <headerContent>
             <Button type="Emphasized" text="{i18n>botaoEditar}" icon="sap-icon://edit" press=".aoClicarEmEditar" />
             <Button type="Reject" text="{i18n>botaoRemover}" icon="sap-icon://cancel" press=".aoClicarEmRemover" />
         </headerContent>
 
-        <!-- Conteúdo -->
         <content>
             <Panel
                 class="sapUiResponsiveMargin sapUiSmallMarginTop"
@@ -40,42 +37,36 @@
                         <f:formContainers>
                             <f:FormContainer>
                                 <f:formElements>
-                                    <!-- ID DO DETALHE -->
                                     <f:FormElement label="{i18n>idTabela}">
                                         <f:fields>
                                             <Text text="{equipamentos>/id}" />
                                         </f:fields>
                                     </f:FormElement>
                                     
-                                    <!-- NOME DO DETALHE -->
                                     <f:FormElement label="{i18n>nomeTabela}">
                                         <f:fields>
                                             <Text text="{equipamentos>/nome}" />
                                         </f:fields>
                                     </f:FormElement>
                                     
-                                    <!-- TIPO DO DETALHE -->
                                     <f:FormElement label="{i18n>tipoTabela}">
                                         <f:fields>
                                             <Text text="{equipamentos>/tipo}" />
                                         </f:fields>
                                     </f:FormElement>
                                     
-                                    <!-- QUANTIDADE DO DETALHE -->
                                     <f:FormElement label="{i18n>quantidadeTabela}">
                                         <f:fields>
                                             <ObjectNumber number="{equipamentos>/quantidadeEmEstoque}" unit="un" />
                                         </f:fields>
                                     </f:FormElement>
                                     
-                                    <!-- DATA DO DETALHE -->
                                     <f:FormElement label="{i18n>dataTabela}">
                                         <f:fields>
                                             <Text text="{path: 'equipamentos>/dataDeInclusao', formatter: '.formatter.formatarData'}" />
                                         </f:fields>
                                     </f:FormElement>
                                     
-                                    <!-- DISPONIBILIDADE DO DETALHE -->
                                     <f:FormElement label="{i18n>disponibilidadeTabela}">
                                         <f:fields>
                                             <ObjectStatus

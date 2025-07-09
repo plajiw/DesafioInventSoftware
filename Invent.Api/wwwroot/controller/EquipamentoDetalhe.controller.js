@@ -11,14 +11,12 @@ sap.ui.define([
 ], (Controller, JSONModel, formatter, UIComponent, MessageToast, Dialog, mobileLibrary, Button, Text) => {
     "use strict";
 
-    // I18N
     const CHAVE_I18N_TITULO_REMOCAO = "tituloConfirmarRemocao";
     const CHAVE_I18N_VALIDAR_REMOCAO = "confirmarRemocaoEquipamento";
     const CHAVE_I18N_SUCESSO_REMOCAO = "equipamentoRemovido";
     const CHAVE_I18N_BOTAO_REMOVER = "botaoRemover";
     const CHAVE_I18N_BOTAO_CANCELAR = "botaoCancelar";
 
-    // Constantes
     const MODELO_EQUIPAMENTO = "equipamentos";
     const ROTA_LISTA = "listaEquipamento";
     const ROTA_DETALHES = "detalheEquipamento";
@@ -115,7 +113,6 @@ sap.ui.define([
             fetch(urlApi)
                 .then(res => res.json())
                 .then(dados => oModelo.setData(dados))
-                .catch(err => console.error("Erro ao buscar detalhes do equipamento:", err));
         }
     });
 });

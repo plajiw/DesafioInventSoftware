@@ -3,7 +3,6 @@ sap.ui.define([
 ], (coreLibrary) => {
     "use strict";
 
-    // CHAVES I18N
     const CHAVE_I18N_NOME_OBRIGATORIO = "validacaoNomeObrigatorio";
     const CHAVE_I18N_NOME_TAMANHO = "validacaoNomeTamanho";
     const CHAVE_I18N_TIPO_OBRIGATORIO = "validacaoTipoObrigatorio";
@@ -11,7 +10,6 @@ sap.ui.define([
     const CHAVE_I18N_QUANTIDADE_MINIMO = "validacaoQuantidadeMinima";
     const CHAVE_I18N_QUANTIDADE_MAXIMO = "validacaoQuantidadeMaxima";
 
-    // Constantes
     const ID_INPUT_NOME = "inputNome";
     const ID_INPUT_TIPO = "inputTipo";
     const ID_INPUT_QUANTIDADE = "inputQuantidade";
@@ -58,15 +56,12 @@ sap.ui.define([
         },
 
         validarFormulario: function (view, oResourceBundle) {
-            // Obtém os valores dos campos na View
             let valorNome = view.byId(ID_INPUT_NOME).getValue();
             let valorTipo = view.byId(ID_INPUT_TIPO).getValue();
             let valorQuantidade = view.byId(ID_INPUT_QUANTIDADE).getValue();
 
-            // Armazena as mensagens de erro
             let mensagensErro = [];
 
-            // Valida o campo nome
             let validacaoNome = this.validarCampo("nome", valorNome, oResourceBundle);
 
             if (validacaoNome.mensagemErro) {
@@ -75,7 +70,6 @@ sap.ui.define([
                 view.byId(ID_INPUT_NOME).setValueStateText(validacaoNome.mensagemErro);
             }
 
-            // Valida o campo tipo
             let validacaoTipo = this.validarCampo("tipo", valorTipo, oResourceBundle);
 
             if (validacaoTipo.mensagemErro) {
@@ -84,7 +78,6 @@ sap.ui.define([
                 view.byId(ID_INPUT_TIPO).setValueStateText(validacaoTipo.mensagemErro);
             }
 
-            // Valida o campo quantidade
             let validacaoQuantidade = this.validarCampo("quantidadeEmEstoque", valorQuantidade, oResourceBundle);
 
             if (validacaoQuantidade.mensagemErro) {
@@ -93,7 +86,6 @@ sap.ui.define([
                 view.byId(ID_INPUT_QUANTIDADE).setValueStateText(validacaoQuantidade.mensagemErro);
             }
 
-            // Retorna mensagens de erro concatenadas
             return mensagensErro.join("\n");
         }
     };

@@ -9,7 +9,6 @@
 ], (Controller, JSONModel, Filter, FilterOperator, formatter, UIComponent, MessageBox) => {
   "use strict";
 
-  // Constantes
   const MODELO_EQUIPAMENTO = "equipamentos";
   const PROPRIEDADE_NOME = "nome";
   const ENDPOINT_EQUIPAMENTOS = "api/Equipamentos";
@@ -50,7 +49,6 @@
             oModelo.setData(data);
         })
         .catch(err => {
-            console.error("Erro ao carregar equipamentos:", err);
             MessageBox.error(this.getOwnerComponent().getModel("i18n").getResourceBundle().getText("erroCarregarEquipamentos"));
         });
     },
@@ -78,9 +76,7 @@
     aoPressionarItem: function (oEvento) {
       const oItemPressionado = oEvento.getSource();
       const oContexto = oItemPressionado.getBindingContext(MODELO_EQUIPAMENTO);
-      // A partir do contexto, extrai a propriedade "id" do equipamento
       const idDoEquipamento = oContexto.getProperty(PROPRIEDADE_ID);
-      // Navegar para a rota, passando o ID como parâmetro
       this.roteador.navTo(ROTA_DETALHES, { id: idDoEquipamento });
     }
   });

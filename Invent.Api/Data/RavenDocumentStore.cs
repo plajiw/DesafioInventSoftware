@@ -2,7 +2,6 @@
 
 namespace Invent.Api.Data
 {
-    // Classe estática para centralizar a criação do DocumentStore
     public static class RavenDocumentStore
     {
         public static IDocumentStore CriarStore()
@@ -13,7 +12,6 @@ namespace Invent.Api.Data
                 Database = "InventSoftwareDB"
             };
 
-            // Altera o separador padrão
             store.Conventions.IdentityPartsSeparator = '-';
 
             store.Initialize();

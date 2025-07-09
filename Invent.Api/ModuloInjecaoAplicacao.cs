@@ -11,14 +11,11 @@ namespace Invent.Api
     {
         public static void BindServices(IServiceCollection services)
         {
-            // Registra o DocumentStore
             services.AddSingleton<IDocumentStore>(RavenDocumentStore.CriarStore());
 
-            // Registra Repositórios e Serviços
             services.AddScoped<IEquipamentoRepositorio, RavenDbEquipamentoRepositorio>();
             services.AddScoped<ServicoEquipamentoEletronico>();
 
-            // Registra os validadores do FluentValidation
             services.AddFluentValidationAutoValidation();
             services.AddValidatorsFromAssemblyContaining<EquipamentoEletronicoValidador>();
         }

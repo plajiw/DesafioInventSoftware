@@ -50,10 +50,8 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// Mapeia a rota padrão para o arquivo index.html
 app.MapFallbackToFile("index.html");
 
-// Rota  de desenvolvimento específica para testes
 if (app.Environment.IsDevelopment())
 {
     app.MapGet("/tests", context =>

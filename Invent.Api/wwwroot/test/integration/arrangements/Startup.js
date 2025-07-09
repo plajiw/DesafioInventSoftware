@@ -12,7 +12,6 @@ sap.ui.define([
     let proximoId = ID_INICIAL_MOCK;
 
     function mockFetch(url, opcoesFetch) {
-        // cadastro
         if (opcoesFetch?.method === "POST") {
             const novoEquipamento = JSON.parse(opcoesFetch.body);
             novoEquipamento.id = `Equipamento-${proximoId++}-A`;
@@ -20,12 +19,10 @@ sap.ui.define([
             return Promise.resolve({ ok: true, json: () => Promise.resolve(novoEquipamento) });
         }
 
-        // listagem
         if (url.endsWith("/Equipamentos")) {
             return Promise.resolve({ ok: true, json: () => Promise.resolve(equipamentos) });
         }
 
-        // detalhes
         const id = url.split("/").pop();
         const equipamento = equipamentos.find(e => e.id === id);
         return Promise.resolve({ ok: true, json: () => Promise.resolve(equipamento) });
@@ -42,12 +39,12 @@ sap.ui.define([
         },
 
         iTearDownMyApp: function () {
-            window.fetch = undefined; // Limpa o mock
+            window.fetch = undefined;
             equipamentos = [
                 { id: "Equipamento-1-A", nome: "Teste 1", tipo: "Eletrônico", quantidadeEmEstoque: 10, dataDeInclusao: "2025-07-08T13:39:38.1443059Z", temEstoque: true },
                 { id: "Equipamento-2-A", nome: "Teste 2", tipo: "Mecânico", quantidadeEmEstoque: 0, dataDeInclusao: "2025-07-08T13:39:38.1443059Z", temEstoque: false }
             ];
-            proximoId = ID_INICIAL_MOCK; // Reseta o contador
+            proximoId = ID_INICIAL_MOCK;
             return this.iTeardownMyUIComponent();
         }
     });

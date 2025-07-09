@@ -8,7 +8,6 @@ sap.ui.define([
 ], (Controller, JSONModel, MessageBox, coreLibrary, Validador, UIComponent) => {
     "use strict";
 
-    // Constantes
     const MODELO_EQUIPAMENTO = "equipamentos";
     const ENDPOINT_EQUIPAMENTOS = "api/Equipamentos";
     const ROTA_CADASTRO = "cadastroEquipamento";
@@ -19,7 +18,6 @@ sap.ui.define([
     const ID_INPUT_TIPO = "inputTipo";
     const ID_INPUT_QUANTIDADE = "inputQuantidade";
 
-    // Acessamos o ValueState a partir da biblioteca
     const ValueState = coreLibrary.ValueState;
 
     return Controller.extend("ui5.gestaoequipamento.controller.EquipamentoCadastro", {
@@ -28,7 +26,6 @@ sap.ui.define([
             this.getView().setModel(oModelo, MODELO_EQUIPAMENTO);
 
             this.roteador = UIComponent.getRouterFor(this);
-            // Configura os gatilhos de acesso para as rotas de cadastro e editar
             this.roteador.getRoute(ROTA_CADASTRO).attachPatternMatched(this._aoAcessarCadastro, this);
             this.roteador.getRoute(ROTA_EDITAR).attachPatternMatched(this._aoAcessarEditar, this);
         },
@@ -64,7 +61,6 @@ sap.ui.define([
 
         _carregarDadosEdicao: function (id) {
             let oModelo = this._obterModeloEquipamento();
-            // GET por ID
             fetch(`${ENDPOINT_EQUIPAMENTOS}/${id}`)
                 .then(res => {
                     if (!res.ok) {
@@ -79,7 +75,6 @@ sap.ui.define([
                     oModelo.setData(dados);
                 })
                 .catch(err => {
-                    console.error("Erro ao carregar dados para edição:", err);
                     MessageBox.error(this.getOwnerComponent().getModel("i18n").getResourceBundle().getText("erroCarregarEquipamento"));
                 });
         },
@@ -88,11 +83,8 @@ sap.ui.define([
             const separador = "--";
             const posicaoAposPrefixo = 1;
 
-            // Obter o campo que disparou o evento
             let campoEntrada = oEvento.getSource();
-            // Obtém o ID do elemento que disparou o evento
             let idDoCampo = campoEntrada.getId();
-            // Remove o prefixo para obter o ID
             let nomeCampo = idDoCampo.split(separador)[posicaoAposPrefixo];
 
             let chaveModelo;
@@ -113,10 +105,8 @@ sap.ui.define([
                     break;
             }
 
-            // Obtém o valor digitado do evento
             let valorDigitado = oEvento.getParameter("value");
 
-            // Atualiza o modelo
             let oModelo = this._obterModeloEquipamento();
             let dados = oModelo.getData();
             dados[chaveModelo] = valorDigitado;

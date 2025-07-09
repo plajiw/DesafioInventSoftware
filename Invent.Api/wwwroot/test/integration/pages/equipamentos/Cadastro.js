@@ -17,7 +17,6 @@ sap.ui.define([
                 euClicoEmVoltar: function () {
                     return this.waitFor({
                         controlType: "sap.m.Button",
-                        viewName: VIEW_NAME,
                         matchers: new PropertyStrictEquals({
                             name: "type",
                             value: "Back"
@@ -29,7 +28,6 @@ sap.ui.define([
                         errorMessage: "Não encontrei o botão Voltar na tela de Cadastro."
                     });
                 },
-                // Teste de nome
                 preenchoONome: function (nome) {
                     return this.waitFor({
                         controlType: "sap.m.Input",
@@ -45,8 +43,6 @@ sap.ui.define([
                         errorMessage: "Não encontrei o campo Nome na página de cadastro."
                     });
                 },
-
-                // Teste de Tipo
                 preenchoOTipo: function (tipo) {
                     return this.waitFor({
                         controlType: "sap.m.Input",
@@ -62,8 +58,6 @@ sap.ui.define([
                         errorMessage: "Não encontrei o campo Tipo na página de cadastro."
                     });
                 },
-
-                // Teste de Quantidade
                 preenchoAQuantidade: function (quantidade) {
                     return this.waitFor({
                         controlType: "sap.m.Input",
@@ -83,8 +77,6 @@ sap.ui.define([
                         errorMessage: "Não encontrei o campo Quantidade na página de cadastro."
                     });
                 },
-
-                // Teste Salvar
                 euClicoEmSalvar: function () {
                     return this.waitFor({
                         controlType: "sap.m.Button",
@@ -100,7 +92,6 @@ sap.ui.define([
                         errorMessage: "Botão Salvar não foi encontrado na página de cadastro."
                     });
                 },
-
                 euClicoEmFecharValidacaoErro: function () {
                     return this.waitFor({
                         controlType: "sap.m.Button",

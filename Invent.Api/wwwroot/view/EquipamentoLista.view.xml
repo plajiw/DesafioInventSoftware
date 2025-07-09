@@ -2,15 +2,12 @@
     xmlns:mvc="sap.ui.core.mvc"
     xmlns:core="sap.ui.core" controllerName="ui5.gestaoequipamento.controller.EquipamentoLista">
 
-    <!-- Página -->
     <Page title="{i18n>tituloPaginaLista}" titleAlignment="Center">
 
-        <!-- Header -->
         <headerContent>
             <Button icon="sap-icon://add" text="{i18n>botaoCadastrar}" press=".aoClicarEmCadastrar" type="Emphasized" />
         </headerContent>
 
-        <!-- Conteúdo-->
         <content >
             <Panel class="sapUiResponsiveMargin sapUiSmallMarginTop" width="auto" backgroundDesign="Solid">
                 <Table id="tabelaEquipamentos" items="{equipamentos>/}" growing="true" growingThreshold="20">
@@ -50,22 +47,16 @@
                     <items>
                         <ColumnListItem type="Navigation" press=".aoPressionarItem">
                             <cells>
-                                <!-- ID DO EQUIPAMENTO -->
                                 <Text text="{equipamentos>id}" />
 
-                                <!-- NOME DO EQUIPAMENTO -->
                                 <Text text="{equipamentos>nome}" />
 
-                                <!-- TIPO DO EQUIPAMENTO -->
                                 <Text text="{equipamentos>tipo}" />
 
-                                <!-- QUANTIDADE DO EQUIPAMENTO -->
                                 <ObjectNumber number="{equipamentos>quantidadeEmEstoque}" unit="un" />
 
-                                <!-- DATA DO EQUIPAMENTO -->
                                 <Text text="{path: 'equipamentos>dataDeInclusao', formatter: '.formatter.formatarData'}"/>
 
-                                <!-- DISPONIBILIDADE DO EQUIPAMENTO -->
                                 <ObjectStatus text="{path: 'equipamentos>temEstoque', formatter: '.formatter.formatarDisponibilidade'}" state="{= ${equipamentos>temEstoque} ? 'Success' : 'Error' }" />
                             </cells>
                         </ColumnListItem>

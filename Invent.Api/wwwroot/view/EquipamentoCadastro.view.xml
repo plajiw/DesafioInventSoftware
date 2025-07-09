@@ -3,28 +3,22 @@
     xmlns:mvc="sap.ui.core.mvc"
     xmlns:f="sap.ui.layout.form">
 
-    <!-- Página -->
     <Page id="paginaCadastro" title="{i18n>tituloPaginaCadastro}" titleAlignment="Center" showNavButton="true" navButtonPress=".aoClicarEmVoltar">
 
-        <!-- Header -->
         <headerContent>
             <Button type="Emphasized" text="{i18n>botaoSalvar}" icon="sap-icon://save" press=".aoClicarEmSalvar" />
             <Button text="{i18n>botaoCancelar}" press=".aoClicarEmVoltar" />
         </headerContent>
 
-        <!-- Conteúdo -->
         <content>
             <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanXL="3" labelSpanL="3" labelSpanM="12" labelSpanS="12" emptySpanXL="4" emptySpanL="4" emptySpanM="0" emptySpanS="0" columnsXL="1" columnsL="1" columnsM="1" class="sapUiResponsiveMargin sapUiMediumMarginTop">
                 <f:content>
-                    <!-- Campo Nome -->
                     <Label text="{i18n>labelNome}" required="true" />
                     <Input id="inputNome" value="{equipamentos>/nome}" placeholder="{i18n>placeholderNome}" liveChange=".aoDigitar"/>
 
-                    <!-- Campo Tipo -->
                     <Label text="{i18n>labelTipo}" required="true" />
                     <Input id="inputTipo" value="{equipamentos>/tipo}" placeholder="{i18n>placeholderTipo}" liveChange=".aoDigitar" />
 
-                    <!-- Campo Quantidade -->
                     <Label text="{i18n>labelQuantidade}" required="true" />
                     <Input id="inputQuantidade" value="{equipamentos>/quantidadeEmEstoque}" type="Number" placeholder="{i18n>placeholderQuantidade}" liveChange=".aoDigitar" />
                 </f:content>

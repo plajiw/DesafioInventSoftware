@@ -9,16 +9,12 @@ namespace Invent.Api.Controllers
     [Route("api/[controller]")]
     public class EquipamentosController : ControllerBase
     {
-        // referência para o serviço, responsável pelas regras de negócio, validação e banco de dados
         private readonly ServicoEquipamentoEletronico _servicoEquipamento;
-
-        // Construtor com a injeção de dependência do serviço
         public EquipamentosController(ServicoEquipamentoEletronico servicoEquipamento)
         {
             _servicoEquipamento = servicoEquipamento;
         }
 
-        // Rota para buscar todos os equipamentos.
         [HttpGet]
         public async Task<IActionResult> ObterTodos()
         {
@@ -26,7 +22,6 @@ namespace Invent.Api.Controllers
             return Ok(todosOsEquipamentos);
         }
 
-        // Rota para buscar um único equipamento pelo seu ID
         [HttpGet("{id}")]
         public async Task<IActionResult> ObterPorId(string id)
         {
@@ -42,7 +37,6 @@ namespace Invent.Api.Controllers
             }
         }
 
-        // Rota para criar um novo equipamento
         [HttpPost]
         public async Task<IActionResult> Criar([FromBody] EquipamentoEletronico dadosDoNovoEquipamento)
         {
@@ -61,7 +55,6 @@ namespace Invent.Api.Controllers
             }
         }
 
-        // Rota para atualizar um equipamento existente
         [HttpPut("{id}")]
         public async Task<IActionResult> Atualizar(string id, [FromBody] EquipamentoEletronico equipamentoParaAtualizar)
         {
@@ -92,7 +85,6 @@ namespace Invent.Api.Controllers
             }
         }
 
-        // Rota para remover um equipamento
         [HttpDelete("{id}")]
         public async Task<IActionResult> Remover(string id)
         {
@@ -100,7 +92,7 @@ namespace Invent.Api.Controllers
 
             if (removidoComSucesso)
             {
-                return NoContent(); // 204 No Content
+                return NoContent();
             }
 
             return NotFound();

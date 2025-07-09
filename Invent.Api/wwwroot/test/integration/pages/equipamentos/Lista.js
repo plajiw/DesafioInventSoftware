@@ -17,7 +17,6 @@ sap.ui.define([
     Opa5.createPageObjects({
         naPaginaDeListagemDeEquipamentos: {
             actions: {
-                // Ação: Clicar no botão de cadastro
                 euClicoNoBotaoDeCadastro: function () {
                     return this.waitFor({
                         controlType: "sap.m.Button",
@@ -34,7 +33,6 @@ sap.ui.define([
                     });
                 },
 
-                // Ação: Realizar busca pelo nome
                 euBuscoPorNome: function (nome) {
                     return this.waitFor({
                         controlType: "sap.m.SearchField",
@@ -51,7 +49,6 @@ sap.ui.define([
                     });
                 },
 
-                // Ação: Clicar no item pelo nome
                 euClicoNoItemPeloNome: function (nome) {
                     return this.waitFor({
                         controlType: "sap.m.Text",

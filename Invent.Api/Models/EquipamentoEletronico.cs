@@ -2,7 +2,6 @@
 {
     public class EquipamentoEletronico
     {
-        // Id determinado pelo RavenDB
         public string? Id { get; set; }
         public required string Nome { get; set; }
         public required string Tipo { get; set; }

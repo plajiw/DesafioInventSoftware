@@ -13,12 +13,11 @@ namespace Invent.Api.Data
             _store = store;
         }
 
-        // Criação de um equipamento
         public async Task<EquipamentoEletronico> CriarEquipamento(EquipamentoEletronico equipamento)
         {
             using (IAsyncDocumentSession session = _store.OpenAsyncSession())
             {
-                equipamento.Id = null; // O próprio Raven determina o Id
+                equipamento.Id = null;
 
                 equipamento.DataDeInclusao = DateTime.UtcNow;
 
@@ -28,21 +27,17 @@ namespace Invent.Api.Data
             }
         }
 
-        // Atualização do equipamento
         public async Task<EquipamentoEletronico> Atualizar(string id, EquipamentoEletronico equipamento)
         {
             using (IAsyncDocumentSession session = _store.OpenAsyncSession())
             {
-                // Carregamos o documento usando o id do parâmetro
                 var equipamentoDoBanco = await session.LoadAsync<EquipamentoEletronico>(id);
 
-                // Se o documento for nulo, retorna null
                 if (equipamentoDoBanco is null)
                 {
                     throw new KeyNotFoundException($"Equipamento com o ID '{id}' não foi encontrado.");
                 }
 
-                // Dados alterados
                 equipamentoDoBanco.Nome = equipamento.Nome;
                 equipamentoDoBanco.Tipo = equipamento.Tipo;
                 equipamentoDoBanco.QuantidadeEmEstoque = equipamento.QuantidadeEmEstoque;
@@ -79,16 +74,13 @@ namespace Invent.Api.Data
         {
             using (IAsyncDocumentSession session = _store.OpenAsyncSession())
             {
-                // Carregamos o documento
                 var documentoParaRemover = await session.LoadAsync<EquipamentoEletronico>(id);
 
-                // Se o documento for nulo, retorna false
                 if (documentoParaRemover is null)
                 {
                     return false;
                 }
 
-                // Se existe é removido
                 session.Delete(documentoParaRemover);
 
                 await session.SaveChangesAsync();

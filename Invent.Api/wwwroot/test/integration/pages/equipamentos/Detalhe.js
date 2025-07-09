@@ -58,28 +58,34 @@ sap.ui.define([
                     });
                 },
                 euConfirmoRemocao: function () {
-                    const INDICE_BOTAO_SIM = 0;
                     return this.waitFor({
                         controlType: "sap.m.Button",
-                        searchOpenDialogs: true, // Limita a busca aos controles dentro do diálogo aberto
-                        success: function (arrayDeBotoes) { // [Botão 0: ID=__mbox-btn-0, Texto=Sim, Botão 1: ID=__mbox-btn-1, Texto=Não"]
-                            arrayDeBotoes[INDICE_BOTAO_SIM].firePress();
-                            Opa5.assert.ok(true, "Botão 'Sim' clicado com sucesso.");
+                        searchOpenDialogs: true,
+                        matchers: new PropertyStrictEquals({
+                            name: "text",
+                            value: "Sim"
+                        }),
+                        actions: new Press(),
+                        success: function () {
+                            Opa5.assert.ok(true, "Confirmou remoção do equipamento.");
                         },
-                        errorMessage: "Não encontrei o botão 'Sim' na dentro do dialog."
+                        errorMessage: "Não foi possível localizar a opção para confirmar a remoção."
                     });
                 },
+
                 euNaoConfirmoRemocao: function () {
-                    const INDICE_BOTAO_NAO = 1;
                     return this.waitFor({
                         controlType: "sap.m.Button",
-                        searchOpenDialogs: true, // Limita a busca aos controles dentro do diálogo aberto
-                        success: function (arrayDeBotoes) { // [Botão 0: ID=__mbox-btn-0, Texto=Sim, Botão 1: ID=__mbox-btn-1, Texto=Não"]
-                            console.log("Obtemos o array do botão: ",arrayDeBotoes)
-                            arrayDeBotoes[INDICE_BOTAO_NAO].firePress();
-                            Opa5.assert.ok(true, "Botão 'Não' clicado com sucesso");
+                        searchOpenDialogs: true,
+                        matchers: new PropertyStrictEquals({
+                            name: "text",
+                            value: "Não"
+                        }),
+                        actions: new Press(),
+                        success: function () {
+                            Opa5.assert.ok(true, "Confirmou a não remoção do equipamento.");
                         },
-                        errorMessage: "Não encontrei o botão 'Não' na dentro do dialog."
+                        errorMessage: "Não foi possível localizar a opção para negar a remoção."
                     });
                 }
             },

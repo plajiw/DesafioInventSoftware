@@ -19,7 +19,11 @@ sap.ui.define([
                             name: "type",
                             value: "Back"
                         }),
-                        actions: new Press()
+                        actions: new Press(),
+                        success: function () {
+                            Opa5.assert.ok(true, "Botão 'Voltar' clicado com sucesso.");
+                        },
+                        errorMessage: "Não encontrei o botão 'Voltar'."
                     });
                 },
                 euClicoEmRemover: function () {
@@ -30,7 +34,11 @@ sap.ui.define([
                             propertyName: "text",
                             key: "botaoRemover"
                         }),
-                        actions: new Press()
+                        actions: new Press(),
+                        success: function () {
+                            Opa5.assert.ok(true, "Botão 'Remover' clicado com sucesso.");
+                        },
+                        errorMessage: "Não encontrei o botão 'Remover'."
                     });
                 },
                 euClicoEmEditar: function () {
@@ -41,17 +49,24 @@ sap.ui.define([
                             propertyName: "text",
                             key: "botaoEditar"
                         }),
-                        actions: new Press()
+                        actions: new Press(),
+                        success: function () {
+                            Opa5.assert.ok(true, "Botão 'Editar' clicado com sucesso.");
+                        },
+                        errorMessage: "Não encontrei o botão 'Editar'."
+
                     });
                 },
                 euConfirmoRemocao: function () {
+                    const INDICE_BOTAO_SIM = 0;
                     return this.waitFor({
                         controlType: "sap.m.Button",
-                        matchers: new PropertyStrictEquals({
-                            name: "text",
-                            value: "Sim"
-                        }),
-                        actions: new Press()
+                        searchOpenDialogs: true, // Limita a busca aos controles dentro do diálogo aberto
+                        success: function (arrayDeBotoes) { // [Botão 0: ID=__mbox-btn-0, Texto=Sim, Botão 1: ID=__mbox-btn-1, Texto=Não"]
+                            arrayDeBotoes[INDICE_BOTAO_SIM].firePress();
+                            Opa5.assert.ok(true, "Botão 'Sim' clicado com sucesso.");
+                        },
+                        errorMessage: "Não encontrei o botão 'Sim' na dentro do dialog."
                     });
                 },
                 euNaoConfirmoRemocao: function () {
@@ -59,10 +74,12 @@ sap.ui.define([
                     return this.waitFor({
                         controlType: "sap.m.Button",
                         searchOpenDialogs: true, // Limita a busca aos controles dentro do diálogo aberto
-                        success: function (aButtons) { // [Botão 0: ID=__mbox-btn-0, Texto=Sim, Botão 1: ID=__mbox-btn-1, Texto=Não"]
-                            aButtons[INDICE_BOTAO_NAO].firePress();
-                            Opa5.assert.ok(true, "Botão 'Não' clicado no diálogo.");
+                        success: function (arrayDeBotoes) { // [Botão 0: ID=__mbox-btn-0, Texto=Sim, Botão 1: ID=__mbox-btn-1, Texto=Não"]
+                            console.log("Obtemos o array do botão: ",arrayDeBotoes)
+                            arrayDeBotoes[INDICE_BOTAO_NAO].firePress();
+                            Opa5.assert.ok(true, "Botão 'Não' clicado com sucesso");
                         },
+                        errorMessage: "Não encontrei o botão 'Não' na dentro do dialog."
                     });
                 }
             },
@@ -74,7 +91,11 @@ sap.ui.define([
                         matchers: new I18NText({
                             propertyName: "title",
                             key: "tituloPaginaDetalhes"
-                        })
+                        }),
+                        success: function () {
+                            Opa5.assert.ok(true, "Página de detalhes foi aberta corretamente.");
+                        },
+                        errorMessage: "Página de detalhes não abriu corretamente."
                     });
                 }
             }

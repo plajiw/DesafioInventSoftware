@@ -1,4 +1,3 @@
-// webapp/test/integration/pages/Detalhe.js
 sap.ui.define([
     "sap/ui/test/Opa5",
     "sap/ui/test/matchers/I18NText",

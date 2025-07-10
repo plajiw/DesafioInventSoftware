@@ -37,22 +37,6 @@ sap.ui.define([], function () {
             const oResourceBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
             let chaveParaTraducao = `tipoEquipamento${indiceDoTipo}`
             return oResourceBundle.getText(chaveParaTraducao);
-
-            // const arrayDeTipo = [
-            //     "Desktop",
-            //     "Notebook",
-            //     "Smartphone",
-            //     "Tablet",
-            //     "TV",
-            //     "Monitor",
-            //     "Teclado",
-            //     "Mouse",
-            //     "Impressora",
-            //     "Webcam",
-            //     "Headset",
-            // ];
-
-            // return arrayDeTipo[indiceDoTipo];
         }
     };
 });

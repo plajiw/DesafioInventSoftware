@@ -51,7 +51,7 @@
                                     
                                     <f:FormElement label="{i18n>tipoTabela}">
                                         <f:fields>
-                                            <Text text="{path: 'equipamentos>/tipo', formatter: '.formatter.fomatarTipo'}" />
+                                            <Text text="{path: 'equipamentos>/tipo', formatter: '.formatter.formatarTipo'}" />
                                         </f:fields>
                                     </f:FormElement>
                                     

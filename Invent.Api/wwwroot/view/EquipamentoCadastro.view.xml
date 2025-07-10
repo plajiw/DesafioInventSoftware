@@ -1,6 +1,7 @@
 <mvc:View controllerName="ui5.gestaoequipamento.controller.EquipamentoCadastro"
     xmlns="sap.m"
     xmlns:mvc="sap.ui.core.mvc"
+    xmlns:core="sap.ui.core"
     xmlns:f="sap.ui.layout.form">
 
     <Page id="paginaCadastro" title="{i18n>tituloPaginaCadastro}" titleAlignment="Center" showNavButton="true" navButtonPress=".aoClicarEmVoltar">
@@ -17,7 +18,9 @@
                     <Input id="inputNome" value="{equipamentos>/nome}" placeholder="{i18n>placeholderNome}" liveChange=".aoDigitar"/>
 
                     <Label text="{i18n>labelTipo}" required="true" />
-                    <Input id="inputTipo" value="{equipamentos>/tipo}" placeholder="{i18n>placeholderTipo}" liveChange=".aoDigitar" />
+                    <Select id="inputTipo" selectedKey="{equipamentos>/tipo}" items="{ path: 'tipos>/values'}" change=".aoMudarTipo">
+                        <core:Item key="{tipos>key}" text="{tipos>text}" />
+                    </Select>
 
                     <Label text="{i18n>labelQuantidade}" required="true" />
                     <Input id="inputQuantidade" value="{equipamentos>/quantidadeEmEstoque}" type="Number" placeholder="{i18n>placeholderQuantidade}" liveChange=".aoDigitar" />

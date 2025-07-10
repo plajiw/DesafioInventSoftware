@@ -33,22 +33,26 @@ sap.ui.define([], function () {
             return `${dia}/${mes}/${ano} ${hora}:${minuto}`;
         },
 
-        formatarTipo: function (iTipo) {
-            const arrayDeTipo = [
-                "Desktop",
-                "Notebook",
-                "Smartphone",
-                "Tablet",
-                "TV",
-                "Monitor",
-                "Teclado",
-                "Mouse",
-                "Impressora",
-                "Webcam",
-                "Headset",
-            ];
+        formatarTipo: function (indiceDoTipo) {
+            const oResourceBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
+            let chaveParaTraducao = `tipoEquipamento${indiceDoTipo}`
+            return oResourceBundle.getText(chaveParaTraducao);
 
-            return arrayDeTipo[iTipo];
+            // const arrayDeTipo = [
+            //     "Desktop",
+            //     "Notebook",
+            //     "Smartphone",
+            //     "Tablet",
+            //     "TV",
+            //     "Monitor",
+            //     "Teclado",
+            //     "Mouse",
+            //     "Impressora",
+            //     "Webcam",
+            //     "Headset",
+            // ];
+
+            // return arrayDeTipo[indiceDoTipo];
         }
     };
 });

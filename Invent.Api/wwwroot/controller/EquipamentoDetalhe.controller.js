@@ -21,7 +21,7 @@ sap.ui.define([
     const ROTA_LISTA = "listaEquipamento";
     const ROTA_DETALHES = "detalheEquipamento";
     const ROTA_EDITAR = "editarEquipamento";
-    const ENDPOINT_EQUIPAMENTOS = "api/Equipamento";
+    const ENDPOINT_EQUIPAMENTOS = "api/Equipamentos";
     const ARGUMENTOS_DA_ROTA = "arguments";
     const PROPRIEDADE_ID = "/id";
     const PROPRIEDADE_NOME = "/nome";
@@ -112,7 +112,7 @@ sap.ui.define([
 
             fetch(urlApi)
                 .then(res => res.json())
-                .then(dados => oModelo.setData(dados))
+                .then(dados => oModelo.setData(dados));
         }
     });
 });

@@ -43,7 +43,7 @@ namespace Invent.Api.Data
             }
         }
 
-        public async Task<IEnumerable<EquipamentoEletronico>> ObterTodos(string filtro)
+        public async Task<IEnumerable<EquipamentoEletronico>> ObterTodos(string? filtro)
         {
             using (IAsyncDocumentSession session = _store.OpenAsyncSession())
             {

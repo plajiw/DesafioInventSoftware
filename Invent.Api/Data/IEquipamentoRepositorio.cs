@@ -8,7 +8,7 @@ namespace Invent.Api.Data
 
         Task Atualizar(string id, EquipamentoEletronico equipamento);
 
-        Task<IEnumerable<EquipamentoEletronico>> ObterTodos(string filtro);
+        Task<IEnumerable<EquipamentoEletronico>> ObterTodos(string? filtro);
 
         Task<EquipamentoEletronico> ObterPorId(string id);
 

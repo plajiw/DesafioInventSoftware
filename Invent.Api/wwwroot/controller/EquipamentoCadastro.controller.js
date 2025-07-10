@@ -12,7 +12,6 @@ sap.ui.define([
     const MODELO_TIPOS = "tipos";
     const ENDPOINT_EQUIPAMENTOS = "api/Equipamentos";
     const ROTA_CADASTRO = "cadastroEquipamento";
-    const ROTA_LISTA = "listaEquipamento";
     const ROTA_DETALHES = "detalheEquipamento";
     const ROTA_EDITAR = "editarEquipamento";
     const ID_INPUT_NOME = "inputNome";
@@ -26,19 +25,27 @@ sap.ui.define([
             let oModelo = new JSONModel({});
             this.getView().setModel(oModelo, MODELO_EQUIPAMENTO);
 
-            const arrayDeTipos = [
-                { key: 0, text: this.getOwnerComponent().getModel("i18n").getResourceBundle().getText("tipoEquipamento0") },
-                { key: 1, text: this.getOwnerComponent().getModel("i18n").getResourceBundle().getText("tipoEquipamento1") },
-                { key: 2, text: this.getOwnerComponent().getModel("i18n").getResourceBundle().getText("tipoEquipamento2") },
-                { key: 3, text: this.getOwnerComponent().getModel("i18n").getResourceBundle().getText("tipoEquipamento3") }
-            ];
+            this._oResourceBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
 
+            const arrayDeTipos = this._criarListaDeTipos();
             let oModeloTipo = new JSONModel({ values: arrayDeTipos });
             this.getView().setModel(oModeloTipo, MODELO_TIPOS);
 
             this.roteador = UIComponent.getRouterFor(this);
             this.roteador.getRoute(ROTA_CADASTRO).attachPatternMatched(this._aoAcessarCadastro, this);
             this.roteador.getRoute(ROTA_EDITAR).attachPatternMatched(this._aoAcessarEditar, this);
+        },
+
+        _criarListaDeTipos: function () {
+            const totalDeTipos = 12;
+            const tipos = [];
+            for (let i = 0; i < totalDeTipos; i++) {
+                tipos.push({
+                    key: i,
+                    text: this._oResourceBundle.getText(`tipoEquipamento${i}`)
+                });
+            }
+            return tipos;
         },
 
         _obterModeloEquipamento: function () {
@@ -73,21 +80,8 @@ sap.ui.define([
         _carregarDadosEdicao: function (id) {
             let oModelo = this._obterModeloEquipamento();
             fetch(`${ENDPOINT_EQUIPAMENTOS}/${id}`)
-                .then(res => {
-                    if (!res.ok) {
-                        throw new Error(`Erro HTTP: ${res.status}`);
-                    }
-                    return res.json();
-                })
-                .then(dados => {
-                    if (Array.isArray(dados)) {
-                        throw new Error("API retornou uma lista em vez de um único equipamento");
-                    }
-                    oModelo.setData(dados);
-                })
-                .catch(err => {
-                    MessageBox.error(this.getOwnerComponent().getModel("i18n").getResourceBundle().getText("erroCarregarEquipamento"));
-                });
+                .then(res => res.json())
+                .then(dados => oModelo.setData(dados));
         },
 
         aoDigitar: function (oEvento) {
@@ -103,9 +97,6 @@ sap.ui.define([
                 case ID_INPUT_NOME:
                     chaveModelo = "nome";
                     break;
-                // case ID_INPUT_TIPO:
-                //     chaveModelo = "tipo";
-                //     break;
                 case ID_INPUT_QUANTIDADE:
                     chaveModelo = "quantidadeEmEstoque";
                     break;
@@ -120,11 +111,22 @@ sap.ui.define([
             dados[chaveModelo] = valorDigitado;
             oModelo.setData(dados);
 
-            const oResourceBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
-            let { estadoDoCampo, mensagemErro } = Validador.validarCampo(chaveModelo, valorDigitado, oResourceBundle);
+            let { estadoDoCampo, mensagemErro } = Validador.validarCampo(chaveModelo, valorDigitado, this._oResourceBundle);
 
             campoEntrada.setValueState(estadoDoCampo);
             campoEntrada.setValueStateText(mensagemErro);
+        },
+
+        aoMudarTipo: function (oEvento) {
+            const campoEntrada = oEvento.getSource();
+            const valorSelecionado = oEvento.getParameter("selectedKey");
+
+            let oModelo = this._obterModeloEquipamento();
+            let dados = oModelo.getData();
+            dados.tipo = valorSelecionado;
+            oModelo.setData(dados);
+
+            campoEntrada.setValueState(ValueState.None);
         },
 
         _configurarRequisicao: function (id, dados) {
@@ -142,7 +144,7 @@ sap.ui.define([
             const corpoDaRequisicao = {
                 id: dados.id || null,
                 nome: dados.nome,
-                tipo: dados.tipo,
+                tipo: parseInt(dados.tipo),
                 quantidadeEmEstoque: parseInt(dados.quantidadeEmEstoque)
             };
 
@@ -161,8 +163,7 @@ sap.ui.define([
 
         _validarFormulario: function () {
             const view = this.getView();
-            const oResourceBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
-            const errosEncontrados = Validador.validarFormulario(view, oResourceBundle);
+            const errosEncontrados = Validador.validarFormulario(view, this._oResourceBundle);
 
             if (errosEncontrados) MessageBox.error(errosEncontrados);
 

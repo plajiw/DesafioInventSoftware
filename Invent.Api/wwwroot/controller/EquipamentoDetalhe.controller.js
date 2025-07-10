@@ -7,12 +7,12 @@ sap.ui.define([
     "sap/m/Dialog",
     "sap/m/library",
     "sap/m/Button",
-    "sap/m/Text",
-], (Controller, JSONModel, formatter, UIComponent, MessageToast, Dialog, santaLibrary, mobileLibrary, Button, Text) => {
+    "sap/m/Text"
+], (Controller, JSONModel, formatter, UIComponent, MessageToast, Dialog, mobileLibrary, Button, Text) => {
     "use strict";
 
     const CHAVE_I18N_TITULO_REMOCAO = "tituloConfirmarRemocao";
-    const CHAVE_I18N_VALIDAR_REMOCAO = "confirmarRemover";
+    const CHAVE_I18N_VALIDAR_REMOCAO = "confirmarRemocaoEquipamento";
     const CHAVE_I18N_SUCESSO_REMOCAO = "equipamentoRemovido";
     const CHAVE_I18N_BOTAO_REMOVER = "botaoConfirmar";
     const CHAVE_I18N_BOTAO_CANCELAR = "botaoCancelar";
@@ -26,7 +26,7 @@ sap.ui.define([
     const PROPRIEDADE_ID = "/id";
     const PROPRIEDADE_NOME = "/nome";
 
-    return Controller.extend("ui.model.gestaoequipamento.controller.EquipamentoDetalhe", {
+    return Controller.extend("ui5.gestaoequipamento.controller.EquipamentoDetalhe", {
         formatter: formatter,
 
         onInit: function () {
@@ -51,7 +51,7 @@ sap.ui.define([
             this._roteador.navTo(ROTA_EDITAR, { id: idDoEquipamento });
         },
 
-        aoClicarRemover: function () {
+        aoClicarEmRemover: function () {
             this._alertaAoRemover();
         },
 
@@ -60,15 +60,24 @@ sap.ui.define([
             fetch(urlApi, {
                 method: 'DELETE',
             })
-                .then(() => this._roteador.navTo(ROTA_LISTA, {}, true));
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error(`Erro HTTP: ${res.status}`);
+                    }
+                    MessageToast.show(this.getOwnerComponent().getModel("i18n").getResourceBundle().getText(CHAVE_I18N_SUCESSO_REMOCAO));
+                    this._roteador.navTo(ROTA_LISTA, {}, true);
+                })
+                .catch(err => {
+                    MessageBox.error(this.getOwnerComponent().getModel("i18n").getResourceBundle().getText("erroRemoverEquipamento"));
+                });
         },
 
         _alertaAoRemover: function () {
-            let DialogType = mobileLibrary.DialogType;
-            let ButtonType = mobileLibrary.ButtonType;
-            let oResourceBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
-            let oModelo = this._obterModeloEquipamento();
-            let nome = oModelo.getProperty(PROPRIEDADE_NOME);
+            const DialogType = mobileLibrary.DialogType;
+            const ButtonType = mobileLibrary.ButtonType;
+            const oResourceBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
+            const oModelo = this._obterModeloEquipamento();
+            const nome = oModelo.getProperty(PROPRIEDADE_NOME);
 
             if (!this.dialogAprovarRemocao) {
                 this._textoDialogo = new Text({ text: "" });
@@ -81,7 +90,6 @@ sap.ui.define([
                         text: oResourceBundle.getText(CHAVE_I18N_BOTAO_REMOVER),
                         press: () => {
                             const id = oModelo.getProperty(PROPRIEDADE_ID);
-                            MessageToast.show(oResourceBundle.getText(CHAVE_I18N_SUCESSO_REMOCAO));
                             this._removerEquipamento(id);
                             this.dialogAprovarRemocao.close();
                         }
@@ -111,8 +119,16 @@ sap.ui.define([
             const urlApi = `${ENDPOINT_EQUIPAMENTOS}/${id}`;
 
             fetch(urlApi)
-                .then(res => res.json())
-                .then(dados => oModelo.setData(dados));
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error(`Erro HTTP: ${res.status}`);
+                    }
+                    return res.json();
+                })
+                .then(dados => oModelo.setData(dados))
+                .catch(err => {
+                    MessageBox.error(this.getOwnerComponent().getModel("i18n").getResourceBundle().getText("erroCarregarEquipamento"));
+                });
         }
     });
 });

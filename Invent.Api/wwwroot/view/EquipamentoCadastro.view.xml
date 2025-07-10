@@ -5,25 +5,24 @@
     xmlns:f="sap.ui.layout.form">
 
     <Page id="paginaCadastro" title="{i18n>tituloPaginaCadastro}" titleAlignment="Center" showNavButton="true" navButtonPress=".aoClicarEmVoltar">
-
         <headerContent>
             <Button type="Emphasized" text="{i18n>botaoSalvar}" icon="sap-icon://save" press=".aoClicarEmSalvar" />
             <Button text="{i18n>botaoCancelar}" press=".aoClicarEmVoltar" />
         </headerContent>
-
         <content>
-            <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanXL="3" labelSpanL="3" labelSpanM="12" labelSpanS="12" emptySpanXL="4" emptySpanL="4" emptySpanM="0" emptySpanS="0" columnsXL="1" columnsL="1" columnsM="1" class="sapUiResponsiveMargin sapUiMediumMarginTop">
+            <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanXL="4" labelSpanL="4" labelSpanM="4" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="4" emptySpanL="4" emptySpanM="0" emptySpanS="0" columnsXL="1" columnsL="1" columnsM="1" class="sapUiResponsiveMargin sapUiMediumMarginTop">
                 <f:content>
-                    <Label text="{i18n>labelNome}" required="true" />
-                    <Input id="inputNome" value="{equipamentos>/nome}" placeholder="{i18n>placeholderNome}" liveChange=".aoDigitar"/>
+                    <Label id="labelNome" text="{i18n>labelNome}" required="true" />
+                    <Input id="inputNome" value="{equipamentos>/nome}" placeholder="{i18n>placeholderNome}" liveChange=".aoDigitar" ariaLabelledBy="labelNome"/>
 
-                    <Label text="{i18n>labelTipo}" required="true" />
-                    <Select id="inputTipo" selectedKey="{equipamentos>/tipo}" items="{ path: 'tipos>/values'}" change=".aoMudarTipo">
+                    <Label id="labelTipo" text="{i18n>labelTipo}" required="true" />
+                    <Select id="inputTipo" selectedKey="{equipamentos>/tipo}" items="{path: 'tipos>/values'}" forceSelection="false">
+                        <core:Item key="" text="{i18n>placeholderTipo}" enabled="false" />
                         <core:Item key="{tipos>key}" text="{tipos>text}" />
                     </Select>
 
-                    <Label text="{i18n>labelQuantidade}" required="true" />
-                    <Input id="inputQuantidade" value="{equipamentos>/quantidadeEmEstoque}" type="Number" placeholder="{i18n>placeholderQuantidade}" liveChange=".aoDigitar" />
+                    <Label id="labelQuantidade" text="{i18n>labelQuantidade}" required="true" />
+                    <Input id="inputQuantidade" value="{equipamentos>/quantidadeEmEstoque}" type="Number" placeholder="{i18n>placeholderQuantidade}" liveChange=".aoDigitar" ariaLabelledBy="labelQuantidade" />
                 </f:content>
             </f:SimpleForm>
         </content>

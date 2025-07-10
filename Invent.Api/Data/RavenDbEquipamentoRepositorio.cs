@@ -18,7 +18,6 @@ namespace Invent.Api.Data
             using (IAsyncDocumentSession session = _store.OpenAsyncSession())
             {
                 equipamento.Id = null;
-
                 equipamento.DataDeInclusao = DateTime.UtcNow;
 
                 await session.StoreAsync(equipamento);

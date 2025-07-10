@@ -11,7 +11,7 @@ namespace Invent.Api.Models
                 .Length(3, 100).WithMessage("O nome deve ter entre 3 e 100 caracteres.");
 
             RuleFor(e => e.Tipo)
-                .NotEmpty().WithMessage("O tipo do equipamento é obrigatório.");
+                .IsInEnum().WithMessage("Selecione um tipo válido.");
 
             RuleFor(e => e.QuantidadeEmEstoque)
                 .GreaterThanOrEqualTo(0).WithMessage("A quantidade precisa ser maior ou igual a zero.")

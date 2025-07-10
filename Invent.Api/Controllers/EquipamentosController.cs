@@ -30,7 +30,6 @@ namespace Invent.Api.Controllers
                 var equipamentoEncontrado = await _servicoEquipamento.ObterPorId(id);
                 return Ok(equipamentoEncontrado);
             }
-
             catch (KeyNotFoundException ex)
             {
                 return NotFound(new { Mensagem = ex.Message });
@@ -68,17 +67,14 @@ namespace Invent.Api.Controllers
                 var equipamentoAtualizado = await _servicoEquipamento.Atualizar(id, equipamentoParaAtualizar);
                 return Ok(equipamentoAtualizado);
             }
-
             catch (KeyNotFoundException ex)
             {
                 return NotFound(new { Mensagem = ex.Message });
             }
-
             catch (ValidationException ex)
             {
                 return BadRequest(ex.Errors);
             }
-
             catch (Exception ex)
             {
                 return StatusCode(500, $"Um erro interno ocorreu: {ex.Message}");

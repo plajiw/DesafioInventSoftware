@@ -7,26 +7,26 @@ sap.ui.define([
     "sap/m/Dialog",
     "sap/m/library",
     "sap/m/Button",
-    "sap/m/Text"
-], (Controller, JSONModel, formatter, UIComponent, MessageToast, Dialog, mobileLibrary, Button, Text) => {
+    "sap/m/Text",
+], (Controller, JSONModel, formatter, UIComponent, MessageToast, Dialog, santaLibrary, mobileLibrary, Button, Text) => {
     "use strict";
 
     const CHAVE_I18N_TITULO_REMOCAO = "tituloConfirmarRemocao";
-    const CHAVE_I18N_VALIDAR_REMOCAO = "confirmarRemocaoEquipamento";
+    const CHAVE_I18N_VALIDAR_REMOCAO = "confirmarRemover";
     const CHAVE_I18N_SUCESSO_REMOCAO = "equipamentoRemovido";
-    const CHAVE_I18N_BOTAO_REMOVER = "botaoRemover";
+    const CHAVE_I18N_BOTAO_REMOVER = "botaoConfirmar";
     const CHAVE_I18N_BOTAO_CANCELAR = "botaoCancelar";
 
     const MODELO_EQUIPAMENTO = "equipamentos";
     const ROTA_LISTA = "listaEquipamento";
     const ROTA_DETALHES = "detalheEquipamento";
     const ROTA_EDITAR = "editarEquipamento";
-    const ENDPOINT_EQUIPAMENTOS = "api/Equipamentos";
+    const ENDPOINT_EQUIPAMENTOS = "api/Equipamento";
     const ARGUMENTOS_DA_ROTA = "arguments";
     const PROPRIEDADE_ID = "/id";
     const PROPRIEDADE_NOME = "/nome";
 
-    return Controller.extend("ui5.gestaoequipamento.controller.EquipamentoDetalhe", {
+    return Controller.extend("ui.model.gestaoequipamento.controller.EquipamentoDetalhe", {
         formatter: formatter,
 
         onInit: function () {
@@ -51,7 +51,7 @@ sap.ui.define([
             this._roteador.navTo(ROTA_EDITAR, { id: idDoEquipamento });
         },
 
-        aoClicarEmRemover: function () {
+        aoClicarRemover: function () {
             this._alertaAoRemover();
         },
 
@@ -71,12 +71,11 @@ sap.ui.define([
             let nome = oModelo.getProperty(PROPRIEDADE_NOME);
 
             if (!this.dialogAprovarRemocao) {
+                this._textoDialogo = new Text({ text: "" });
                 this.dialogAprovarRemocao = new Dialog({
                     type: DialogType.Message,
                     title: oResourceBundle.getText(CHAVE_I18N_TITULO_REMOCAO),
-                    content: new Text({
-                        text: oResourceBundle.getText(CHAVE_I18N_VALIDAR_REMOCAO, [nome]),
-                    }),
+                    content: this._textoDialogo,
                     beginButton: new Button({
                         type: ButtonType.Emphasized,
                         text: oResourceBundle.getText(CHAVE_I18N_BOTAO_REMOVER),
@@ -98,6 +97,7 @@ sap.ui.define([
                 this.getView().addDependent(this.dialogAprovarRemocao);
             }
 
+            this._textoDialogo.setText(oResourceBundle.getText(CHAVE_I18N_VALIDAR_REMOCAO, [nome]));
             this.dialogAprovarRemocao.open();
         },
 

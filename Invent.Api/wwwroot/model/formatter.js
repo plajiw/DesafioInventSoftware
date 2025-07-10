@@ -31,6 +31,24 @@ sap.ui.define([], function () {
             const minuto = String(oDate.getMinutes()).padStart(quantidadeMaxima, valorDePreenchimento);
 
             return `${dia}/${mes}/${ano} ${hora}:${minuto}`;
+        },
+
+        formatarTipo: function (iTipo) {
+            const arrayDeTipo = [
+                "Desktop",
+                "Notebook",
+                "Smartphone",
+                "Tablet",
+                "TV",
+                "Monitor",
+                "Teclado",
+                "Mouse",
+                "Impressora",
+                "Webcam",
+                "Headset",
+            ];
+
+            return arrayDeTipo[iTipo];
         }
     };
 });

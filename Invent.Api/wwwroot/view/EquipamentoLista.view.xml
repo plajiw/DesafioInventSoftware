@@ -51,7 +51,7 @@
 
                                 <Text text="{equipamentos>nome}" />
 
-                                <Text text="{equipamentos>tipo}" />
+                                <Text text="{path: 'equipamentos>tipo', formatter: '.formatter.formatarTipo'}" />
 
                                 <ObjectNumber number="{equipamentos>quantidadeEmEstoque}" unit="un" />
 

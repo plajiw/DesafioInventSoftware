@@ -8,7 +8,7 @@ namespace Invent.Api.Models
         public required string Nome { get; set; }
         public required TipoEquipamentoEletronico Tipo { get; set; }
         public int QuantidadeEmEstoque { get; set; }
-        public DateTime DataDeInclusao { get; set; }
+        public DateTimeOffset DataDeInclusao { get; set; }
         public bool TemEstoque => QuantidadeEmEstoque > 0;
     }
 }

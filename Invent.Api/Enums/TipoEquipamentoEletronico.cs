@@ -1,4 +1,6 @@
-﻿namespace Invent.Api.Enums
+﻿using System.ComponentModel;
+
+namespace Invent.Api.Enums
 {
     public enum TipoEquipamentoEletronico
     {

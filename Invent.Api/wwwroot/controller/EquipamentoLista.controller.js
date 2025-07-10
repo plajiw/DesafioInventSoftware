@@ -9,10 +9,11 @@
 ], (Controller, JSONModel, Filter, FilterOperator, formatter, UIComponent, MessageBox) => {
     "use strict";
 
+    const CHAVE_I18N_ERRO_CARREGAR_EQUIPAMENTOS = "erroCarregarEquipamentos";
+    const CHAVE_I18N_ERRO_BUSCAR_EQUIPAMENTOS = "erroBuscarEquipamentos";
+
     const MODELO_EQUIPAMENTO = "equipamentos";
-    const PROPRIEDADE_NOME = "nome";
     const ENDPOINT_EQUIPAMENTOS = "api/Equipamentos";
-    const ID_TABELA_EQUIPAMENTOS = "tabelaEquipamentos";
     const PROPRIEDADE_ID = "id";
     const ROTA_DETALHES = "detalheEquipamento";
     const ROTA_LISTA = "listaEquipamento";
@@ -24,7 +25,7 @@
         onInit: function () {
             let oModelo = new JSONModel([]);
             this.getView().setModel(oModelo, MODELO_EQUIPAMENTO);
-
+            this._oResourceBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
             this.roteador = UIComponent.getRouterFor(this);
             this.roteador.getRoute(ROTA_LISTA).attachPatternMatched(this._carregarEquipamentos, this);
         },
@@ -33,40 +34,34 @@
             return this.getView().getModel(MODELO_EQUIPAMENTO);
         },
 
-        _carregarEquipamentos() {
+        _carregarEquipamentos: function () {
             let oModelo = this._obterModeloEquipamento();
+            this.getView().setBusy(true);
             fetch(ENDPOINT_EQUIPAMENTOS)
-                .then(res => {
-                    if (!res.ok) {
-                        throw new Error(`Erro HTTP: ${res.status}`);
-                    }
-                    return res.json();
+                .then(res => res.json())
+                .then(data => oModelo.setData(data))
+                .catch(() => {
+                    MessageBox.error(this._oResourceBundle.getText(CHAVE_I18N_ERRO_CARREGAR_EQUIPAMENTOS));
                 })
-                .then(data => {
-                    if (!Array.isArray(data)) {
-                        throw new Error("API não retornou uma lista de equipamentos");
-                    }
-                    oModelo.setData(data);
-                })
-                .catch(err => {
-                    MessageBox.error(this.getOwnerComponent().getModel("i18n").getResourceBundle().getText("erroCarregarEquipamentos"));
-                });
+                .finally(() => this.getView().setBusy(false));
         },
 
         aoBuscar: function (oEvent) {
-            const consultaRealizada = "query";
-            const conjutoDeEquipamentos = "items";
+            const query = oEvent.getParameter("query");
+            const oModelo = this._obterModeloEquipamento();
 
-            const sQuery = oEvent.getParameter(consultaRealizada);
-            const oBinding = this.byId(ID_TABELA_EQUIPAMENTOS).getBinding(conjutoDeEquipamentos);
+            this.getView().setBusy(true);
 
-            const aFilters = [];
-            if (sQuery) {
-                const oFilter = new Filter(PROPRIEDADE_NOME, FilterOperator.Contains, sQuery);
-                aFilters.push(oFilter);
-            }
+            const url = `${ENDPOINT_EQUIPAMENTOS}?filtro=${query}`;
+            console.log("Url buscado: ", url);
 
-            oBinding.filter(aFilters);
+            fetch(url)
+                .then(res => res.json())
+                .then(data => oModelo.setData(data))
+                .catch(() => {
+                    MessageBox.error(this._oResourceBundle.getText(CHAVE_I18N_ERRO_BUSCAR_EQUIPAMENTOS));
+                })
+                .finally(() => this.getView().setBusy(false));
         },
 
         aoClicarEmCadastrar: function () {

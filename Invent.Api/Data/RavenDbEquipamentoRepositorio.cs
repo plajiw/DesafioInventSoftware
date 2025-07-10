@@ -13,26 +13,24 @@ namespace Invent.Api.Data
             _store = store;
         }
 
-        public async Task<EquipamentoEletronico> CriarEquipamento(EquipamentoEletronico equipamento)
+        public async Task<EquipamentoEletronico> CriarEquipamento(EquipamentoEletronico equipamento)
         {
             using (IAsyncDocumentSession session = _store.OpenAsyncSession())
             {
-                equipamento.Id = null;
-                equipamento.DataDeInclusao = DateTime.UtcNow;
-
+                equipamento.DataDeInclusao = DateTimeOffset.Now;
                 await session.StoreAsync(equipamento);
                 await session.SaveChangesAsync();
                 return equipamento;
             }
         }
 
-        public async Task<EquipamentoEletronico> Atualizar(string id, EquipamentoEletronico equipamento)
+        public async Task Atualizar(string id, EquipamentoEletronico equipamento)
         {
             using (IAsyncDocumentSession session = _store.OpenAsyncSession())
             {
                 var equipamentoDoBanco = await session.LoadAsync<EquipamentoEletronico>(id);
 
-                if (equipamentoDoBanco is null)
+                if (equipamentoDoBanco == null)
                 {
                     throw new KeyNotFoundException($"Equipamento com o ID '{id}' não foi encontrado.");
                 }
@@ -42,15 +40,25 @@ namespace Invent.Api.Data
                 equipamentoDoBanco.QuantidadeEmEstoque = equipamento.QuantidadeEmEstoque;
 
                 await session.SaveChangesAsync();
-                return equipamentoDoBanco;
             }
         }
 
-        public async Task<IEnumerable<EquipamentoEletronico>> ObterTodos()
+        public async Task<IEnumerable<EquipamentoEletronico>> ObterTodos(string filtro)
         {
             using (IAsyncDocumentSession session = _store.OpenAsyncSession())
             {
-                return await session.Query<EquipamentoEletronico>().ToListAsync();
+                var query = session.Query<EquipamentoEletronico>();
+
+                if (!string.IsNullOrEmpty(filtro))
+                {
+
+                    query = query
+                        .Search(x => x.Nome, $"*{filtro}*")
+                        .Search(x => x.Tipo, $"*{filtro}*")
+                        .Search(x => x.QuantidadeEmEstoque, $"*{filtro}*");
+                }
+
+                return await query.ToListAsync();
             }
         }
 
@@ -58,33 +66,25 @@ namespace Invent.Api.Data
         {
             using (IAsyncDocumentSession session = _store.OpenAsyncSession())
             {
-                var equipamento = await session.LoadAsync<EquipamentoEletronico>(id);
-
-                if (equipamento is null)
-                {
-                    throw new KeyNotFoundException($"Equipamento com o ID '{id}' não foi encontrado.");
-                }
-
-                return equipamento;
+                return await session.LoadAsync<EquipamentoEletronico>(id)
+                    ?? throw new KeyNotFoundException($"Equipamento com o ID '{id}' não foi encontrado.");
             }
         }
 
-        public async Task<bool> RemoverPorId(string id)
+        public async Task RemoverPorId(string id)
         {
             using (IAsyncDocumentSession session = _store.OpenAsyncSession())
             {
                 var documentoParaRemover = await session.LoadAsync<EquipamentoEletronico>(id);
 
-                if (documentoParaRemover is null)
+                if (documentoParaRemover == null)
                 {
-                    return false;
+                    throw new KeyNotFoundException($"Equipamento com o ID '{id}' não foi encontrado.");
                 }
 
                 session.Delete(documentoParaRemover);
 
                 await session.SaveChangesAsync();
-
-                return true;
             }
         }
     }

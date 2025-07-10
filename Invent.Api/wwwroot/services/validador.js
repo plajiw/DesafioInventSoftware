@@ -31,7 +31,8 @@ sap.ui.define([
                     if (!valor || valor === "") {
                         mensagemErro = oResourceBundle.getText(CHAVE_I18N_NOME_OBRIGATORIO);
                         estadoDoCampo = ValueState.Error;
-                    } else if (valor.length < nomeMinimoDeCaracteres || valor.length > nomeMaximoDeCaracteres) {
+                    } 
+                    if (valor.length < nomeMinimoDeCaracteres || valor.length > nomeMaximoDeCaracteres) {
                         mensagemErro = oResourceBundle.getText(CHAVE_I18N_NOME_TAMANHO);
                         estadoDoCampo = ValueState.Error;
                     }
@@ -48,11 +49,11 @@ sap.ui.define([
                     if (!valor || valor === "") {
                         mensagemErro = oResourceBundle.getText(CHAVE_I18N_QUANTIDADE_OBRIGATORIO);
                         estadoDoCampo = ValueState.Error;
-                    } 
+                    }
                     if (parseInt(valor) < quantidadeMinimaDeEstoque) {
                         mensagemErro = oResourceBundle.getText(CHAVE_I18N_QUANTIDADE_MINIMO);
                         estadoDoCampo = ValueState.Error;
-                    } 
+                    }
                     if (parseInt(valor) > quantidadeMaximaDeEstoque) {
                         mensagemErro = oResourceBundle.getText(CHAVE_I18N_QUANTIDADE_MAXIMO);
                         estadoDoCampo = ValueState.Error;

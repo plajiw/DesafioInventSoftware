@@ -10,6 +10,8 @@ sap.ui.define([
 
     const MODELO_EQUIPAMENTO = "equipamentos";
     const MODELO_TIPOS = "tipos";
+    const MODELO_I18N = "i18n";
+    const CHAVE_I18N_TIPO_EQUIPAMENTO = "tipoEquipamento";
     const ENDPOINT_EQUIPAMENTOS = "api/Equipamentos";
     const ROTA_CADASTRO = "cadastroEquipamento";
     const ROTA_DETALHES = "detalheEquipamento";
@@ -17,6 +19,10 @@ sap.ui.define([
     const ID_INPUT_NOME = "inputNome";
     const ID_INPUT_TIPO = "inputTipo";
     const ID_INPUT_QUANTIDADE = "inputQuantidade";
+    const PARAMETRO_DE_VALOR = "value";
+    const ARGUMENTOS_DA_ROTA = "arguments";
+    const PROPRIEDADE_NOME = "nome";
+    const PROPRIEDADE_ESTOQUE = "quantidadeEmEstoque";
 
     const ValueState = coreLibrary.ValueState;
 
@@ -25,7 +31,7 @@ sap.ui.define([
             let oModelo = new JSONModel({});
             this.getView().setModel(oModelo, MODELO_EQUIPAMENTO);
 
-            this._oResourceBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
+            this._oResourceBundle = this.getOwnerComponent().getModel(MODELO_I18N).getResourceBundle();
 
             const arrayDeTipos = this._criarListaDeTipos();
             let oModeloTipo = new JSONModel({ values: arrayDeTipos });
@@ -42,7 +48,7 @@ sap.ui.define([
             for (let i = 0; i < totalDeTipos; i++) {
                 tipos.push({
                     key: i,
-                    text: this._oResourceBundle.getText(`tipoEquipamento${i}`)
+                    text: this._oResourceBundle.getText(`${CHAVE_I18N_TIPO_EQUIPAMENTO}${i}`)
                 });
             }
             return tipos;
@@ -57,9 +63,8 @@ sap.ui.define([
         },
 
         _aoAcessarEditar: function (oEvento) {
-            const argumentosDaRota = "arguments";
             this._limparCampos();
-            const id = oEvento.getParameter(argumentosDaRota).id;
+            const id = oEvento.getParameter(ARGUMENTOS_DA_ROTA).id;
             this._carregarDadosEdicao(id);
         },
 
@@ -95,16 +100,16 @@ sap.ui.define([
             let chaveModelo;
             switch (nomeCampo) {
                 case ID_INPUT_NOME:
-                    chaveModelo = "nome";
+                    chaveModelo = PROPRIEDADE_NOME;
                     break;
                 case ID_INPUT_QUANTIDADE:
-                    chaveModelo = "quantidadeEmEstoque";
+                    chaveModelo = PROPRIEDADE_ESTOQUE;
                     break;
                 default:
                     break;
             }
 
-            let valorDigitado = oEvento.getParameter("value");
+            let valorDigitado = oEvento.getParameter(PARAMETRO_DE_VALOR);
 
             let oModelo = this._obterModeloEquipamento();
             let dados = oModelo.getData();
@@ -118,8 +123,9 @@ sap.ui.define([
         },
 
         aoMudarTipo: function (oEvento) {
+            const chaveDoTipo = "selectedKey"
             const campoEntrada = oEvento.getSource();
-            const valorSelecionado = oEvento.getParameter("selectedKey");
+            const valorSelecionado = oEvento.getParameter(chaveDoTipo);
 
             let oModelo = this._obterModeloEquipamento();
             let dados = oModelo.getData();

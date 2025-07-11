@@ -7,16 +7,19 @@ sap.ui.define([
     "sap/m/Dialog",
     "sap/m/library",
     "sap/m/Button",
-    "sap/m/Text"
-], (Controller, JSONModel, formatter, UIComponent, MessageToast, Dialog, mobileLibrary, Button, Text) => {
+    "sap/m/Text",
+    "sap/m/MessageBox"
+], (Controller, JSONModel, formatter, UIComponent, MessageToast, Dialog, mobileLibrary, Button, Text, MessageBox) => {
     "use strict";
 
     const CHAVE_I18N_TITULO_REMOCAO = "tituloConfirmarRemocao";
     const CHAVE_I18N_VALIDAR_REMOCAO = "confirmarRemocaoEquipamento";
+    const CHAVE_18N_ERRO_REMOCAO = "erroRemoverEquipamento";
     const CHAVE_I18N_SUCESSO_REMOCAO = "equipamentoRemovido";
     const CHAVE_I18N_BOTAO_REMOVER = "botaoConfirmar";
     const CHAVE_I18N_BOTAO_CANCELAR = "botaoCancelar";
-
+    const CHAVE_I18N_ERRO_CARREGAR_EQUIPAMENTOS = "erroCarregarEquipamentos";
+    const MODELO_I18N = "i18n";
     const MODELO_EQUIPAMENTO = "equipamentos";
     const ROTA_LISTA = "listaEquipamento";
     const ROTA_DETALHES = "detalheEquipamento";
@@ -32,9 +35,10 @@ sap.ui.define([
         onInit: function () {
             this._view = this.getView();
             this._roteador = UIComponent.getRouterFor(this);
+            this._oResourceBundle = this.getOwnerComponent().getModel(MODELO_I18N).getResourceBundle();
+            this._roteador.getRoute(ROTA_DETALHES).attachPatternMatched(this._aoCoincidirRota, this);
             const oModelo = new JSONModel();
             this._view.setModel(oModelo, MODELO_EQUIPAMENTO);
-            this._roteador.getRoute(ROTA_DETALHES).attachPatternMatched(this._aoCoincidirRota, this);
         },
 
         _obterModeloEquipamento: function () {
@@ -64,18 +68,17 @@ sap.ui.define([
                     if (!res.ok) {
                         throw new Error(`Erro HTTP: ${res.status}`);
                     }
-                    MessageToast.show(this.getOwnerComponent().getModel("i18n").getResourceBundle().getText(CHAVE_I18N_SUCESSO_REMOCAO));
+                    MessageToast.show(this._oResourceBundle.getText(CHAVE_I18N_SUCESSO_REMOCAO));
                     this._roteador.navTo(ROTA_LISTA, {}, true);
                 })
                 .catch(err => {
-                    MessageBox.error(this.getOwnerComponent().getModel("i18n").getResourceBundle().getText("erroRemoverEquipamento"));
+                    MessageBox.error(this._oResourceBundle.getText(CHAVE_18N_ERRO_REMOCAO));
                 });
         },
 
         _alertaAoRemover: function () {
             const DialogType = mobileLibrary.DialogType;
             const ButtonType = mobileLibrary.ButtonType;
-            const oResourceBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
             const oModelo = this._obterModeloEquipamento();
             const nome = oModelo.getProperty(PROPRIEDADE_NOME);
 
@@ -83,11 +86,11 @@ sap.ui.define([
                 this._textoDialogo = new Text({ text: "" });
                 this.dialogAprovarRemocao = new Dialog({
                     type: DialogType.Message,
-                    title: oResourceBundle.getText(CHAVE_I18N_TITULO_REMOCAO),
+                    title: this._oResourceBundle.getText(CHAVE_I18N_TITULO_REMOCAO),
                     content: this._textoDialogo,
                     beginButton: new Button({
                         type: ButtonType.Emphasized,
-                        text: oResourceBundle.getText(CHAVE_I18N_BOTAO_REMOVER),
+                        text: this._oResourceBundle.getText(CHAVE_I18N_BOTAO_REMOVER),
                         press: () => {
                             const id = oModelo.getProperty(PROPRIEDADE_ID);
                             this._removerEquipamento(id);
@@ -95,7 +98,7 @@ sap.ui.define([
                         }
                     }),
                     endButton: new Button({
-                        text: oResourceBundle.getText(CHAVE_I18N_BOTAO_CANCELAR),
+                        text: this._oResourceBundle.getText(CHAVE_I18N_BOTAO_CANCELAR),
                         press: () => {
                             this.dialogAprovarRemocao.close();
                         }
@@ -105,7 +108,7 @@ sap.ui.define([
                 this.getView().addDependent(this.dialogAprovarRemocao);
             }
 
-            this._textoDialogo.setText(oResourceBundle.getText(CHAVE_I18N_VALIDAR_REMOCAO, [nome]));
+            this._textoDialogo.setText(this._oResourceBundle.getText(CHAVE_I18N_VALIDAR_REMOCAO, [nome]));
             this.dialogAprovarRemocao.open();
         },
 
@@ -127,7 +130,7 @@ sap.ui.define([
                 })
                 .then(dados => oModelo.setData(dados))
                 .catch(err => {
-                    MessageBox.error(this.getOwnerComponent().getModel("i18n").getResourceBundle().getText("erroCarregarEquipamento"));
+                    MessageBox.error(this._oResourceBundle.getText(CHAVE_I18N_ERRO_CARREGAR_EQUIPAMENTOS));
                 });
         }
     });

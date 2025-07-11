@@ -1,8 +1,6 @@
 ﻿using FluentValidation;
 using Invent.Api.Data;
 using Invent.Api.Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Invent.Api.Services
 {
@@ -23,10 +21,10 @@ namespace Invent.Api.Services
             return await _repositorioEquipamento.CriarEquipamento(equipamentoParaCriar);
         }
 
-        public async Task Atualizar(string id, EquipamentoEletronico dadosParaAtualizar)
+        public async Task<EquipamentoEletronico> Atualizar(string id, EquipamentoEletronico dadosParaAtualizar)
         {
             await _validadorEquipamentoEletronico.ValidateAndThrowAsync(dadosParaAtualizar);
-            await _repositorioEquipamento.Atualizar(id, dadosParaAtualizar);
+            return await _repositorioEquipamento.Atualizar(id, dadosParaAtualizar);
         }
 
         public async Task<IEnumerable<EquipamentoEletronico>> ObterTodos(string? filtro)

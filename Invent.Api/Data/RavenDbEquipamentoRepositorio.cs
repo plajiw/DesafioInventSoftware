@@ -1,8 +1,6 @@
 ﻿using Invent.Api.Models;
 using Raven.Client.Documents;
 using Raven.Client.Documents.Session;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Invent.Api.Data
 {
@@ -29,21 +27,17 @@ namespace Invent.Api.Data
             return equipamento;
         }
 
-        public async Task Atualizar(string id, EquipamentoEletronico equipamento)
+        public async Task<EquipamentoEletronico> Atualizar(string id, EquipamentoEletronico equipamento)
         {
             using var session = AbrirSessao();
-            var equipamentoExistente = await session.LoadAsync<EquipamentoEletronico>(id);
-
-            if (equipamentoExistente == null)
-            {
-                throw new KeyNotFoundException($"Equipamento com ID '{id}' não encontrado.");
-            }
+            var equipamentoExistente = await ObterPorId(id);
 
             equipamentoExistente.Nome = equipamento.Nome;
             equipamentoExistente.Tipo = equipamento.Tipo;
             equipamentoExistente.QuantidadeEmEstoque = equipamento.QuantidadeEmEstoque;
 
             await session.SaveChangesAsync();
+            return equipamentoExistente;
         }
 
         public async Task<IEnumerable<EquipamentoEletronico>> ObterTodos(string? filtro)
@@ -65,20 +59,13 @@ namespace Invent.Api.Data
         public async Task<EquipamentoEletronico> ObterPorId(string id)
         {
             using var session = AbrirSessao();
-            var equipamento = await session.LoadAsync<EquipamentoEletronico>(id);
-            return equipamento ?? throw new KeyNotFoundException($"Equipamento com ID '{id}' não encontrado.");
+            return await session.LoadAsync<EquipamentoEletronico>(id) ?? throw new KeyNotFoundException($"Equipamento com ID '{id}' não encontrado.");
         }
 
         public async Task RemoverPorId(string id)
         {
             using var session = AbrirSessao();
-            var equipamento = await session.LoadAsync<EquipamentoEletronico>(id);
-
-            if (equipamento == null)
-            {
-                throw new KeyNotFoundException($"Equipamento com ID '{id}' não encontrado.");
-            }
-
+            var equipamento = await ObterPorId(id);
             session.Delete(equipamento);
             await session.SaveChangesAsync();
         }

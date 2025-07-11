@@ -1,6 +1,8 @@
 ﻿using Invent.Api.Models;
 using Raven.Client.Documents;
 using Raven.Client.Documents.Session;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Invent.Api.Data
 {
@@ -13,79 +15,72 @@ namespace Invent.Api.Data
             _store = store;
         }
 
+        private IAsyncDocumentSession AbrirSessao()
+        {
+            return _store.OpenAsyncSession();
+        }
+
         public async Task<EquipamentoEletronico> CriarEquipamento(EquipamentoEletronico equipamento)
         {
-            using (IAsyncDocumentSession session = _store.OpenAsyncSession())
-            {
-                equipamento.DataDeInclusao = DateTimeOffset.Now;
-                await session.StoreAsync(equipamento);
-                await session.SaveChangesAsync();
-                return equipamento;
-            }
+            using var session = AbrirSessao();
+            equipamento.DataDeInclusao = DateTimeOffset.Now;
+            await session.StoreAsync(equipamento);
+            await session.SaveChangesAsync();
+            return equipamento;
         }
 
         public async Task Atualizar(string id, EquipamentoEletronico equipamento)
         {
-            using (IAsyncDocumentSession session = _store.OpenAsyncSession())
+            using var session = AbrirSessao();
+            var equipamentoExistente = await session.LoadAsync<EquipamentoEletronico>(id);
+
+            if (equipamentoExistente == null)
             {
-                var equipamentoDoBanco = await session.LoadAsync<EquipamentoEletronico>(id);
-
-                if (equipamentoDoBanco == null)
-                {
-                    throw new KeyNotFoundException($"Equipamento com o ID '{id}' não foi encontrado.");
-                }
-
-                equipamentoDoBanco.Nome = equipamento.Nome;
-                equipamentoDoBanco.Tipo = equipamento.Tipo;
-                equipamentoDoBanco.QuantidadeEmEstoque = equipamento.QuantidadeEmEstoque;
-
-                await session.SaveChangesAsync();
+                throw new KeyNotFoundException($"Equipamento com ID '{id}' não encontrado.");
             }
+
+            equipamentoExistente.Nome = equipamento.Nome;
+            equipamentoExistente.Tipo = equipamento.Tipo;
+            equipamentoExistente.QuantidadeEmEstoque = equipamento.QuantidadeEmEstoque;
+
+            await session.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<EquipamentoEletronico>> ObterTodos(string? filtro)
         {
-            using (IAsyncDocumentSession session = _store.OpenAsyncSession())
+            using var session = AbrirSessao();
+            var query = session.Query<EquipamentoEletronico>();
+
+            if (!string.IsNullOrEmpty(filtro))
             {
-                var query = session.Query<EquipamentoEletronico>();
-
-                if (!string.IsNullOrEmpty(filtro))
-                {
-
-                    query = query
-                        .Search(x => x.Nome, $"*{filtro}*")
-                        .Search(x => x.Tipo, $"*{filtro}*")
-                        .Search(x => x.QuantidadeEmEstoque, $"*{filtro}*");
-                }
-
-                return await query.ToListAsync();
+                query = query
+                    .Search(x => x.Nome, $"*{filtro}*")
+                    .Search(x => x.Tipo, $"*{filtro}*")
+                    .Search(x => x.QuantidadeEmEstoque, $"*{filtro}*");
             }
+
+            return await query.ToListAsync();
         }
 
         public async Task<EquipamentoEletronico> ObterPorId(string id)
         {
-            using (IAsyncDocumentSession session = _store.OpenAsyncSession())
-            {
-                return await session.LoadAsync<EquipamentoEletronico>(id)
-                    ?? throw new KeyNotFoundException($"Equipamento com o ID '{id}' não foi encontrado.");
-            }
+            using var session = AbrirSessao();
+            var equipamento = await session.LoadAsync<EquipamentoEletronico>(id);
+            return equipamento ?? throw new KeyNotFoundException($"Equipamento com ID '{id}' não encontrado.");
         }
 
         public async Task RemoverPorId(string id)
         {
-            using (IAsyncDocumentSession session = _store.OpenAsyncSession())
+            using var session = AbrirSessao();
+            var equipamento = await session.LoadAsync<EquipamentoEletronico>(id);
+
+            if (equipamento == null)
             {
-                var documentoParaRemover = await session.LoadAsync<EquipamentoEletronico>(id);
-
-                if (documentoParaRemover == null)
-                {
-                    throw new KeyNotFoundException($"Equipamento com o ID '{id}' não foi encontrado.");
-                }
-
-                session.Delete(documentoParaRemover);
-
-                await session.SaveChangesAsync();
+                throw new KeyNotFoundException($"Equipamento com ID '{id}' não encontrado.");
             }
+
+            session.Delete(equipamento);
+            await session.SaveChangesAsync();
         }
     }
 }

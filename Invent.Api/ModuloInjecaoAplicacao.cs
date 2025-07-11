@@ -4,6 +4,7 @@ using Invent.Api.Data;
 using Invent.Api.Models;
 using Invent.Api.Services;
 using Raven.Client.Documents;
+using System.Text.Json.Serialization;
 
 namespace Invent.Api
 {

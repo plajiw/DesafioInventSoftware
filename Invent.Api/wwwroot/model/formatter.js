@@ -31,6 +31,12 @@ sap.ui.define([], function () {
             const minuto = String(oDate.getMinutes()).padStart(quantidadeMaxima, valorDePreenchimento);
 
             return `${dia}/${mes}/${ano} ${hora}:${minuto}`;
+        },
+
+        formatarTipo: function (indiceDoTipo) {
+            const oResourceBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
+            let chaveParaTraducao = `tipoEquipamento${indiceDoTipo}`
+            return oResourceBundle.getText(chaveParaTraducao);
         }
     };
 });

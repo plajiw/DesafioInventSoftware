@@ -1,5 +1,4 @@
-<mvc:View
-    controllerName="ui5.gestaoequipamento.controller.EquipamentoDetalhe"
+<mvc:View controllerName="ui5.gestaoequipamento.controller.EquipamentoDetalhe"
     xmlns="sap.m"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns:f="sap.ui.layout.form"
@@ -12,27 +11,11 @@
         </headerContent>
 
         <content>
-            <Panel
-                class="sapUiResponsiveMargin sapUiSmallMarginTop"
-                width="auto"
-                backgroundDesign="Transparent">
+            <Panel class="sapUiResponsiveMargin sapUiSmallMarginTop" width="auto" backgroundDesign="Transparent">
                 <content>
                     <f:Form id="formDetalhes" editable="false">
                         <f:layout>
-                            <f:ResponsiveGridLayout
-                                labelSpanXL="4"
-                                labelSpanL="3"
-                                labelSpanM="12"
-                                labelSpanS="12"
-                                adjustLabelSpan="false"
-                                emptySpanXL="0"
-                                emptySpanL="4"
-                                emptySpanM="0"
-                                emptySpanS="0"
-                                columnsXL="1"
-                                columnsL="1"
-                                columnsM="1"
-                                singleContainerFullSize="false" />
+                            <f:ResponsiveGridLayout labelSpanXL="4" labelSpanL="3" labelSpanM="12" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="0" emptySpanL="4" emptySpanM="0" emptySpanS="0" columnsXL="1" columnsL="1" columnsM="1" singleContainerFullSize="false" />
                         </f:layout>
                         <f:formContainers>
                             <f:FormContainer>
@@ -42,36 +25,34 @@
                                             <Text text="{equipamentos>/id}" />
                                         </f:fields>
                                     </f:FormElement>
-                                    
+
                                     <f:FormElement label="{i18n>nomeTabela}">
                                         <f:fields>
                                             <Text text="{equipamentos>/nome}" />
                                         </f:fields>
                                     </f:FormElement>
-                                    
+
                                     <f:FormElement label="{i18n>tipoTabela}">
                                         <f:fields>
-                                            <Text text="{equipamentos>/tipo}" />
+                                            <Text text="{path: 'equipamentos>/tipo', formatter: '.formatter.formatarTipo'}" />
                                         </f:fields>
                                     </f:FormElement>
-                                    
+
                                     <f:FormElement label="{i18n>quantidadeTabela}">
                                         <f:fields>
                                             <ObjectNumber number="{equipamentos>/quantidadeEmEstoque}" unit="un" />
                                         </f:fields>
                                     </f:FormElement>
-                                    
+
                                     <f:FormElement label="{i18n>dataTabela}">
                                         <f:fields>
                                             <Text text="{path: 'equipamentos>/dataDeInclusao', formatter: '.formatter.formatarData'}" />
                                         </f:fields>
                                     </f:FormElement>
-                                    
+
                                     <f:FormElement label="{i18n>disponibilidadeTabela}">
                                         <f:fields>
-                                            <ObjectStatus
-                                                text="{path: 'equipamentos>/temEstoque', formatter: '.formatter.formatarDisponibilidade'}"
-                                                state="{= ${equipamentos>/temEstoque} ? 'Success' : 'Error' }" />
+                                            <ObjectStatus text="{path: 'equipamentos>/temEstoque', formatter: '.formatter.formatarDisponibilidade'}" state="{= ${equipamentos>/temEstoque} ? 'Success' : 'Error' }" />
                                         </f:fields>
                                     </f:FormElement>
 

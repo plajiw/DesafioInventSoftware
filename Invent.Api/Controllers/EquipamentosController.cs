@@ -2,6 +2,7 @@
 using Invent.Api.Models;
 using Invent.Api.Services;
 using Microsoft.AspNetCore.Mvc;
+using Raven.Client.Documents;
 
 namespace Invent.Api.Controllers
 {
@@ -10,31 +11,27 @@ namespace Invent.Api.Controllers
     public class EquipamentosController : ControllerBase
     {
         private readonly ServicoEquipamentoEletronico _servicoEquipamento;
-        public EquipamentosController(ServicoEquipamentoEletronico servicoEquipamento)
+        private readonly IDocumentStore _store;
+
+        public EquipamentosController(ServicoEquipamentoEletronico servicoEquipamento, IDocumentStore store)
         {
             _servicoEquipamento = servicoEquipamento;
+            _store = store;
         }
 
         [HttpGet]
-        public async Task<IActionResult> ObterTodos()
+        public async Task<IActionResult> ObterTodos([FromQuery] string? filtro = null)
         {
-            var todosOsEquipamentos = await _servicoEquipamento.ObterTodos();
+            var todosOsEquipamentos = await _servicoEquipamento.ObterTodos(filtro);
             return Ok(todosOsEquipamentos);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> ObterPorId(string id)
         {
-            try
-            {
-                var equipamentoEncontrado = await _servicoEquipamento.ObterPorId(id);
-                return Ok(equipamentoEncontrado);
-            }
+            var equipamentoEncontrado = await _servicoEquipamento.ObterPorId(id);
+            return Ok(equipamentoEncontrado);
 
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(new { Mensagem = ex.Message });
-            }
         }
 
         [HttpPost]
@@ -56,7 +53,7 @@ namespace Invent.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Atualizar(string id, [FromBody] EquipamentoEletronico equipamentoParaAtualizar)
+        public async Task<IActionResult> Atualizar([FromRoute] string id, [FromBody] EquipamentoEletronico equipamentoParaAtualizar)
         {
             if (id != equipamentoParaAtualizar.Id)
             {
@@ -65,20 +62,17 @@ namespace Invent.Api.Controllers
 
             try
             {
-                var equipamentoAtualizado = await _servicoEquipamento.Atualizar(id, equipamentoParaAtualizar);
-                return Ok(equipamentoAtualizado);
+                await _servicoEquipamento.Atualizar(id, equipamentoParaAtualizar);
+                return NoContent();
             }
-
             catch (KeyNotFoundException ex)
             {
                 return NotFound(new { Mensagem = ex.Message });
             }
-
             catch (ValidationException ex)
             {
                 return BadRequest(ex.Errors);
             }
-
             catch (Exception ex)
             {
                 return StatusCode(500, $"Um erro interno ocorreu: {ex.Message}");
@@ -88,14 +82,19 @@ namespace Invent.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Remover(string id)
         {
-            var removidoComSucesso = await _servicoEquipamento.RemoverPorId(id);
-
-            if (removidoComSucesso)
+            try
             {
+                await _servicoEquipamento.RemoverPorId(id);
                 return NoContent();
             }
-
-            return NotFound();
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { Mensagem = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Um erro interno ocorreu: {ex.Message}");
+            }
         }
     }
 }

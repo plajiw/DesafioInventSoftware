@@ -1,26 +1,26 @@
 sap.ui.define([
-  "sap/ui/core/UIComponent",
-  "sap/ui/model/resource/ResourceModel"
+    "sap/ui/core/UIComponent",
+    "sap/ui/model/resource/ResourceModel"
 ], (UIComponent, ResourceModel) => {
-  "use strict";
+    "use strict";
 
-  const I18N_MODELO = "i18n";
-  const CHAVE_TITULO_APP = "tituloAplicacao";
+    const I18N_MODELO = "i18n";
+    const CHAVE_TITULO_APP = "tituloAplicacao";
 
-  return UIComponent.extend("ui5.gestaoequipamento.Component", {
-    metadata: { manifest: "json" },
+    return UIComponent.extend("ui5.gestaoequipamento.Component", {
+        metadata: { manifest: "json" },
 
-    init() {
-      UIComponent.prototype.init.apply(this, arguments);
+        init() {
+            UIComponent.prototype.init.apply(this, arguments);
 
-      const i18nModel = this.getModel(I18N_MODELO);
-      const resourceBundle = i18nModel.getResourceBundle();
+            const i18nModel = this.getModel(I18N_MODELO);
+            const resourceBundle = i18nModel.getResourceBundle();
 
-      const appTitle = resourceBundle.getText(CHAVE_TITULO_APP);
+            const appTitle = resourceBundle.getText(CHAVE_TITULO_APP);
 
-      document.title = appTitle;
+            document.title = appTitle;
 
-      this.getRouter().initialize();
-    }
-  });
+            this.getRouter().initialize();
+        }
+    });
 });

@@ -28,65 +28,64 @@ sap.ui.define([
 
             switch (nomeCampo) {
                 case "nome":
-                    if (!valor)
+                    if (!valor || valor === "") {
                         mensagemErro = oResourceBundle.getText(CHAVE_I18N_NOME_OBRIGATORIO);
-                    if (valor && (valor.length < nomeMinimoDeCaracteres || valor.length > nomeMaximoDeCaracteres))
+                        estadoDoCampo = ValueState.Error;
+                    } 
+                    if (valor.length < nomeMinimoDeCaracteres || valor.length > nomeMaximoDeCaracteres) {
                         mensagemErro = oResourceBundle.getText(CHAVE_I18N_NOME_TAMANHO);
+                        estadoDoCampo = ValueState.Error;
+                    }
                     break;
 
                 case "tipo":
-                    if (!valor)
+                    if (valor === undefined || valor === null || valor === "") {
                         mensagemErro = oResourceBundle.getText(CHAVE_I18N_TIPO_OBRIGATORIO);
+                        estadoDoCampo = ValueState.Error;
+                    }
                     break;
 
                 case "quantidadeEmEstoque":
-                    if (!valor)
+                    if (!valor || valor === "") {
                         mensagemErro = oResourceBundle.getText(CHAVE_I18N_QUANTIDADE_OBRIGATORIO);
-                    if (parseInt(valor) < quantidadeMinimaDeEstoque)
+                        estadoDoCampo = ValueState.Error;
+                    }
+                    if (parseInt(valor) < quantidadeMinimaDeEstoque) {
                         mensagemErro = oResourceBundle.getText(CHAVE_I18N_QUANTIDADE_MINIMO);
-                    if (parseInt(valor) > quantidadeMaximaDeEstoque)
+                        estadoDoCampo = ValueState.Error;
+                    }
+                    if (parseInt(valor) > quantidadeMaximaDeEstoque) {
                         mensagemErro = oResourceBundle.getText(CHAVE_I18N_QUANTIDADE_MAXIMO);
+                        estadoDoCampo = ValueState.Error;
+                    }
                     break;
             }
-
-            if (mensagemErro)
-                estadoDoCampo = ValueState.Error;
 
             return { estadoDoCampo, mensagemErro };
         },
 
         validarFormulario: function (view, oResourceBundle) {
-            let valorNome = view.byId(ID_INPUT_NOME).getValue();
-            let valorTipo = view.byId(ID_INPUT_TIPO).getValue();
-            let valorQuantidade = view.byId(ID_INPUT_QUANTIDADE).getValue();
+            const campos = [
+                { id: ID_INPUT_NOME, chave: "nome", getValue: () => view.byId(ID_INPUT_NOME).getValue() },
+                { id: ID_INPUT_TIPO, chave: "tipo", getValue: () => view.byId(ID_INPUT_TIPO).getSelectedKey() },
+                { id: ID_INPUT_QUANTIDADE, chave: "quantidadeEmEstoque", getValue: () => view.byId(ID_INPUT_QUANTIDADE).getValue() }
+            ];
 
-            let mensagensErro = [];
+            const mensagensErro = [];
 
-            let validacaoNome = this.validarCampo("nome", valorNome, oResourceBundle);
+            campos.forEach(({ id, chave, getValue }) => {
+                const validacao = this.validarCampo(chave, getValue(), oResourceBundle);
+                const campo = view.byId(id);
 
-            if (validacaoNome.mensagemErro) {
-                mensagensErro.push(validacaoNome.mensagemErro);
-                view.byId(ID_INPUT_NOME).setValueState(validacaoNome.estado);
-                view.byId(ID_INPUT_NOME).setValueStateText(validacaoNome.mensagemErro);
-            }
+                campo.setValueState(validacao.estadoDoCampo);
+                campo.setValueStateText(validacao.mensagemErro);
 
-            let validacaoTipo = this.validarCampo("tipo", valorTipo, oResourceBundle);
+                if (validacao.mensagemErro) {
+                    mensagensErro.push(validacao.mensagemErro);
+                }
+            });
 
-            if (validacaoTipo.mensagemErro) {
-                mensagensErro.push(validacaoTipo.mensagemErro);
-                view.byId(ID_INPUT_TIPO).setValueState(validacaoTipo.estado);
-                view.byId(ID_INPUT_TIPO).setValueStateText(validacaoTipo.mensagemErro);
-            }
-
-            let validacaoQuantidade = this.validarCampo("quantidadeEmEstoque", valorQuantidade, oResourceBundle);
-
-            if (validacaoQuantidade.mensagemErro) {
-                mensagensErro.push(validacaoQuantidade.mensagemErro);
-                view.byId(ID_INPUT_QUANTIDADE).setValueState(validacaoQuantidade.estado);
-                view.byId(ID_INPUT_QUANTIDADE).setValueStateText(validacaoQuantidade.mensagemErro);
-            }
-
-            return mensagensErro.join("\n");
+            return mensagensErro.length > 0 ? mensagensErro.join("\n") : null;
         }
     };
 });

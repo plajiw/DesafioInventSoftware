@@ -12,7 +12,6 @@ namespace Invent.Api.Tests
         private readonly IValidator<EquipamentoEletronico> _validador;
         private readonly ServicoEquipamentoEletronico _servico;
 
-        // Construtor
         public ServicoEquipamentoEletronicoTests()
         {
             _mockRepositorio = new Mock<IEquipamentoRepositorio>();

@@ -1,4 +1,3 @@
-// Selecionar elementos do DOM
 const form = document.getElementById('equipamento-form');
 const formTitle = document.getElementById('form-title');
 const equipamentoIdInput = document.getElementById('equipamento-id');
@@ -11,10 +10,8 @@ const cancelBtn = document.getElementById('cancel-btn');
 const tableBody = document.getElementById('table-body');
 const noDataMessage = document.getElementById('no-data-message');
 
-// URL da API
 const apiUrl = 'http://localhost:5124/api/equipamentos';
 
-// Função para buscar e renderizar equipamentos
 function buscarEquipamentos() {
     noDataMessage.classList.add('d-none');
     tableBody.innerHTML = '';
@@ -38,7 +35,6 @@ function buscarEquipamentos() {
         });
 }
 
-// Função para renderizar a tabela
 function renderTable(equipamentos) {
     tableBody.innerHTML = '';
     equipamentos.forEach(equipamento => {
@@ -59,7 +55,6 @@ function renderTable(equipamentos) {
     });
 }
 
-// Função para preparar o formulário para edição
 function prepararParaEditar(id) {
     fetch(`${apiUrl}/${id}`)
         .then(resposta => {
@@ -82,7 +77,6 @@ function prepararParaEditar(id) {
         });
 }
 
-// Função para excluir equipamento
 function deletarEquipamento(id) {
     if (confirm('Tem certeza que deseja excluir este equipamento?')) {
         fetch(`${apiUrl}/${id}`, { method: 'DELETE' })
@@ -96,7 +90,6 @@ function deletarEquipamento(id) {
     }
 }
 
-// Função para limpar o formulário
 function limparFormulario() {
     form.reset();
     equipamentoIdInput.value = '';
@@ -106,7 +99,6 @@ function limparFormulario() {
     nomeInput.focus();
 }
 
-// Evento de submit do formulário
 form.addEventListener('submit', (event) => {
     event.preventDefault();
 
@@ -142,8 +134,6 @@ form.addEventListener('submit', (event) => {
         });
 });
 
-// Evento do botão Cancelar
 cancelBtn.addEventListener('click', limparFormulario);
 
-// Inicializar ao carregar a página
 document.addEventListener('DOMContentLoaded', buscarEquipamentos);

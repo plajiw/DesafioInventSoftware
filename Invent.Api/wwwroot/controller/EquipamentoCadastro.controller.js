@@ -9,25 +9,51 @@ sap.ui.define([
     "use strict";
 
     const MODELO_EQUIPAMENTO = "equipamentos";
+    const MODELO_TIPOS = "tipos";
+    const MODELO_I18N = "i18n";
+    const CHAVE_I18N_TIPO_EQUIPAMENTO = "tipoEquipamento";
     const ENDPOINT_EQUIPAMENTOS = "api/Equipamentos";
     const ROTA_CADASTRO = "cadastroEquipamento";
-    const ROTA_LISTA = "listaEquipamento";
     const ROTA_DETALHES = "detalheEquipamento";
     const ROTA_EDITAR = "editarEquipamento";
     const ID_INPUT_NOME = "inputNome";
     const ID_INPUT_TIPO = "inputTipo";
     const ID_INPUT_QUANTIDADE = "inputQuantidade";
+    const PARAMETRO_DE_VALOR = "value";
+    const ARGUMENTOS_DA_ROTA = "arguments";
+    const PROPRIEDADE_NOME = "nome";
+    const PROPRIEDADE_ESTOQUE = "quantidadeEmEstoque";
 
     const ValueState = coreLibrary.ValueState;
 
     return Controller.extend("ui5.gestaoequipamento.controller.EquipamentoCadastro", {
+        _id: null,
+
         onInit: function () {
             let oModelo = new JSONModel({});
             this.getView().setModel(oModelo, MODELO_EQUIPAMENTO);
 
+            this._oResourceBundle = this.getOwnerComponent().getModel(MODELO_I18N).getResourceBundle();
+
+            const arrayDeTipos = this._criarListaDeTipos();
+            let oModeloTipo = new JSONModel({ values: arrayDeTipos });
+            this.getView().setModel(oModeloTipo, MODELO_TIPOS);
+
             this.roteador = UIComponent.getRouterFor(this);
             this.roteador.getRoute(ROTA_CADASTRO).attachPatternMatched(this._aoAcessarCadastro, this);
             this.roteador.getRoute(ROTA_EDITAR).attachPatternMatched(this._aoAcessarEditar, this);
+        },
+
+        _criarListaDeTipos: function () {
+            const totalDeTipos = 12;
+            const tipos = [];
+            for (let i = 0; i < totalDeTipos; i++) {
+                tipos.push({
+                    key: i,
+                    text: this._oResourceBundle.getText(`${CHAVE_I18N_TIPO_EQUIPAMENTO}${i}`)
+                });
+            }
+            return tipos;
         },
 
         _obterModeloEquipamento: function () {
@@ -39,10 +65,9 @@ sap.ui.define([
         },
 
         _aoAcessarEditar: function (oEvento) {
-            const argumentosDaRota = "arguments";
             this._limparCampos();
-            const id = oEvento.getParameter(argumentosDaRota).id;
-            this._carregarDadosEdicao(id);
+            this._id = oEvento.getParameter(ARGUMENTOS_DA_ROTA).id;
+            this._carregarDadosEdicao(this._id);
         },
 
         _limparValueStateCampos(idDoInput) {
@@ -62,21 +87,8 @@ sap.ui.define([
         _carregarDadosEdicao: function (id) {
             let oModelo = this._obterModeloEquipamento();
             fetch(`${ENDPOINT_EQUIPAMENTOS}/${id}`)
-                .then(res => {
-                    if (!res.ok) {
-                        throw new Error(`Erro HTTP: ${res.status}`);
-                    }
-                    return res.json();
-                })
-                .then(dados => {
-                    if (Array.isArray(dados)) {
-                        throw new Error("API retornou uma lista em vez de um único equipamento");
-                    }
-                    oModelo.setData(dados);
-                })
-                .catch(err => {
-                    MessageBox.error(this.getOwnerComponent().getModel("i18n").getResourceBundle().getText("erroCarregarEquipamento"));
-                });
+                .then(res => res.json())
+                .then(dados => oModelo.setData(dados));
         },
 
         aoDigitar: function (oEvento) {
@@ -89,35 +101,40 @@ sap.ui.define([
 
             let chaveModelo;
             switch (nomeCampo) {
-                case (ID_INPUT_NOME):
-                    chaveModelo = "nome";
+                case ID_INPUT_NOME:
+                    chaveModelo = PROPRIEDADE_NOME;
                     break;
-
-                case (ID_INPUT_TIPO):
-                    chaveModelo = "tipo";
+                case ID_INPUT_QUANTIDADE:
+                    chaveModelo = PROPRIEDADE_ESTOQUE;
                     break;
-
-                case (ID_INPUT_QUANTIDADE):
-                    chaveModelo = "quantidadeEmEstoque";
-                    break;
-
                 default:
                     break;
             }
 
-            let valorDigitado = oEvento.getParameter("value");
+            let valorDigitado = oEvento.getParameter(PARAMETRO_DE_VALOR);
 
             let oModelo = this._obterModeloEquipamento();
             let dados = oModelo.getData();
             dados[chaveModelo] = valorDigitado;
             oModelo.setData(dados);
 
-            const oResourceBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
-
-            let { estadoDoCampo, mensagemErro } = Validador.validarCampo(chaveModelo, valorDigitado, oResourceBundle);
+            let { estadoDoCampo, mensagemErro } = Validador.validarCampo(chaveModelo, valorDigitado, this._oResourceBundle);
 
             campoEntrada.setValueState(estadoDoCampo);
             campoEntrada.setValueStateText(mensagemErro);
+        },
+
+        aoMudarTipo: function (oEvento) {
+            const chaveDoTipo = "selectedKey"
+            const campoEntrada = oEvento.getSource();
+            const valorSelecionado = oEvento.getParameter(chaveDoTipo);
+
+            let oModelo = this._obterModeloEquipamento();
+            let dados = oModelo.getData();
+            dados.tipo = valorSelecionado;
+            oModelo.setData(dados);
+
+            campoEntrada.setValueState(ValueState.None);
         },
 
         _configurarRequisicao: function (id, dados) {
@@ -135,7 +152,7 @@ sap.ui.define([
             const corpoDaRequisicao = {
                 id: dados.id || null,
                 nome: dados.nome,
-                tipo: dados.tipo,
+                tipo: parseInt(dados.tipo),
                 quantidadeEmEstoque: parseInt(dados.quantidadeEmEstoque)
             };
 
@@ -143,19 +160,26 @@ sap.ui.define([
         },
 
         _executarRequisicao: function (metodo, url, corpoDaRequisicao) {
+
             fetch(url, {
                 method: metodo,
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(corpoDaRequisicao)
             })
-                .then(resposta => resposta.json())
-                .then(equipamento => this.roteador.navTo(ROTA_DETALHES, { id: equipamento.id }));
+                .then(resposta => {
+                    if (resposta.status == 201)
+                        return resposta.json()
+                })
+                .then(equipamento => {
+                    this._id ??= equipamento?.id;
+                    this.roteador.navTo(ROTA_DETALHES, { id: this._id });
+                    this._id = null;
+                });
         },
 
         _validarFormulario: function () {
             const view = this.getView();
-            const oResourceBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
-            const errosEncontrados = Validador.validarFormulario(view, oResourceBundle);
+            const errosEncontrados = Validador.validarFormulario(view, this._oResourceBundle);
 
             if (errosEncontrados) MessageBox.error(errosEncontrados);
 
@@ -172,6 +196,5 @@ sap.ui.define([
         aoClicarEmVoltar: function () {
             window.history.back();
         }
-
     });
 });

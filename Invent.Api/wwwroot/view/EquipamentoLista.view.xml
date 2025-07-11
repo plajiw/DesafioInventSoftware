@@ -14,7 +14,7 @@
                     <headerToolbar>
                         <Toolbar>
                             <ToolbarSpacer />
-                            <SearchField  id="searchEquipamentos" width="40%" placeholder="{i18n>buscarPlaceholder}" search=".aoBuscar" />
+                            <SearchField id="searchEquipamentos" width="40%" placeholder="{i18n>buscarPlaceholder}" search=".aoBuscar" />
                         </Toolbar>
                     </headerToolbar>
 
@@ -51,7 +51,7 @@
 
                                 <Text text="{equipamentos>nome}" />
 
-                                <Text text="{equipamentos>tipo}" />
+                                <Text text="{path: 'equipamentos>tipo', formatter: '.formatter.formatarTipo'}" />
 
                                 <ObjectNumber number="{equipamentos>quantidadeEmEstoque}" unit="un" />
 

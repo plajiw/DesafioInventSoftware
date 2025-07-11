@@ -27,6 +27,8 @@ sap.ui.define([
     const ValueState = coreLibrary.ValueState;
 
     return Controller.extend("ui5.gestaoequipamento.controller.EquipamentoCadastro", {
+        _id: null,
+
         onInit: function () {
             let oModelo = new JSONModel({});
             this.getView().setModel(oModelo, MODELO_EQUIPAMENTO);
@@ -64,8 +66,8 @@ sap.ui.define([
 
         _aoAcessarEditar: function (oEvento) {
             this._limparCampos();
-            const id = oEvento.getParameter(ARGUMENTOS_DA_ROTA).id;
-            this._carregarDadosEdicao(id);
+            this._id = oEvento.getParameter(ARGUMENTOS_DA_ROTA).id;
+            this._carregarDadosEdicao(this._id);
         },
 
         _limparValueStateCampos(idDoInput) {
@@ -158,13 +160,21 @@ sap.ui.define([
         },
 
         _executarRequisicao: function (metodo, url, corpoDaRequisicao) {
+
             fetch(url, {
                 method: metodo,
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(corpoDaRequisicao)
             })
-                .then(resposta => resposta.json())
-                .then(equipamento => this.roteador.navTo(ROTA_DETALHES, { id: equipamento.id }));
+                .then(resposta => {
+                    if (resposta.status == 201)
+                        return resposta.json()
+                })
+                .then(equipamento => {
+                    this._id ??= equipamento?.id;
+                    this.roteador.navTo(ROTA_DETALHES, { id: this._id });
+                    this._id = null;
+                });
         },
 
         _validarFormulario: function () {

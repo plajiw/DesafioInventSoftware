@@ -50,8 +50,6 @@
             const oModelo = this._obterModeloEquipamento();
             const url = `${ENDPOINT_EQUIPAMENTOS}?filtro=${query}`;
 
-            this.getView().setBusy(true);
-
             fetch(url)
                 .then(res => res.json())
                 .then(data => oModelo.setData(data))

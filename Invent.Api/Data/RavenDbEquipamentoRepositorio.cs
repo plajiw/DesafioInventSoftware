@@ -30,7 +30,7 @@ namespace Invent.Api.Data
         public async Task<EquipamentoEletronico> Atualizar(string id, EquipamentoEletronico equipamento)
         {
             using var session = AbrirSessao();
-            var equipamentoExistente = await ObterPorId(id);
+            var equipamentoExistente = await ObterPorId(id, session);
 
             equipamentoExistente.Nome = equipamento.Nome;
             equipamentoExistente.Tipo = equipamento.Tipo;
@@ -56,16 +56,17 @@ namespace Invent.Api.Data
             return await query.ToListAsync();
         }
 
-        public async Task<EquipamentoEletronico> ObterPorId(string id)
+        public async Task<EquipamentoEletronico> ObterPorId(string id, IAsyncDocumentSession session = null)
         {
-            using var session = AbrirSessao();
+            session ??= AbrirSessao();
+
             return await session.LoadAsync<EquipamentoEletronico>(id) ?? throw new KeyNotFoundException($"Equipamento com ID '{id}' não encontrado.");
         }
 
         public async Task RemoverPorId(string id)
         {
             using var session = AbrirSessao();
-            var equipamento = await ObterPorId(id);
+            var equipamento = await ObterPorId(id, session);
             session.Delete(equipamento);
             await session.SaveChangesAsync();
         }

@@ -29,15 +29,9 @@ namespace Invent.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> ObterPorId(string id)
         {
-            try
-            {
-                var equipamentoEncontrado = await _servicoEquipamento.ObterPorId(id);
-                return Ok(equipamentoEncontrado);
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(new { Mensagem = ex.Message });
-            }
+            var equipamentoEncontrado = await _servicoEquipamento.ObterPorId(id);
+            return Ok(equipamentoEncontrado);
+
         }
 
         [HttpPost]
@@ -59,7 +53,7 @@ namespace Invent.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Atualizar(string id, [FromBody] EquipamentoEletronico equipamentoParaAtualizar)
+        public async Task<IActionResult> Atualizar([FromRoute] string id, [FromBody] EquipamentoEletronico equipamentoParaAtualizar)
         {
             if (id != equipamentoParaAtualizar.Id)
             {
